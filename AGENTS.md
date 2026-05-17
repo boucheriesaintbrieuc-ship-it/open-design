@@ -18,6 +18,7 @@ This file is the single source of truth for agents entering this repository. Rea
 - `apps/daemon` is the local privileged daemon and `od` bin. It owns `/api/*`, agent spawning, skills, design systems, artifacts, and static serving.
 - `apps/desktop` is the Electron shell; it discovers the web URL through sidecar IPC.
 - `apps/packaged` is the thin packaged Electron runtime entry; it starts packaged sidecars and owns the `od://` entry glue only.
+- `apps/landing-page` is a stand-alone static Astro marketing site (Atelier Zero style); it shares design tokens with `apps/web` but no state, routes, or runtime, and must not import product packages. See `apps/landing-page/AGENTS.md`.
 - `packages/contracts` is the pure TypeScript web/daemon app contract layer.
 - `packages/sidecar-proto` owns the Open Design sidecar business protocol; `packages/sidecar` owns the generic sidecar runtime; `packages/platform` owns generic OS process primitives.
 - `tools/dev` is the local development lifecycle control plane.

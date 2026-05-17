@@ -8,6 +8,7 @@ Follow the root `AGENTS.md` first. This file only records module-level boundarie
 - `apps/daemon`: Express + SQLite local daemon and `od` bin. It owns REST/SSE APIs, agent CLI spawning, skills, design systems, artifact persistence, static serving, and local data under `.od/`.
 - `apps/desktop`: Electron shell. Desktop does not guess the web port; it reads runtime status through sidecar IPC and opens the reported web URL.
 - `apps/packaged`: Thin packaged Electron runtime entry. It starts packaged daemon/web sidecars, registers the `od://` entry protocol, and delegates desktop host behavior to `apps/desktop`.
+- `apps/landing-page`: Stand-alone static Astro marketing site rendering the canonical Open Design landing page in the Atelier Zero style. It shares design tokens with `apps/web` but no state, routes, or runtime, has no `/api`/`/artifacts`/`/frames` proxy, and must not import `@open-design/web`, `@open-design/daemon`, `@open-design/desktop`, `@open-design/sidecar*`, or `@open-design/contracts`. See `apps/landing-page/AGENTS.md`.
 
 ## Daemon layout
 
