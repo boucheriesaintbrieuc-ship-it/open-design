@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /merci.html
+Disallow: /paiement-annule.html
+Disallow: /paiement/
+
+Sitemap: https://www.bornea.fr/sitemap.xml

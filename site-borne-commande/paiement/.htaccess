@@ -1,0 +1,5 @@
+# La configuration ne doit jamais être servie, même si PHP est désactivé
+# par accident sur l'hébergement.
+<FilesMatch "^(config|config\.exemple)\.php$">
+  Require all denied
+</FilesMatch>
