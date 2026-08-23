@@ -207,11 +207,16 @@ sur le serveur, mais `assets/site.css` non, et la page s’est affichée sans au
 style. Passez par l’archive, elle règle le problème.
 
 1. Récupérez `borne-restaurants-site.zip`.
-2. cPanel, puis **Gestionnaire de fichiers**, puis ouvrez `public_html`.
+2. cPanel, puis **Gestionnaire de fichiers**, puis ouvrez le dossier du domaine.
+   Sur o2switch, un domaine supplémentaire a sa propre racine dans le dossier
+   personnel, pas dans `public_html` : ici c’est `/home/moau1329/borne-restaurants.fr`.
+   `public_html` sert le domaine principal du compte, qui est un autre site.
 3. Supprimez l’ancien `index.html` qui s’y trouve.
 4. Cliquez sur **Téléverser** et envoyez le fichier `.zip` entier.
-5. Revenez dans `public_html`, clic droit sur l’archive, puis **Extract**.
-6. Supprimez l’archive une fois extraite.
+5. Revenez dans le dossier, sélectionnez l’archive d’un clic, puis **Extraire**
+   dans la barre d’outils. Le bouton reste grisé tant que rien n’est sélectionné.
+6. **Supprimez l’archive une fois extraite.** Laissée en place, elle reste
+   téléchargeable par n’importe qui à l’adresse du site.
 
 Vérifiez ensuite ces trois adresses dans le navigateur :
 
