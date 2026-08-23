@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borne de commande restaurant — installée en Bretagne | Ardoise</title>
+<meta name="description" content="Borne tactile de commande pour fast-food et brasserie : 0 % de commission, bon taux de TVA appliqué, titres-restaurant acceptés. Installée et dépannée depuis Saint-Brieuc.">
+<link rel="canonical" href="https://ardoise-bornes.fr/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Borne de commande restaurant — installée en Bretagne | Ardoise">
+<meta property="og:description" content="Vos clients commandent seuls, votre équipe cuisine. Borne tactile K1 : 0 % de commission, SAV J+1 en Bretagne.">
+<meta property="og:image" content="https://ardoise-bornes.fr/img/og.jpg">
+<meta property="og:url" content="https://ardoise-bornes.fr/">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#16150F">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2316150F'/><rect x='7' y='6' width='18' height='15' fill='%23EDE7DC'/><rect x='13' y='23' width='6' height='4' fill='%23EDE7DC'/></svg>">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ardoise-bornes.fr/#org",
+      "name": "Ardoise",
+      "url": "https://ardoise-bornes.fr/",
+      "telephone": "+33296000000",
+      "email": "contact@ardoise-bornes.fr",
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Côtes-d'Armor" },
+        { "@type": "AdministrativeArea", "name": "Finistère" },
+        { "@type": "AdministrativeArea", "name": "Ille-et-Vilaine" },
+        { "@type": "AdministrativeArea", "name": "Morbihan" }
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ADRESSE À COMPLÉTER",
+        "addressLocality": "Saint-Brieuc",
+        "postalCode": "22000",
+        "addressCountry": "FR"
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "Ardoise K1 — borne de commande tactile pour restaurant",
+      "description": "Borne de commande tactile 21,5 pouces avec imprimante ticket intégrée, lecteur de carte bancaire sans contact et logiciel de carte. Sans commission sur les commandes.",
+      "brand": { "@type": "Brand", "name": "Ardoise" },
+      "category": "Borne de commande restaurant",
+      "offers": {
+        "@type": "Offer",
+        "price": "1690.00",
+        "priceCurrency": "EUR",
+        "valueAddedTaxIncluded": false,
+        "availability": "https://schema.org/InStock",
+        "url": "https://ardoise-bornes.fr/",
+        "priceValidUntil": "2026-12-31",
+        "seller": { "@id": "https://ardoise-bornes.fr/#org" }
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Est-ce que je paie une commission sur les commandes passées à la borne ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Non. La borne est vendue ou louée, et le logiciel est compris. Aucun pourcentage n'est prélevé sur le chiffre d'affaires, quel que soit le volume." } },
+        { "@type": "Question", "name": "La borne gère-t-elle la TVA à 10 % sur place et à 5,5 % à emporter ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Oui. La question sur place / à emporter est posée avant le paiement et le taux correspondant est appliqué à la ligne, puis transmis à la caisse et au ticket." } },
+        { "@type": "Question", "name": "La borne est-elle conforme à la loi anti-fraude à la TVA ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Le logiciel d'encaissement est certifié et une attestation individuelle de conformité vous est remise à l'installation, conformément à l'article 286-I-3° bis du code général des impôts." } },
+        { "@type": "Question", "name": "Peut-on payer en titres-restaurant dématérialisés ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Oui, les cartes titres-restaurant sans contact des principaux émetteurs sont acceptées sur le lecteur intégré, dans la limite du plafond journalier légal." } },
+        { "@type": "Question", "name": "Que se passe-t-il si la borne tombe en panne un vendredi soir ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "La prise de commande au comptoir reste possible : la borne est un canal supplémentaire, pas un remplacement de la caisse. Une intervention est planifiée le jour ouvré suivant en Bretagne, avec matériel de prêt si l'immobilisation dépasse 48 heures." } }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+@layer reset, tokens, base, layout, composants, utilitaires;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol { margin: 0; padding: 0; }
+  ul[role="list"] { list-style: none; }
+  img, svg { display: block; max-width: 100%; height: auto; }
+  input, button, select { font: inherit; color: inherit; }
+  a { color: inherit; }
+  table { border-collapse: collapse; width: 100%; }
+}
+
+@layer tokens {
+  :root {
+    /* Palette prise sur le comptoir réel : papier kraft du ticket, inox, écran noir,
+       voyant vert du terminal de paiement, bandeau orange de la file d'attente. */
+    --kraft:     #EDE7DC;
+    --kraft-2:   #E2DACB;
+    --inox:      #C9C7C0;
+    --encre:     #16150F;
+    --encre-2:   #5C574A;
+    --valide:    #0F6B3A;   /* fonds de bouton, texte sur clair */
+    --valide-clair: #2FA463;/* texte vert sur fond sombre uniquement */   /* uniquement : validation, paiement, CTA */
+    --attente:   #A32E06;   /* uniquement : la section problème */
+
+    --f-board:  "Haettenschweiler", "Arial Narrow Bold", "Franklin Gothic Condensed", "Oswald", Impact, sans-serif;
+    --f-texte:  "Helvetica Neue", "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-donnee: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+
+    --t-sm:  clamp(.8125rem, .79rem + .12vw, .875rem);
+    --t-md:  clamp(1rem, .95rem + .25vw, 1.125rem);
+    --t-lg:  clamp(1.25rem, 1.05rem + .9vw, 1.75rem);
+    --t-xl:  clamp(2rem, 1.3rem + 3vw, 3.5rem);
+    --t-2xl: clamp(2.5rem, 1.2rem + 5.4vw, 5rem);
+
+    --pas: clamp(1rem, .6rem + 1.6vw, 1.75rem);
+    --gout: clamp(1.25rem, .8rem + 2vw, 2.75rem);
+    --section: clamp(3.5rem, 2rem + 6vw, 7rem);
+    --max: 1180px;
+    --mesure: 62ch;
+    --duree: 180ms;
+    --courbe: cubic-bezier(.2,.7,.3,1);
+  }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--kraft); color: var(--encre);
+    font-family: var(--f-texte); font-size: var(--t-md); line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    /* trame très légère de papier ticket */
+    background-image: repeating-linear-gradient(0deg, rgba(22,21,15,.028) 0 1px, transparent 1px 5px);
+  }
+  h1, h2, h3 { line-height: 1; text-wrap: balance; }
+  p { text-wrap: pretty; max-width: var(--mesure); }
+  strong { font-weight: 700; }
+  :where(a, button, input, select, summary):focus-visible {
+    outline: 3px solid var(--valide); outline-offset: 3px;
+  }
+  ::selection { background: var(--encre); color: var(--kraft); }
+  .saut { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .saut:focus { width: auto; height: auto; clip-path: none; left: 1rem; top: 1rem; z-index: 99; background: var(--encre); color: var(--kraft); padding: .75rem 1rem; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+}
+
+@layer layout {
+  /* Un enfant de grille prend par défaut la largeur de son contenu le plus large :
+     sans min-width, un tableau à défilement horizontal élargit toute la page. */
+  .doc > *, .duo > *, .fiche > *, .prix-grille > *, .hero > *, .mecanique > *, .calc__grille > * { min-width: 0; }
+  .env { width: min(100% - var(--gout) * 2, var(--max)); margin-inline: auto; }
+  .sec { padding-block: var(--section); }
+  .pile { display: grid; gap: var(--pas); }
+}
+
+@layer composants {
+  /* --- Titrage type panneau de menu au-dessus du comptoir --- */
+  .board {
+    font-family: var(--f-board); text-transform: uppercase;
+    letter-spacing: .005em; font-weight: 400;
+  }
+  .surtitre {
+    font-family: var(--f-donnee); font-size: var(--t-sm);
+    text-transform: uppercase; letter-spacing: .16em; color: var(--encre-2);
+  }
+
+  /* --- Barre haute --- */
+  .barre {
+    display: flex; align-items: center; gap: var(--pas); flex-wrap: wrap;
+    padding-block: .9rem; border-bottom: 2px solid var(--encre);
+  }
+  .logo { font-family: var(--f-board); text-transform: uppercase; font-size: 1.6rem; letter-spacing: .02em; }
+  .logo span { color: var(--valide); }
+  .barre .tel { margin-left: auto; font-family: var(--f-donnee); font-size: var(--t-sm); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  /* --- Boutons --- */
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+    min-height: 52px; padding: .9rem 1.6rem;
+    background: var(--valide); color: #fff; border: 2px solid var(--valide);
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    box-shadow: 5px 5px 0 var(--encre);
+    transition: transform var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe);
+  }
+  .cta:hover { transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--encre); }
+  .cta:active { transform: translate(5px,5px); box-shadow: 0 0 0 var(--encre); }
+  .cta[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
+  .cta--fant { background: transparent; color: var(--encre); border-color: var(--encre); box-shadow: none; }
+  .cta--fant:hover { background: var(--encre); color: var(--kraft); transform: none; }
+
+  /* --- Hero --- */
+  .hero { display: grid; gap: var(--gout); align-items: start; padding-block: clamp(2rem,1rem+4vw,4.5rem) var(--section); }
+  @media (min-width: 62rem) { .hero { grid-template-columns: 1.05fr .95fr; } }
+  .hero h1 { font-size: var(--t-2xl); }
+  .hero h1 em { font-style: normal; color: var(--valide); }
+  .hero .chapo { font-size: var(--t-lg); line-height: 1.3; max-width: 34ch; margin-top: 1.1rem; }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: .85rem; margin-top: 1.75rem; }
+  .hero .sous { font-size: var(--t-sm); color: var(--encre-2); margin-top: .9rem; }
+
+  /* --- Borne interactive --- */
+  .borne { justify-self: center; width: min(100%, 30rem); }
+  .borne__ecran {
+    background: var(--encre); border: 3px solid var(--encre);
+    border-radius: 14px; padding: .9rem; color: var(--kraft);
+    box-shadow: 10px 10px 0 var(--inox);
+  }
+  .borne__interieur { background: #FBF8F2; color: var(--encre); border-radius: 6px; min-height: 25rem; padding: 1.1rem; display: flex; flex-direction: column; }
+  .borne__socle { width: 42%; height: .95rem; margin: 0 auto; background: var(--inox); border: 3px solid var(--encre); border-top: 0; }
+  .borne__pied { width: 62%; height: .6rem; margin: 0 auto; background: var(--inox); border: 3px solid var(--encre); }
+  .etape-nom { font-family: var(--f-donnee); font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; color: var(--encre-2); }
+  .etape-titre { font-family: var(--f-board); text-transform: uppercase; font-size: 1.55rem; margin: .2rem 0 .9rem; }
+  .choix { display: grid; gap: .5rem; }
+  .choix button {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    width: 100%; min-height: 52px; padding: .65rem .85rem; text-align: left;
+    background: #fff; border: 2px solid var(--encre); cursor: pointer;
+    transition: background var(--duree), color var(--duree);
+  }
+  .choix button:hover { background: var(--encre); color: var(--kraft); }
+  .choix button[aria-pressed="true"] { background: var(--valide); border-color: var(--valide); color: #fff; }
+  .choix button[aria-pressed="true"]::after { content: "✓"; }
+  .choix .p { font-family: var(--f-donnee); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .borne__bas { margin-top: auto; padding-top: 1rem; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+  .total { font-family: var(--f-donnee); font-variant-numeric: tabular-nums; font-size: 1.5rem; font-weight: 700; }
+  .borne .cta { min-height: 48px; padding: .7rem 1.2rem; box-shadow: 3px 3px 0 var(--encre); }
+  .tva-note { font-family: var(--f-donnee); font-size: .74rem; color: var(--valide); font-weight: 700; }
+  .ticket {
+    font-family: var(--f-donnee); font-size: .8rem; line-height: 1.5;
+    background: #fff; padding: 1rem .9rem; border: 1px dashed var(--encre-2);
+    white-space: pre-wrap; font-variant-numeric: tabular-nums;
+  }
+  .legende-borne { font-size: var(--t-sm); color: var(--encre-2); text-align: center; margin-top: .9rem; max-width: none; }
+
+  /* --- Bandeau de réassurance --- */
+  .bandeau { background: var(--encre); color: var(--kraft); }
+  .bandeau ul { list-style: none; display: grid; gap: .1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%,13rem),1fr)); }
+  .bandeau li { padding: 1.3rem var(--pas); border-left: 1px solid rgba(237,231,220,.22); }
+  .bandeau li:first-child { border-left: 0; }
+  .bandeau b { display: block; font-family: var(--f-board); text-transform: uppercase; font-size: 1.7rem; letter-spacing: .01em; color: #fff; }
+  .bandeau span { font-size: var(--t-sm); color: #C6C1B5; }
+
+  /* --- Sections --- */
+  .titre-sec { font-family: var(--f-board); text-transform: uppercase; font-size: var(--t-xl); margin-top: .35rem; }
+  .intro-sec { margin-top: .9rem; font-size: var(--t-lg); line-height: 1.35; }
+
+  .probleme { background: var(--kraft-2); border-block: 2px solid var(--encre); }
+  .probleme .titre-sec { color: var(--attente); }
+  .horloge { display: grid; gap: 0; margin-top: var(--gout); border: 2px solid var(--encre); background: #fff; }
+  .horloge div { display: grid; grid-template-columns: 5.5rem 1fr; gap: var(--pas); padding: .85rem var(--pas); border-top: 1px solid var(--inox); align-items: baseline; }
+  .horloge div:first-child { border-top: 0; }
+  .horloge time { font-family: var(--f-donnee); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .horloge p { max-width: none; }
+  .horloge div[data-pic] { background: color-mix(in srgb, var(--attente) 9%, #fff); }
+  .horloge div[data-pic] time { color: var(--attente); }
+
+  .mecanique { display: grid; gap: 0; margin-top: var(--gout); border: 2px solid var(--encre); }
+  @media (min-width: 48rem) { .mecanique { grid-template-columns: 1fr 1fr; } }
+  .mecanique article { padding: var(--pas); border-top: 2px solid var(--encre); background: #fff; }
+  @media (min-width: 48rem) {
+    .mecanique article:nth-child(-n+2) { border-top: 0; }
+    .mecanique article:nth-child(2n) { border-left: 2px solid var(--encre); }
+  }
+  .mecanique h3 { font-family: var(--f-board); text-transform: uppercase; font-size: 1.5rem; margin-bottom: .5rem; }
+  .mecanique .num { font-family: var(--f-donnee); font-size: .75rem; letter-spacing: .14em; color: var(--valide); }
+
+  .fiche { display: grid; gap: var(--gout); margin-top: var(--gout); }
+  @media (min-width: 52rem) { .fiche { grid-template-columns: 1fr 1fr; } }
+  .fiche table { font-size: var(--t-sm); background: #fff; border: 2px solid var(--encre); }
+  .fiche th, .fiche td { text-align: left; padding: .6rem .8rem; border-top: 1px solid var(--inox); vertical-align: top; }
+  .fiche tr:first-child th, .fiche tr:first-child td { border-top: 0; }
+  .fiche th { font-weight: 600; color: var(--encre-2); width: 42%; }
+  .fiche td { font-family: var(--f-donnee); font-variant-numeric: tabular-nums; }
+  .fiche caption { font-family: var(--f-board); text-transform: uppercase; font-size: 1.35rem; text-align: left; padding-bottom: .55rem; }
+
+  .compat { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.1rem; }
+  .compat li { font-family: var(--f-donnee); font-size: var(--t-sm); border: 1px solid var(--encre); padding: .35rem .7rem; background: #fff; }
+
+  .avis { display: grid; gap: var(--gout); margin-top: var(--gout); grid-template-columns: repeat(auto-fit, minmax(min(100%,17rem),1fr)); }
+  .avis blockquote { border: 2px dashed var(--attente); background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(196,58,11,.05) 10px 20px); padding: var(--pas); }
+  .avis .marque { font-family: var(--f-donnee); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--attente); font-weight: 700; }
+  .avis p { font-size: var(--t-sm); color: var(--encre-2); margin-top: .5rem; }
+
+  .prix-grille { display: grid; gap: var(--gout); margin-top: var(--gout); }
+  @media (min-width: 48rem) { .prix-grille { grid-template-columns: 1fr 1fr; } }
+  .offre { background: #fff; border: 2px solid var(--encre); padding: var(--pas); display: flex; flex-direction: column; box-shadow: 6px 6px 0 var(--inox); }
+  .offre--reco { box-shadow: 6px 6px 0 var(--valide); }
+  .offre h3 { font-family: var(--f-board); text-transform: uppercase; font-size: 1.5rem; }
+  .montant { font-family: var(--f-donnee); font-variant-numeric: tabular-nums; font-size: clamp(2.2rem,1.4rem+3vw,3.2rem); font-weight: 700; line-height: 1; margin: .6rem 0 .2rem; }
+  .montant small { font-size: .95rem; font-weight: 400; color: var(--encre-2); }
+  .offre ul { list-style: none; margin: 1.1rem 0; display: grid; gap: .45rem; font-size: var(--t-sm); }
+  .offre li { padding-left: 1.4rem; position: relative; }
+  .offre li::before { content: "—"; position: absolute; left: 0; color: var(--valide); font-weight: 700; }
+  .offre .cta { margin-top: auto; }
+
+  details { border-top: 1px solid var(--inox); }
+  details:last-of-type { border-bottom: 1px solid var(--inox); }
+  summary { cursor: pointer; list-style: none; padding: 1.1rem 2.5rem 1.1rem 0; position: relative; font-weight: 600; font-size: var(--t-md); }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; position: absolute; right: .35rem; top: 50%; translate: 0 -50%; font-family: var(--f-donnee); font-size: 1.5rem; color: var(--valide); }
+  details[open] summary::after { content: "–"; }
+  details p { padding-bottom: 1.2rem; color: var(--encre-2); }
+
+  .final { background: var(--encre); color: var(--kraft); }
+  .final .titre-sec { color: #fff; }
+  .final p { color: #C6C1B5; }
+  .form { display: grid; gap: .85rem; margin-top: var(--gout); max-width: 30rem; }
+  .form label { display: grid; gap: .3rem; font-size: var(--t-sm); }
+  .form input {
+    min-height: 50px; padding: .6rem .8rem; background: #fff; color: var(--encre);
+    border: 2px solid var(--encre); border-radius: 0;
+  }
+  .form .rgpd { font-size: .78rem; color: #A9A498; max-width: none; }
+  .form .rgpd a { color: #fff; }
+
+  .pied { background: var(--encre); color: #A9A498; border-top: 1px solid rgba(237,231,220,.2); font-size: var(--t-sm); }
+  .pied a { color: var(--kraft); }
+  .pied .cols { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%,15rem),1fr)); }
+
+  .cta-mobile { position: sticky; bottom: 0; z-index: 30; background: var(--valide); border-top: 2px solid var(--encre); }
+  .cta-mobile a { display: flex; align-items: center; justify-content: center; gap: .6rem; min-height: 56px; color: #fff; font-weight: 700; text-decoration: none; }
+  @media (min-width: 48rem) { .cta-mobile { display: none; } }
+}
+
+@layer utilitaires {
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .cache { display: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<header class="env">
+  <div class="barre">
+    <div class="logo">Ardoise<span>.</span></div>
+    <a class="tel" href="tel:+33296000000">02 96 00 00 00</a>
+    <a class="cta" href="#demo" style="min-height:44px;padding:.55rem 1.1rem;box-shadow:3px 3px 0 var(--encre)">Réserver une démo</a>
+  </div>
+</header>
+
+<main id="contenu">
+
+  <section class="env hero">
+    <div>
+      <p class="surtitre">Borne de commande · Restauration · Bretagne</p>
+      <h1 class="board">Vos clients commandent seuls.<br><em>Votre équipe cuisine.</em></h1>
+      <p class="chapo">Une borne tactile qui prend la commande, applique le bon taux de TVA, encaisse la carte et le titre-restaurant, et imprime en cuisine. Sans commission sur votre chiffre d’affaires.</p>
+      <div class="actions">
+        <a class="cta" href="#demo">Réserver une démo de 15 min</a>
+        <a class="cta cta--fant" href="tel:+33296000000">02 96 00 00 00</a>
+      </div>
+      <p class="sous">Démo sur place ou en visio. Sans engagement, sans devis à signer le jour même.</p>
+    </div>
+
+    <div class="borne">
+      <div class="borne__ecran">
+        <div class="borne__interieur" id="k">
+          <p class="etape-nom" id="k-etape">Étape 1 sur 3</p>
+          <h2 class="etape-titre" id="k-titre">Votre menu</h2>
+          <div class="choix" id="k-choix"></div>
+          <div class="borne__bas">
+            <span class="total" id="k-total">0,00 €</span>
+            <span class="tva-note" id="k-tva"></span>
+            <button class="cta" id="k-suivant" type="button">Continuer</button>
+          </div>
+        </div>
+      </div>
+      <div class="borne__socle"></div>
+      <div class="borne__pied"></div>
+      <p class="legende-borne">Ceci n’est pas une image : c’est le parcours réel de commande, en plus court. Essayez-le.</p>
+    </div>
+  </section>
+
+  <section class="bandeau">
+    <div class="env">
+      <ul>
+        <li><b>0 %</b><span>de commission sur les commandes, quel que soit le volume</span></li>
+        <li><b>10 / 5,5</b><span>taux de TVA appliqué selon sur place ou à emporter</span></li>
+        <li><b>J+1</b><span>intervention sur site en Bretagne, matériel de prêt au-delà de 48 h</span></li>
+        <li><b>3 ans</b><span>de garantie pièces et main-d’œuvre, écran compris</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec probleme">
+    <div class="env">
+      <p class="surtitre">Le vrai problème</p>
+      <h2 class="titre-sec">Ce n’est pas la vitesse en cuisine.<br>C’est le goulot au comptoir.</h2>
+      <p class="intro-sec">Entre 12 h 05 et 13 h 15, la prise de commande devient le point le plus lent du service. Voilà à quoi ressemble une heure de rush sans borne.</p>
+      <div class="horloge">
+        <div><time>12:05</time><p>Deux personnes en cuisine, une seule en caisse. Le flux tient encore.</p></div>
+        <div data-pic><time>12:20</time><p>Six personnes en file. Le client qui hésite bloque les cinq suivants.</p></div>
+        <div data-pic><time>12:35</time><p>La caisse arrête de proposer le supplément et la boisson : il faut aller vite. Le ticket moyen baisse au moment où il y a le plus de monde.</p></div>
+        <div data-pic><time>12:50</time><p>Deux clients regardent la file et repartent. Personne ne les compte, ils n’apparaissent nulle part dans votre Z de caisse.</p></div>
+        <div><time>13:15</time><p>Le rush est passé. Vous avez servi ce que vous pouviez servir, pas ce que vous pouviez vendre.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec env">
+    <p class="surtitre">Le mécanisme</p>
+    <h2 class="titre-sec">Pourquoi une borne change le ticket moyen</h2>
+    <p class="intro-sec">Ce n’est pas une question de technologie, c’est une question de temps disponible et de gêne sociale.</p>
+    <div class="mecanique">
+      <article>
+        <p class="num">01</p>
+        <h3>Le client n’est pressé par personne</h3>
+        <p>Devant une borne, il n’y a pas de file qui souffle derrière lui ni de caissier qui attend. Il lit toute la carte au lieu de commander ce qu’il connaît déjà.</p>
+      </article>
+      <article>
+        <p class="num">02</p>
+        <h3>Le supplément est proposé à chaque fois</h3>
+        <p>Une équipe en rush oublie de proposer le bacon, la sauce et le dessert. La borne le propose à la commande n° 1 comme à la commande n° 180, sans jamais insister.</p>
+      </article>
+      <article>
+        <p class="num">03</p>
+        <h3>Personne ne se fait humilier par la carte</h3>
+        <p>Allergies, plat mal prononcé, français hésitant, groupe qui change d’avis : à la borne, tout cela se fait sans témoin. Les 14 allergènes sont affichés à l’écran, comme l’exige le règlement INCO.</p>
+      </article>
+      <article>
+        <p class="num">04</p>
+        <h3>La commande arrive écrite en cuisine</h3>
+        <p>Plus de « sans oignon » perdu à l’oral. Le ticket cuisine sort tel que le client l’a saisi, avec le numéro d’appel. Les erreurs refaites gratuitement disparaissent du service.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec env" id="materiel">
+    <p class="surtitre">Ce qu’on installe chez vous</p>
+    <h2 class="titre-sec">La borne K1, et le logiciel qui va avec</h2>
+    <div class="fiche">
+      <table>
+        <caption>Le matériel</caption>
+        <tbody>
+          <tr><th scope="row">Écran</th><td>21,5″ tactile capacitif, verre trempé antireflet</td></tr>
+          <tr><th scope="row">Lisibilité</th><td>350 cd/m², lisible en vitrine plein jour</td></tr>
+          <tr><th scope="row">Imprimante</th><td>thermique 80 mm intégrée, 250 mm/s</td></tr>
+          <tr><th scope="row">Paiement</th><td>lecteur sans contact CB, mobile et titres-restaurant</td></tr>
+          <tr><th scope="row">Format</th><td>sur pied 1 400 mm ou platine à visser sur comptoir</td></tr>
+          <tr><th scope="row">Réseau</th><td>Wi-Fi 6 et RJ45 — le filaire est fourni et recommandé</td></tr>
+          <tr><th scope="row">Encombrement</th><td>1 400 × 420 × 380 mm au sol, 24 kg</td></tr>
+          <tr><th scope="row">Consommation</th><td>45 W en service, prise 220 V standard</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>Le logiciel</caption>
+        <tbody>
+          <tr><th scope="row">Carte</th><td>modifiable depuis votre téléphone, effet immédiat</td></tr>
+          <tr><th scope="row">TVA</th><td>10 % sur place / 5,5 % à emporter, appliqué à la ligne</td></tr>
+          <tr><th scope="row">Conformité</th><td>attestation de conformité loi anti-fraude remise à l’installation</td></tr>
+          <tr><th scope="row">Allergènes</th><td>les 14 allergènes réglementaires par produit</td></tr>
+          <tr><th scope="row">Langues</th><td>français, anglais, espagnol, allemand</td></tr>
+          <tr><th scope="row">Cuisine</th><td>impression ticket et/ou écran cuisine avec numéro d’appel</td></tr>
+          <tr><th scope="row">Suivi</th><td>ventes par produit, par heure, par canal — export tableur</td></tr>
+          <tr><th scope="row">Hors ligne</th><td>les commandes continuent, la synchronisation reprend seule</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="surtitre" style="margin-top:var(--gout)">Remonte dans votre caisse</p>
+    <ul class="compat" role="list">
+      <li>Zelty</li><li>L’Addition</li><li>Tiller / SumUp</li><li>Popina</li><li>Lightspeed</li><li>Cashpad</li><li>JDC</li><li>Export CSV</li><li>API</li>
+    </ul>
+    <p style="margin-top:.9rem;font-size:var(--t-sm);color:var(--encre-2)">Votre logiciel n’est pas dans la liste ? Dites-le à la démo : on teste la connexion avant de vous vendre quoi que ce soit.</p>
+  </section>
+
+  <section class="sec env">
+    <p class="surtitre">Preuve</p>
+    <h2 class="titre-sec">Ce que disent les restaurateurs équipés</h2>
+    <p class="intro-sec">Emplacements réservés à de vrais avis, avec nom d’établissement et ville vérifiables. Rien n’est inventé ici : un avis fabriqué est une pratique commerciale trompeuse.</p>
+    <div class="avis">
+      <blockquote>
+        <p class="marque">Emplacement avis n° 1 — à fournir</p>
+        <p>Citation réelle d’un client équipé, 2 à 3 phrases. Nom de l’établissement, ville, date d’installation. Idéalement avec un chiffre qu’il accepte de communiquer.</p>
+      </blockquote>
+      <blockquote>
+        <p class="marque">Emplacement avis n° 2 — à fournir</p>
+        <p>Un avis d’un profil différent du premier : brasserie plutôt que fast-food, ou multi-sites plutôt que mono-site.</p>
+      </blockquote>
+      <blockquote>
+        <p class="marque">Emplacement photo — à fournir</p>
+        <p>Photo de la borne installée en situation, dans un vrai restaurant, prise à hauteur d’œil. Format 4:3, 1 200 px de large minimum.</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="sec env" id="prix">
+    <p class="surtitre">Prix</p>
+    <h2 class="titre-sec">Deux façons de l’avoir. Aucune commission.</h2>
+    <p class="intro-sec">Tarifs hors taxes, destinés aux professionnels. Le logiciel est compris dans les deux cas.</p>
+    <div class="prix-grille">
+      <div class="offre">
+        <h3>Achat</h3>
+        <p class="montant">1 690 €<small> HT</small></p>
+        <p style="font-size:var(--t-sm);color:var(--encre-2)">Puis 19 € HT/mois de maintenance et mises à jour, résiliable.</p>
+        <ul>
+          <li>Borne K1 complète, sur pied ou comptoir</li>
+          <li>Logiciel, carte et écran cuisine compris</li>
+          <li>Garantie 3 ans pièces et main-d’œuvre</li>
+          <li>Amortissable sur votre exercice</li>
+        </ul>
+        <a class="cta cta--fant" href="#demo">Voir la borne en démo</a>
+      </div>
+      <div class="offre offre--reco">
+        <h3>Location tout compris</h3>
+        <p class="montant">69 €<small> HT/mois</small></p>
+        <p style="font-size:var(--t-sm);color:var(--encre-2)">36 mois, maintenance, remplacement et mises à jour inclus.</p>
+        <ul>
+          <li>Aucun investissement de départ</li>
+          <li>Remplacement du matériel en cas de panne</li>
+          <li>Charge d’exploitation, pas d’immobilisation</li>
+          <li>Reprise de la borne en fin de contrat</li>
+        </ul>
+        <a class="cta" href="#demo">Réserver une démo de 15 min</a>
+      </div>
+    </div>
+    <p style="margin-top:var(--pas);font-size:var(--t-sm);color:var(--encre-2)">Installation, paramétrage de votre carte et formation de l’équipe : <strong>390 € HT</strong>, une fois. Deuxième borne sur le même site : −15 %.</p>
+  </section>
+
+  <section class="sec env">
+    <p class="surtitre">Objections</p>
+    <h2 class="titre-sec">Les cinq raisons de dire non</h2>
+    <div style="margin-top:var(--gout);max-width:var(--mesure)">
+      <details>
+        <summary>« Mes clients sont âgés, ils ne s’en serviront pas. »</summary>
+        <p>Une partie ne s’en servira pas, et c’est prévu : la borne ne remplace pas le comptoir, elle absorbe le flux des gens pressés pour que votre équipe ait le temps de s’occuper des autres. Dans les établissements équipés, le comptoir reste ouvert en permanence.</p>
+      </details>
+      <details>
+        <summary>« Je vais devoir licencier quelqu’un. »</summary>
+        <p>Ce n’est pas l’usage qu’en font nos clients. La personne qui était bloquée en caisse passe en salle, au drive ou en production. La borne règle un problème de débit à midi, pas un problème de masse salariale.</p>
+      </details>
+      <details>
+        <summary>« J’ai déjà une caisse, je ne veux pas tout changer. »</summary>
+        <p>La borne se branche sur votre caisse existante. On vérifie la connexion avant la commande, pas après. Si votre logiciel ne remonte pas correctement, on vous le dit et on ne vend pas.</p>
+      </details>
+      <details>
+        <summary>« Et si elle tombe en panne un vendredi soir ? »</summary>
+        <p>Le service continue au comptoir, puisque la caisse est toujours là. On intervient le jour ouvré suivant en Bretagne, et si l’immobilisation dépasse 48 h, une borne de prêt est posée.</p>
+      </details>
+      <details>
+        <summary>« Combien de temps avant que ce soit rentable ? »</summary>
+        <p>Cela dépend de votre nombre de commandes et de votre ticket moyen, et personne ne peut vous le garantir à l’avance sans regarder vos chiffres. À la démo, on le calcule avec votre Z de caisse des quatre derniers mois. Si le calcul ne tient pas, on vous le dit.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="sec final" id="demo">
+    <div class="env">
+      <p class="surtitre" style="color:#A9A498">Démo</p>
+      <h2 class="titre-sec">15 minutes, votre carte à l’écran</h2>
+      <p class="intro-sec">On vient avec une borne, on charge trois de vos produits dessus, et vous la faites essayer à votre équipe. Sur place en Bretagne, en visio partout ailleurs.</p>
+      <form class="form" id="form-demo">
+        <label>Votre établissement et la ville
+          <input name="etab" type="text" autocomplete="organization" required placeholder="Ex. Le Comptoir 22, Saint-Brieuc">
+        </label>
+        <label>Téléphone
+          <input name="tel" type="tel" autocomplete="tel" required placeholder="06 00 00 00 00">
+        </label>
+        <label>Nombre de couverts un midi de semaine, à la louche
+          <input name="couverts" type="text" inputmode="numeric" placeholder="Ex. 80">
+        </label>
+        <button class="cta" type="submit">Demander la démo</button>
+        <p class="rgpd">Ces trois informations servent uniquement à vous rappeler et à préparer la démo. Elles ne sont ni revendues ni utilisées pour de la prospection de masse, et sont supprimées au bout de 12 mois. Pour y accéder ou les faire effacer : <a href="mailto:contact@ardoise-bornes.fr">contact@ardoise-bornes.fr</a>.</p>
+        <p class="rgpd" id="form-secours" hidden></p>
+      </form>
+      <p style="margin-top:var(--gout)">Vous préférez appeler ? <a href="tel:+33296000000" style="color:#fff"><strong>02 96 00 00 00</strong></a>, du lundi au vendredi, 9 h – 18 h.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="pied">
+  <div class="env sec" style="padding-block:var(--gout)">
+    <div class="cols">
+      <div>
+        <p class="logo" style="color:var(--kraft)">Ardoise<span style="color:var(--valide-clair)">.</span></p>
+        <p style="margin-top:.5rem">Bornes de commande pour la restauration.<br>Installées et dépannées depuis Saint-Brieuc.</p>
+      </div>
+      <div>
+        <p><strong style="color:var(--kraft)">Contact</strong></p>
+        <p style="margin-top:.5rem"><a href="tel:+33296000000">02 96 00 00 00</a><br><a href="mailto:contact@ardoise-bornes.fr">contact@ardoise-bornes.fr</a></p>
+      </div>
+      <div>
+        <p><strong style="color:var(--kraft)">Zone d’intervention</strong></p>
+        <p style="margin-top:.5rem">Côtes-d’Armor, Finistère, Ille-et-Vilaine, Morbihan. Reste de la France : installation à distance.</p>
+      </div>
+      <div>
+        <p><strong style="color:var(--kraft)">Informations</strong></p>
+        <p style="margin-top:.5rem"><a href="/mentions-legales.html">Mentions légales</a><br><a href="/cgv.html">Conditions générales de vente</a><br>Prix indiqués hors taxes, réservés aux professionnels.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="cta-mobile"><a href="#demo">Réserver une démo de 15 min</a></div>
+
+<script>
+(() => {
+  const init = () => {
+
+    /* ---------- Borne de démonstration ----------
+       Reproduit le parcours réel : produit, suppléments, sur place / à emporter
+       (c'est là que se joue le taux de TVA), puis ticket. */
+    const zone   = document.getElementById('k');
+    if (zone) {
+      const elChoix = document.getElementById('k-choix');
+      const elTitre = document.getElementById('k-titre');
+      const elEtape = document.getElementById('k-etape');
+      const elTotal = document.getElementById('k-total');
+      const elTva   = document.getElementById('k-tva');
+      const btn     = document.getElementById('k-suivant');
+
+      const menus = [
+        { id: 'smash',  nom: 'Menu Smash double',   prix: 12.90 },
+        { id: 'poulet', nom: 'Menu Poulet croustillant', prix: 11.50 },
+        { id: 'veggie', nom: 'Menu Veggie halloumi', prix: 11.90 },
+        { id: 'enfant', nom: 'Menu Enfant',          prix: 7.50 }
+      ];
+      const extras = [
+        { id: 'bacon',   nom: 'Bacon fumé',        prix: 1.50 },
+        { id: 'cheddar', nom: 'Cheddar affiné',    prix: 1.00 },
+        { id: 'frites',  nom: 'Frites XL',         prix: 1.20 },
+        { id: 'sauce',   nom: 'Sauce maison',      prix: 0.60 }
+      ];
+      const lieux = [
+        { id: 'place',   nom: 'Sur place',    prix: 0, tva: '10 %' },
+        { id: 'emport',  nom: 'À emporter',   prix: 0, tva: '5,5 %' }
+      ];
+
+      const etat = { pas: 0, menu: null, extras: new Set(), lieu: null };
+      const eur = n => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+
+      const total = () => {
+        let t = etat.menu ? etat.menu.prix : 0;
+        extras.forEach(e => { if (etat.extras.has(e.id)) t += e.prix; });
+        return t;
+      };
+
+      const rendre = () => {
+        elTotal.textContent = eur(total());
+        elTva.textContent = etat.lieu ? 'TVA ' + etat.lieu.tva + ' appliquée' : '';
+        btn.disabled = false;
+        btn.textContent = 'Continuer';
+        elChoix.innerHTML = '';
+        zone.querySelectorAll('.ticket, .k-rejouer').forEach(n => n.remove());
+        elChoix.hidden = false;
+        zone.querySelector('.borne__bas').hidden = false;
+
+        if (etat.pas === 0) {
+          elEtape.textContent = 'Étape 1 sur 3';
+          elTitre.textContent = 'Votre menu';
+          menus.forEach(m => elChoix.append(bouton(m, () => { etat.menu = m; rendre(); }, etat.menu && etat.menu.id === m.id)));
+          btn.disabled = !etat.menu;
+        } else if (etat.pas === 1) {
+          elEtape.textContent = 'Étape 2 sur 3';
+          elTitre.textContent = 'Un supplément ?';
+          extras.forEach(e => elChoix.append(bouton(e, () => {
+            etat.extras.has(e.id) ? etat.extras.delete(e.id) : etat.extras.add(e.id);
+            rendre();
+          }, etat.extras.has(e.id))));
+          btn.textContent = etat.extras.size ? 'Continuer' : 'Non merci, continuer';
+        } else if (etat.pas === 2) {
+          elEtape.textContent = 'Étape 3 sur 3';
+          elTitre.textContent = 'Vous mangez…';
+          lieux.forEach(l => elChoix.append(bouton(l, () => { etat.lieu = l; rendre(); }, etat.lieu && etat.lieu.id === l.id)));
+          btn.disabled = !etat.lieu;
+          btn.textContent = 'Payer par carte';
+        } else {
+          elEtape.textContent = 'Commande envoyée';
+          elTitre.textContent = 'Appel n° 47';
+          elChoix.hidden = true;
+          zone.querySelector('.borne__bas').hidden = true;
+          const t = document.createElement('pre');
+          t.className = 'ticket';
+          const lignes = [];
+          lignes.push('  ARDOISE — DÉMONSTRATION');
+          lignes.push('  ------------------------');
+          lignes.push(pad(etat.menu.nom, etat.menu.prix));
+          extras.forEach(e => { if (etat.extras.has(e.id)) lignes.push(pad('  + ' + e.nom, e.prix)); });
+          lignes.push('  ------------------------');
+          lignes.push(pad('TOTAL TTC', total()));
+          lignes.push('  ' + etat.lieu.nom + ' — TVA ' + etat.lieu.tva);
+          lignes.push('  Payé par carte sans contact');
+          lignes.push('');
+          lignes.push('  Ticket cuisine imprimé.');
+          lignes.push('  Aucune erreur de transmission.');
+          t.textContent = lignes.join('\n');
+          zone.append(t);
+          const rejouer = document.createElement('button');
+          rejouer.type = 'button';
+          rejouer.className = 'cta cta--fant k-rejouer';
+          rejouer.style.marginTop = '1rem';
+          rejouer.textContent = 'Recommencer la démonstration';
+          rejouer.addEventListener('click', () => {
+            etat.pas = 0; etat.menu = null; etat.extras.clear(); etat.lieu = null;
+            rendre(); elTitre.focus?.();
+          });
+          zone.append(rejouer);
+        }
+      };
+
+      const pad = (nom, prix) => {
+        const p = prix.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' EUR';
+        const n = ('  ' + nom).slice(0, 26);
+        return n + ' '.repeat(Math.max(1, 30 - n.length - p.length)) + p;
+      };
+
+      const bouton = (o, action, actif) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        const n = document.createElement('span');
+        n.textContent = o.nom;
+        b.append(n);
+        if (o.prix > 0) {
+          const p = document.createElement('span');
+          p.className = 'p';
+          p.textContent = (o.id in { smash:1, poulet:1, veggie:1, enfant:1 } ? '' : '+ ') +
+            o.prix.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+          b.append(p);
+        }
+        b.addEventListener('click', action);
+        return b;
+      };
+
+      btn.addEventListener('click', () => { etat.pas += 1; rendre(); });
+      rendre();
+    }
+
+    /* ---------- Formulaire sans backend ----------
+       Ouvre le client mail avec le message pré-rempli, et affiche systématiquement
+       le secours (téléphone + adresse) au cas où aucun client mail n'est configuré. */
+    const form = document.getElementById('form-demo');
+    if (form) {
+      const secours = document.getElementById('form-secours');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const d = new FormData(form);
+        const corps =
+          'Établissement : ' + (d.get('etab') || '') + '\n' +
+          'Téléphone : '     + (d.get('tel')  || '') + '\n' +
+          'Couverts midi : ' + (d.get('couverts') || 'non précisé') + '\n\n' +
+          'Demande de démonstration de la borne Ardoise K1.';
+        window.location.href = 'mailto:contact@ardoise-bornes.fr'
+          + '?subject=' + encodeURIComponent('Demande de démo — ' + (d.get('etab') || 'borne Ardoise'))
+          + '&body=' + encodeURIComponent(corps);
+        secours.hidden = false;
+        secours.innerHTML = 'Si votre messagerie ne s’est pas ouverte, appelez le <a href="tel:+33296000000">02 96 00 00 00</a> ou écrivez à <a href="mailto:contact@ardoise-bornes.fr">contact@ardoise-bornes.fr</a>.';
+      });
+    }
+  };
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', init, { once: true })
+    : init();
+})();
+</script>
+</body>
+</html>
