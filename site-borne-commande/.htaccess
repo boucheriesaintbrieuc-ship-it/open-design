@@ -1,0 +1,41 @@
+# Réglages serveur pour o2switch (LiteSpeed) et Apache.
+# Ce fichier commence par un point : certains clients FTP le masquent.
+# Si vous ne le voyez pas dans le gestionnaire de fichiers cPanel,
+# activez « Afficher les fichiers cachés » dans ses réglages.
+
+# --- Page d'erreur --------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# --- Forcer HTTPS et la version avec www unique ---------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+</IfModule>
+
+# --- Pas de listing de dossier --------------------------------------------
+Options -Indexes
+
+# --- Compression ----------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# --- Cache navigateur -----------------------------------------------------
+# Les pages restent courtes en cache : elles contiennent le style et le script,
+# donc une correction doit se voir vite. Les images peuvent durer un an.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 1 hour"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+# --- En-têtes de sécurité -------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>

@@ -4,4 +4,4 @@ Disallow: /merci.html
 Disallow: /paiement-annule.html
 Disallow: /paiement/
 
-Sitemap: https://www.bornea.fr/sitemap.xml
+Sitemap: https://borne-restaurants.fr/sitemap.xml

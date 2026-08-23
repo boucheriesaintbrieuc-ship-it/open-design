@@ -12,7 +12,7 @@ Les fichiers .html sont écrits à la racine du site.
 import json, pathlib, re, sys
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
-DOMAINE = "https://www.bornea.fr"
+DOMAINE = "https://borne-restaurants.fr"
 MARQUE = "Bornéa"
 TEL_AFF = "02 96 00 00 00"
 TEL = "+33296000000"
@@ -177,6 +177,25 @@ def fil(items):
     return (f'<nav class="env fil" aria-label="Fil d’Ariane"><ol>{"".join(lis)}</ol></nav>'
             f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>')
 
+# --------------------------------------------------------------------------
+# CSS et JavaScript sont recopiés dans chaque page au lieu d'être liés.
+#
+# Un fichier lié suppose que tout le dossier arrive intact sur le serveur.
+# Dans les faits, un seul fichier envoyé par erreur suffit à afficher un site
+# sans aucun style. Une page qui contient tout ce dont elle a besoin s'affiche
+# correctement même envoyée seule.
+#
+# Contrepartie : modifier un prix ou un numéro de téléphone se fait dans
+# assets/config.js, puis on relance ce script pour propager le changement.
+# --------------------------------------------------------------------------
+def _lire(chemin):
+    return (RACINE / chemin).read_text(encoding="utf-8").strip()
+
+CSS = _lire("assets/site.css")
+JS_CONFIG = _lire("assets/config.js")
+JS_SITE = _lire("assets/site.js")
+JS_INTEGRE = JS_CONFIG + "\n\n/* ---------------------------------------------------------------- */\n\n" + JS_SITE
+
 def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
     blocs = ""
     for bloc in (ld or []):
@@ -200,7 +219,9 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
 <meta property="og:locale" content="fr_FR">
 <meta name="theme-color" content="#F1F2F4">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
-<link rel="stylesheet" href="assets/site.css">{blocs}
+<style>
+{{CSS_ICI}}
+</style>{blocs}
 </head>
 <body{f' class="{classe_body}"' if classe_body else ''}>
 <a class="saut" href="#contenu">Aller au contenu</a>
@@ -208,11 +229,13 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
 {entete()}
 {corps}
 {pied()}
-<script src="assets/config.js"></script>
-<script src="assets/site.js"></script>
+<script>
+{{JS_ICI}}
+</script>
 </body>
 </html>
 """
+    html = html.replace("{CSS_ICI}", CSS).replace("{JS_ICI}", JS_INTEGRE)
     (RACINE / slug).write_text(html, encoding="utf-8")
     return slug
 

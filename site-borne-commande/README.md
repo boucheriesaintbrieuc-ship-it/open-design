@@ -2,8 +2,11 @@
 
 Site marchand mono-produit, onze pages, tunnel complet jusqu’au paiement Stripe.
 Aucune dépendance externe : pas de CDN, pas de police tierce, pas de bibliothèque
-JavaScript. Le site entier pèse 332 ko et n’émet aucune requête réseau au chargement,
-ce qui a été vérifié page par page.
+JavaScript, aucune requête réseau au chargement.
+
+**Chaque page contient son propre style et son propre script.** Elle s’affiche
+correctement même envoyée seule sur un serveur, sans le reste du dossier. Une page
+pèse entre 40 et 58 ko, ce qui reste largement sous le seuil où le poids se voit.
 
 ---
 
@@ -196,20 +199,62 @@ et le nom se retient.
 
 ## Mise en ligne sur o2switch
 
-```bash
-# Tout le contenu du dossier va dans public_html/
-# Permissions : 644 sur les fichiers, 755 sur les dossiers.
-# paiement/config.php : 600, lisible seulement par le serveur.
+### La seule méthode qui marche du premier coup
+
+Le gestionnaire de fichiers de cPanel envoie **des fichiers, pas des dossiers**.
+C’est exactement ce qui s’est passé la première fois : `index.html` est bien arrivé
+sur le serveur, mais `assets/site.css` non, et la page s’est affichée sans aucun
+style. Passez par l’archive, elle règle le problème.
+
+1. Récupérez `borne-restaurants-site.zip`.
+2. cPanel, puis **Gestionnaire de fichiers**, puis ouvrez `public_html`.
+3. Supprimez l’ancien `index.html` qui s’y trouve.
+4. Cliquez sur **Téléverser** et envoyez le fichier `.zip` entier.
+5. Revenez dans `public_html`, clic droit sur l’archive, puis **Extract**.
+6. Supprimez l’archive une fois extraite.
+
+Vérifiez ensuite ces trois adresses dans le navigateur :
+
+```
+https://borne-restaurants.fr/                 la page de vente, avec son style
+https://borne-restaurants.fr/commander.html   le configurateur
+https://borne-restaurants.fr/adresse-bidon    doit afficher la page 404 du site
 ```
 
-Puis, dans cPanel : activez le certificat SSL, forcez la redirection vers HTTPS, purgez
-le cache LiteSpeed. Déclarez ensuite le site dans la Search Console et soumettez
-`sitemap.xml`.
+Si la troisième renvoie l’erreur du serveur au lieu de votre page, le fichier
+`.htaccess` n’a pas été extrait. Il commence par un point, donc le gestionnaire de
+fichiers le masque par défaut : dans ses **Réglages**, cochez « Afficher les fichiers
+cachés ».
 
-Si ce site en remplace un autre, prévoyez les redirections 301 des anciennes adresses,
-sinon le référencement déjà acquis est perdu.
+### Réglages à faire une fois
 
----
+Activez le certificat SSL dans cPanel s’il ne l’est pas déjà, puis purgez le cache
+LiteSpeed. Déclarez enfin le site dans la Search Console et soumettez
+`https://borne-restaurants.fr/sitemap.xml`.
+
+### Pour modifier un texte ou un prix
+
+Les pages contenant leur propre style, une modification globale se propage par le
+générateur plutôt qu’à la main :
+
+```bash
+# 1. Prix, téléphone, adresse e-mail, liens Stripe
+nano assets/config.js
+
+# 2. Style
+nano assets/site.css
+
+# 3. Textes des pages
+nano outils/construire.py
+
+# 4. Régénérer les onze pages, puis refaire l'archive
+python3 outils/construire.py
+zip -r ../borne-restaurants-site.zip *.html robots.txt sitemap.xml .htaccess paiement img
+```
+
+Pour une correction ponctuelle sur une seule page, éditer directement le fichier
+`.html` fonctionne aussi. Pensez alors à reporter la correction dans
+`outils/construire.py`, sinon la prochaine régénération l’effacera.
 
 ## Contrôles passés
 
@@ -228,11 +273,14 @@ sinon le référencement déjà acquis est perdu.
 | Blocage du paiement tant que les CGV ne sont pas acceptées | vérifié |
 | URL transmise à Stripe | vérifiée, avec `prefilled_email` et `client_reference_id` |
 | Syntaxe PHP | `php -l` sans erreur |
+| Page envoyée **seule**, sans le dossier `assets/` | s’affiche complète : style, typographie, script |
 
-Deux défauts ont été trouvés et corrigés pendant ces contrôles, tous deux invisibles à
-la lecture du code : la règle `.nav a` repeignait le bouton « Commander » en gris sur
-fond indigo par un effet de spécificité, et `element.hidden = false` n’a aucun effet sur
-un élément SVG, ce qui empêchait les bornes 2 et 3 d’apparaître dans le configurateur.
+Trois défauts ont été trouvés et corrigés, tous invisibles à la lecture du code. La
+règle `.nav a` repeignait le bouton « Commander » en gris sur fond indigo par un effet
+de spécificité. `element.hidden = false` n’a aucun effet sur un élément SVG, ce qui
+empêchait les bornes 2 et 3 d’apparaître dans le configurateur. Et surtout, la première
+version liait le style dans un fichier séparé, ce qui a suffi à afficher le site nu en
+production : les pages embarquent désormais tout ce dont elles ont besoin.
 
 Non testé ici, à faire de votre côté : rendu sur un iPhone et un Android réels, lecteur
 d’écran, et un paiement de bout en bout avec une clé Stripe de test.
