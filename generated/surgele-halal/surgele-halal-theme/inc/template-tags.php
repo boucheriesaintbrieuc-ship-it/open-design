@@ -15,11 +15,12 @@ function sh_site_branding() {
 		the_custom_logo();
 		return;
 	}
+	// Logo O'Surgelé fourni avec le thème (SVG vectoriel, version pour fond sombre).
 	printf(
-		'<p class="sh-brand"><a href="%1$s" rel="home"><span class="sh-brand__name">%2$s</span><span class="sh-brand__tag">%3$s</span></a></p>',
+		'<p class="sh-brand"><a href="%1$s" rel="home"><img src="%2$s" alt="%3$s" width="220" height="34"></a></p>',
 		esc_url( home_url( '/' ) ),
-		esc_html( get_bloginfo( 'name' ) ),
-		esc_html__( 'Tasty Crousty', 'surgele-halal' )
+		esc_url( SH_URI . '/assets/img/brand/osurgele-logo-light.svg' ),
+		esc_attr( get_bloginfo( 'name' ) )
 	);
 }
 

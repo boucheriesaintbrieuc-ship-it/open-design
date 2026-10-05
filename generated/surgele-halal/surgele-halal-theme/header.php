@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#140A26">
+<meta name="theme-color" content="#07070B">
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -20,12 +20,7 @@ defined( 'ABSPATH' ) || exit;
 
 <?php $sh_ticker = sh_mod( 'ticker_text' ); ?>
 <?php if ( $sh_ticker ) : ?>
-<div class="sh-ticker">
-	<p class="sh-ticker__track">
-		<span><?php echo esc_html( $sh_ticker ); ?></span>
-		<span aria-hidden="true"><?php echo esc_html( $sh_ticker ); ?></span>
-	</p>
-</div>
+<div class="sh-announce"><p><?php echo esc_html( $sh_ticker ); ?></p></div>
 <?php endif; ?>
 
 <header class="sh-header" id="sh-header">
@@ -62,14 +57,14 @@ defined( 'ABSPATH' ) || exit;
 	<div class="sh-drawer__backdrop" data-sh-cart-close></div>
 	<div class="sh-drawer__panel" tabindex="-1">
 		<div class="sh-drawer__head">
-			<h2 id="sh-minicart-title" class="sh-drawer__title"><?php esc_html_e( 'Butin en cours', 'surgele-halal' ); ?></h2>
+			<h2 id="sh-minicart-title" class="sh-drawer__title"><?php esc_html_e( 'Mon panier', 'surgele-halal' ); ?></h2>
 			<button type="button" class="sh-drawer__close" data-sh-cart-close aria-label="<?php esc_attr_e( 'Fermer le panier', 'surgele-halal' ); ?>"><?php echo sh_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
 		</div>
 		<div class="sh-drawer__body" data-sh-cart-body aria-live="polite"></div>
 		<div class="sh-drawer__foot">
 			<p class="sh-drawer__total" data-sh-cart-total></p>
 			<a class="sh-btn sh-btn--ghost" href="<?php echo esc_url( wc_get_cart_url() ); ?>"><?php esc_html_e( 'Voir le panier', 'surgele-halal' ); ?></a>
-			<a class="sh-btn sh-btn--primary" href="<?php echo esc_url( wc_get_checkout_url() ); ?>"><?php esc_html_e( 'Valider la mission', 'surgele-halal' ); ?></a>
+			<a class="sh-btn sh-btn--primary" href="<?php echo esc_url( wc_get_checkout_url() ); ?>"><?php esc_html_e( 'Commander', 'surgele-halal' ); ?></a>
 		</div>
 	</div>
 </div>

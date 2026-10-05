@@ -133,7 +133,7 @@ function sh_product_badges( $product ) {
 		$badges[] = array( 'class' => 'halal', 'label' => __( 'Halal', 'surgele-halal' ) );
 	}
 	if ( sh_mod( 'badge_frozen' ) ) {
-		$badges[] = array( 'class' => 'frozen', 'label' => __( 'Surgelé −18 °C', 'surgele-halal' ) );
+		$badges[] = array( 'class' => 'frozen', 'label' => __( 'Surgelé −18 °C', 'surgele-halal' ) );
 	}
 	if ( sh_mod( 'badge_weight' ) ) {
 		$weight = sh_product_weight_label( $product );
@@ -202,7 +202,7 @@ add_action(
 	'woocommerce_single_product_summary',
 	function () {
 		echo '<div class="sh-storage"><strong>' . esc_html__( 'Conservation', 'surgele-halal' ) . '</strong> ';
-		echo esc_html__( 'À conserver à −18 °C. Ne jamais recongeler un produit décongelé.', 'surgele-halal' ) . '</div>';
+		echo esc_html__( 'À conserver à −18 °C. Ne jamais recongeler un produit décongelé.', 'surgele-halal' ) . '</div>';
 	},
 	35
 );

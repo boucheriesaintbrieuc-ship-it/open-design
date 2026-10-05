@@ -15,49 +15,49 @@ defined( 'ABSPATH' ) || exit;
 function sh_defaults() {
 	return array(
 		// Couleurs.
-		'color_night'      => '#140A26',
-		'color_orange'     => '#FF6B1A',
-		'color_pink'       => '#FF2E88',
-		'color_yellow'     => '#FFC93C',
-		'color_cream'      => '#FFF4E6',
+		'color_night'      => '#07070B',
+		'color_orange'     => '#FF7A1A',
+		'color_pink'       => '#FF2D3A',
+		'color_yellow'     => '#FFB238',
+		'color_cream'      => '#F5F5F7',
 
-		// Bandeau défilant.
-		'ticker_text'      => '100 % HALAL CERTIFIÉ · CHAÎNE DU FROID RESPECTÉE · CLICK & COLLECT À SAINT-BRIEUC · PAIEMENT EN CAISSE',
+		// Bandeau d'annonce.
+		'ticker_text'      => '100 % halal certifié · Chaîne du froid −18 °C · Click & Collect à Saint-Brieuc · Paiement en caisse',
 
-		// Hero.
-		'hero_badge'       => 'Nouvelle mission — remplis ton congélo',
-		'hero_title'       => 'La street food halal qui',
-		'hero_highlight'   => 'croustille.',
-		'hero_text'        => 'Tenders, wings, dorade, cordons bleus : tout le surgelé halal de Saint-Brieuc, en Click & Collect.',
-		'hero_cta_label'   => 'Lancer la mission',
-		'hero_cta2_label'  => 'Voir tout le catalogue',
+		// Hero « showroom 3D ».
+		'hero_badge'       => 'Nouveau · Collection crousty',
+		'hero_title'       => 'Le surgelé halal,',
+		'hero_highlight'   => 'version premium.',
+		'hero_text'        => 'Tenders, nuggets, cordons bleus, kebab, wings, poissons : sélectionne un produit et remplis ton congélo en Click & Collect.',
+		'hero_cta_label'   => 'Voir les produits',
+		'hero_cta2_label'  => 'Tout le catalogue',
 		'hero_cta2_url'    => '',
 		'hero_image'       => 0,
 
 		// Zones (catégories mises en avant).
 		'zone1_slug'       => 'poissons',
-		'zone1_kicker'     => 'Zone 01 · Le port',
+		'zone1_kicker'     => '01 · Poissons',
 		'zone1_text'       => 'Tilapia, dorade, maquereau, chinchard',
 		'zone2_slug'       => 'poulet',
-		'zone2_kicker'     => 'Zone 02 · La ferme',
+		'zone2_kicker'     => '02 · Poulet',
 		'zone2_text'       => 'Cuisses, wings, pilons, poule fumée',
 		'zone3_slug'       => 'crousty',
-		'zone3_kicker'     => 'Zone 03 · Downtown',
+		'zone3_kicker'     => '03 · Crousty',
 		'zone3_text'       => 'Tenders, nuggets, cordons bleus, kebab',
 
 		// Best-sellers.
-		'best_title'       => 'Best-sellers',
+		'best_title'       => 'Les plus commandés',
 		'best_count'       => 8,
 
 		// Bandeau garanties + réassurance.
-		'trust_title_1'    => '100 % halal',
-		'trust_title_2'    => 'Chaîne du froid respectée',
-		'trust_text'       => 'Produits certifiés halal, conservés à −18 °C du fournisseur jusqu’à votre retrait.',
+		'trust_title_1'    => '100 % halal',
+		'trust_title_2'    => 'Froid garanti −18 °C',
+		'trust_text'       => 'Produits certifiés halal, conservés à −18 °C du fournisseur jusqu’à votre retrait.',
 		'reas_1_title'     => 'Click & Collect',
 		'reas_1_text'      => 'Commandez en ligne, récupérez sur place à Saint-Brieuc.',
 		'reas_2_title'     => 'Paiement en caisse',
 		'reas_2_text'      => 'Vous réglez au moment du retrait.',
-		'reas_3_title'     => 'Froid garanti',
+		'reas_3_title'     => 'Chaîne du froid',
 		'reas_3_text'      => 'Pensez à votre sac isotherme pour le trajet retour.',
 
 		// Badges produits.
@@ -66,7 +66,7 @@ function sh_defaults() {
 		'badge_weight'     => true,
 
 		// Pied de page.
-		'footer_about'     => 'Surgelés halal à Saint-Brieuc depuis 2015.',
+		'footer_about'     => 'O’Surgelé — surgelés halal à Saint-Brieuc depuis 2015.',
 		'legal_page'       => 0,
 		'brand_cats'       => 'almondy,avs,chef-zaki,isla-delice',
 
@@ -99,6 +99,11 @@ function sh_zones() {
 		2 => 'Poulet',
 		3 => 'Crousty',
 	);
+	$renders = array(
+		1 => 'dorade',
+		2 => 'wings',
+		3 => 'tenders',
+	);
 	$zones  = array();
 
 	foreach ( $labels as $i => $fallback_label ) {
@@ -119,6 +124,7 @@ function sh_zones() {
 			'url'    => $url,
 			'kicker' => sh_mod( "zone{$i}_kicker" ),
 			'text'   => sh_mod( "zone{$i}_text" ),
+			'render' => sh_render_url( $renders[ $i ] ),
 		);
 	}
 
@@ -141,10 +147,55 @@ function sh_icon( $name ) {
 		'card'   => '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>',
 		'snow'   => '<path d="M12 2v20M4 6l16 12M20 6L4 18"/>',
 		'arrow'  => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+		'prev'   => '<path d="M15 6l-6 6 6 6"/>',
+		'next'   => '<path d="M9 6l6 6-6 6"/>',
 		'check'  => '<path d="M5 12l5 5L20 7"/>',
 	);
 	if ( ! isset( $paths[ $name ] ) ) {
 		return '';
 	}
 	return '<svg class="sh-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths[ $name ] . '</svg>';
+}
+
+/**
+ * URL d'un rendu 3D livré avec le thème (assets/img/3d/<nom>.webp).
+ *
+ * @param string $name Nom du rendu.
+ * @return string
+ */
+function sh_render_url( $name ) {
+	return SH_URI . '/assets/img/3d/' . sanitize_file_name( $name ) . '.webp';
+}
+
+/**
+ * Produits vedettes du showroom 3D de l'accueil. Chaque entrée renvoie vers
+ * une recherche produits (aucune donnée en base n'est requise).
+ * Filtre : sh_showroom_items.
+ *
+ * @return array<int, array{name:string, tag:string, render:string, url:string}>
+ */
+function sh_showroom_items() {
+	$items = array(
+		array( 'name' => 'Tenders', 'tag' => 'Crousty', 'render' => 'tenders', 'q' => 'tenders' ),
+		array( 'name' => 'Nuggets', 'tag' => 'Crousty', 'render' => 'nuggets', 'q' => 'nuggets' ),
+		array( 'name' => 'Cordon bleu', 'tag' => 'Crousty', 'render' => 'cordon-bleu', 'q' => 'cordon bleu' ),
+		array( 'name' => 'Kebab', 'tag' => 'Crousty', 'render' => 'kebab', 'q' => 'kebab' ),
+		array( 'name' => 'Wings', 'tag' => 'Poulet', 'render' => 'wings', 'q' => 'wings' ),
+		array( 'name' => 'Cuisses', 'tag' => 'Poulet', 'render' => 'cuisses', 'q' => 'poulet' ),
+		array( 'name' => 'Dorade', 'tag' => 'Poissons', 'render' => 'dorade', 'q' => 'dorade' ),
+	);
+	$out = array();
+	foreach ( $items as $item ) {
+		$args = array( 's' => $item['q'] );
+		if ( class_exists( 'WooCommerce' ) ) {
+			$args['post_type'] = 'product';
+		}
+		$out[] = array(
+			'name'   => $item['name'],
+			'tag'    => $item['tag'],
+			'render' => sh_render_url( $item['render'] ),
+			'url'    => add_query_arg( $args, home_url( '/' ) ),
+		);
+	}
+	return apply_filters( 'sh_showroom_items', $out );
 }

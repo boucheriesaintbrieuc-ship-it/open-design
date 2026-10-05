@@ -1,4 +1,4 @@
-# Surgelé Halal — thème « Tasty Crousty » + rangement des catégories
+# O'Surgelé — thème « 3D Store » + rangement des catégories
 
 Livrables :
 
@@ -7,6 +7,8 @@ Livrables :
 | `dist/surgele-halal-theme.zip` | Le thème, à téléverser dans **Apparence › Thèmes › Ajouter › Téléverser** |
 | `dist/surgele-halal-categories.zip` | Le plugin de rangement des catégories (WP-CLI **et** page Outils), à utiliser une fois |
 | `surgele-halal-theme/` | Sources du thème (style.css, functions.php, gabarits, assets) |
+| `surgele-halal-theme/assets/img/brand/` | Logo O'Surgelé en SVG : version fond sombre, version fond clair, icône carrée |
+| `surgele-halal-theme/assets/img/3d/` | Les 8 rendus 3D détourés (WebP transparent) : tenders, nuggets, cordon bleu, kebab, wings, cuisses, dorade, tender dans un glaçon |
 | `surgele-halal-categories/` | Source du plugin |
 
 ---
@@ -18,9 +20,19 @@ Livrables :
 - Galerie produit WooCommerce : zoom, lightbox, slider.
 - **Votre page d'accueil actuelle est la boutique.** Le thème le gère : sur la page 1 de l'accueil-boutique, il affiche le hero, les 3 zones, les best-sellers, les bandeaux garanties et réassurance, **puis** le catalogue complet. L'adresse, la pagination (`/page/2/`) et le nombre de produits par page (réglé dans Personnaliser › WooCommerce › Catalogue) ne changent pas. Si vous définissez plus tard une page statique comme accueil, `front-page.php` affiche les mêmes sections.
 - Permaliens produits (`/saintbrieuc/…`) et catégories (`/categorie-produit/…`) : inchangés, le thème n'y touche pas.
-- Polices libres (Anton, Archivo, Bungee, licence OFL) **hébergées dans le thème** : aucun appel à Google, ce qui est plus rapide et évite le transfert d'IP vers Google (RGPD).
-- JavaScript : un seul fichier natif (~9 Ko), sans jQuery. Les scripts jQuery « ajout au panier » et « fragments » de WooCommerce sont retirés des pages de liste. Panier, commande et fiches produits variables gardent ceux dont WooCommerce a besoin.
-- Aucun élément Rockstar/GTA : pas de logo, police, personnage ni visuel propriétaire. Tout le graphisme est en CSS original.
+- Polices libres (Unbounded pour les titres, Manrope pour le texte, licence OFL) **hébergées dans le thème** : aucun appel à Google, ce qui est plus rapide et évite le transfert d'IP vers Google (RGPD).
+- JavaScript : un seul fichier natif (~12 Ko), sans jQuery. Les scripts jQuery « ajout au panier » et « fragments » de WooCommerce sont retirés des pages de liste. Panier, commande et fiches produits variables gardent ceux dont WooCommerce a besoin.
+- Direction artistique : vitrine « showroom 3D » inspirée des sites e-commerce immersifs (scène sombre, colonnes de lumière rouge, produit vedette au centre, voisins en retrait), avec les codes des sites SaaS (verre dépoli, pastilles, cartes en relief). Aucun élément d'une autre marque n'est repris.
+
+## 1 bis. Identité O'Surgelé
+
+- **Logo** (`assets/img/brand/`) : le « O » est un hublot de congélateur (anneau dégradé feu, flocon de glace au centre), l'apostrophe est un éclat de glace, le reste en Unbounded ExtraBold vectorisé (le SVG ne dépend d'aucune police).
+  - `osurgele-logo-light.svg` : texte clair, pour fond sombre (utilisé par défaut dans l'en-tête et le pied de page) ;
+  - `osurgele-logo-dark.svg` : texte foncé, pour fond clair (factures, e-mails, emballages) ;
+  - `osurgele-icon.svg` : icône carrée, utilisée comme favicon tant qu'aucune icône n'est définie dans *Personnaliser › Identité du site*.
+  - Si vous chargez un logo dans le Customizer, il remplace celui du thème.
+- **Palette** : fond `#07070B`, dégradé feu `#FFB238 → #FF7A1A → #FF2D3A`, glace `#8FE3FF`, texte `#F5F5F7`.
+- **Produits 3D** : 8 rendus générés pour la marque (Higgsfield), détourés en WebP transparent. Ils illustrent le showroom de l'accueil et les 3 univers ; **les fiches produits gardent vos vraies photos WooCommerce**. Chaque produit du showroom renvoie vers une recherche (ex. « tenders »), donc vers vos vrais produits. Pour modifier la liste : filtre PHP `sh_showroom_items`.
 
 ## 2. Avant tout : la sauvegarde (obligatoire)
 
@@ -38,9 +50,9 @@ Livrables :
 2. **Ne l'activez pas tout de suite** : cliquez sur **Prévisualisation en direct**. Vous voyez le site avec le nouveau thème, sans que les visiteurs le voient.
 3. Dans la prévisualisation (Customizer), réglez :
    - **Identité du site** : votre logo (sinon un logotype typographique s'affiche).
-   - **Surgelé Halal — Tasty Crousty** :
+   - **O’Surgelé — réglages du thème** :
      - *Couleurs* : 5 couleurs modifiables. Gardez un fond très sombre pour que le texte reste lisible (contraste AA).
-     - *Accueil — Hero & bandeau* : textes du bandeau défilant, badge « mission », titre, sous-titre, boutons, image optionnelle.
+     - *Accueil — Showroom 3D & bandeau* : texte du bandeau d'annonce, badge, titre, sous-titre, boutons, image de fond optionnelle.
      - *Accueil — 3 zones* : la catégorie WooCommerce de chaque tuile (par défaut `poissons`, `poulet`, `crousty`) et leurs textes.
      - *Best-sellers & réassurance* : nombre de best-sellers et textes.
      - *Boutique — badges & performance* : badges Halal / Surgelé / Poids, et le « mode léger » (voir § 7).
@@ -120,8 +132,9 @@ Une fois le rangement fait, vous pouvez désactiver puis supprimer le plugin : l
 
 ## 7. Performance
 
-- 1 CSS (49 Ko non minifié, ~10 Ko en gzip), 1 JS natif en `defer`, 3 polices WOFF2 (67 Ko au total, sous-ensemble latin), préchargement de la police des titres.
-- Hero 100 % CSS (aucune image à charger), animations coupées si le visiteur a activé « réduire les animations ».
+- 1 CSS (51 Ko non minifié, ~11 Ko en gzip), 1 JS natif en `defer`, 2 polices WOFF2 (76 Ko au total, sous-ensemble latin), préchargement de la police des titres.
+- Rendus 3D en WebP (70–100 Ko chacun) : au chargement, seuls le produit vedette et ses deux voisins sont chargés, les autres en différé.
+- Scène du hero (colonnes de lumière, sol) 100 % CSS ; animations (flottement, inclinaison à la souris, défilement) coupées si le visiteur a activé « réduire les animations ».
 - Lazy-load natif des images WordPress / WooCommerce.
 - **Mode léger** (activé par défaut) : l'ajout au panier depuis les listes passe par l'API Store de WooCommerce sans jQuery. Si une extension dépend du panier jQuery de WooCommerce (quick-view, upsell en pop-up…), décochez-le dans *Personnaliser › Boutique — badges & performance*. Sans JavaScript, les boutons restent de simples liens « ajouter au panier » qui fonctionnent.
 
@@ -129,7 +142,7 @@ Une fois le rangement fait, vous pouvez désactiver puis supprimer le plugin : l
 
 Audit axe-core (règles WCAG 2.0/2.1 A et AA) sur l'accueil, une catégorie, un produit variable et un produit simple, en 1440 px et en 390 px : **0 violation** après corrections. Les problèmes trouvés venaient du CSS par défaut de WooCommerce et ont été corrigés : prix barré à 50 % d'opacité (3:1), fil d'Ariane gris #767676 (4,2:1), onglets #515151 (2,4:1).
 
-Également en place : lien « Aller au contenu », focus visible jaune, cibles tactiles ≥ 44 px, menu mobile au clavier (Échap ferme), mini-panier en `dialog` modal avec focus piégé, Échap et retour du focus, compteur du panier annoncé, `prefers-reduced-motion`, mode contraste forcé, `lang` du site.
+Également en place : showroom 3D pilotable au clavier (boutons Précédent/Suivant, flèches ←/→), nom du produit annoncé aux lecteurs d’écran, pas de défilement automatique, lien « Aller au contenu », focus visible jaune, cibles tactiles ≥ 44 px, menu mobile au clavier (Échap ferme), mini-panier en `dialog` modal avec focus piégé, Échap et retour du focus, compteur du panier annoncé, `prefers-reduced-motion`, mode contraste forcé, `lang` du site.
 
 Limites de l'audit automatique : il ne couvre ni la pertinence des textes alternatifs de vos images produit (à remplir dans la médiathèque), ni un test avec lecteur d'écran réel. Faites un passage NVDA ou VoiceOver sur le tunnel de commande. Si vous changez les couleurs dans le Customizer, revérifiez le contraste (par ex. avec WebAIM Contrast Checker).
 

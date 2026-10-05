@@ -11,9 +11,9 @@ get_header();
 ?>
 <main id="main" class="sh-main" tabindex="-1">
 	<section class="sh-container sh-section sh-404">
-		<p class="sh-mission"><span class="sh-mission__dot" aria-hidden="true"></span><?php esc_html_e( 'Mission échouée', 'surgele-halal' ); ?></p>
+		<p class="sh-pill"><span class="sh-pill__dot" aria-hidden="true"></span><?php esc_html_e( 'Erreur 404', 'surgele-halal' ); ?></p>
 		<h1 class="sh-h1"><?php esc_html_e( 'Page introuvable', 'surgele-halal' ); ?></h1>
-		<p><?php esc_html_e( 'Cette page n’existe pas ou a été déplacée. Reprends la partie :', 'surgele-halal' ); ?></p>
+		<p><?php esc_html_e( 'Cette page n’existe pas ou a été déplacée. Cherche un produit :', 'surgele-halal' ); ?></p>
 		<?php sh_search_form( 'sh-search-404' ); ?>
 		<ul class="sh-filters__list sh-404__zones">
 			<?php foreach ( sh_zones() as $sh_zone ) : ?>

@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 <footer class="sh-footer">
 	<div class="sh-container sh-footer__grid">
 		<div class="sh-footer__about">
-			<p class="sh-footer__name"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></p>
+			<p class="sh-footer__name"><img src="<?php echo esc_url( SH_URI . '/assets/img/brand/osurgele-logo-light.svg' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="200" height="31" loading="lazy"></p>
 			<p><?php echo esc_html( sh_mod( 'footer_about' ) ); ?></p>
 		</div>
 

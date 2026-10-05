@@ -44,6 +44,73 @@
 		filters.removeAttribute('open');
 	}
 
+	/* ---------- Showroom 3D (accueil) ---------- */
+	var room = $('[data-sh-showroom]');
+	if (room) {
+		var items = $$('.sh-showroom__item', room);
+		var nameEl = $('[data-sh-name]', room);
+		var tagEl = $('[data-sh-tag]', room);
+		var cta = $('[data-sh-cta]', room);
+		var ctaName = $('[data-sh-cta-name]', room);
+		var current = 0;
+		var n = items.length;
+		function show(i) {
+			current = (i + n) % n;
+			items.forEach(function (el, k) {
+				var rel = (k - current + n) % n;
+				el.style.transform = '';
+				el.classList.toggle('is-active', rel === 0);
+				el.classList.toggle('is-next', rel === 1);
+				el.classList.toggle('is-prev', rel === n - 1);
+				if (rel === 0) { el.removeAttribute('aria-hidden'); } else { el.setAttribute('aria-hidden', 'true'); }
+				// Les images voisines se chargent dès qu'elles deviennent visibles.
+				if (rel <= 1 || rel === n - 1) { var im = $('img', el); if (im && im.loading === 'lazy') { im.loading = 'eager'; } }
+			});
+			var a = items[current];
+			if (nameEl) { nameEl.textContent = a.getAttribute('data-name'); }
+			if (tagEl) { tagEl.textContent = a.getAttribute('data-tag'); }
+			if (cta) { cta.href = a.getAttribute('data-url'); }
+			if (ctaName) { ctaName.textContent = a.getAttribute('data-name'); }
+		}
+		show(0);
+		var prev = $('[data-sh-prev]', room);
+		var next = $('[data-sh-next]', room);
+		if (prev) { prev.addEventListener('click', function () { show(current - 1); }); }
+		if (next) { next.addEventListener('click', function () { show(current + 1); }); }
+		room.addEventListener('keydown', function (e) {
+			if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1); }
+			if (e.key === 'ArrowRight') { e.preventDefault(); show(current + 1); }
+		});
+		// Clic sur un produit voisin : il passe au centre.
+		items.forEach(function (el, k) {
+			el.addEventListener('click', function () { if (k !== current) { show(k); } });
+		});
+		// Glisser au doigt.
+		var x0 = null;
+		room.addEventListener('pointerdown', function (e) { x0 = e.clientX; });
+		room.addEventListener('pointerup', function (e) {
+			if (x0 === null) { return; }
+			var dx = e.clientX - x0; x0 = null;
+			if (Math.abs(dx) > 40) { show(current + (dx < 0 ? 1 : -1)); }
+		});
+		// Inclinaison 3D du produit actif selon la souris (désactivée si mouvement réduit).
+		var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (!still && window.matchMedia('(hover: hover)').matches) {
+			var track = $('.sh-showroom__track', room);
+			track.addEventListener('pointermove', function (e) {
+				var r = track.getBoundingClientRect();
+				var px = (e.clientX - r.left) / r.width - 0.5;
+				var py = (e.clientY - r.top) / r.height - 0.5;
+				var img = $('.is-active img', room);
+				if (img) { img.parentNode.style.transform = 'translate(-50%, -50%) rotateY(' + (px * 18).toFixed(1) + 'deg) rotateX(' + (-py * 14).toFixed(1) + 'deg)'; }
+			});
+			track.addEventListener('pointerleave', function () {
+				var act = $('.is-active', room);
+				if (act) { act.style.transform = ''; }
+			});
+		}
+	}
+
 	/* ---------- Toast ---------- */
 	var toast = $('[data-sh-toast]');
 	var toastTimer;

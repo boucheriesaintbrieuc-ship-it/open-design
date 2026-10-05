@@ -9,7 +9,8 @@ defined( 'ABSPATH' ) || exit;
 
 $sh_is_home_shop = ! empty( $args['is_home_shop'] );
 $sh_zone_index   = 0;
-$sh_kicker       = __( 'Inventaire complet', 'surgele-halal' );
+$sh_kicker       = __( 'Catalogue complet', 'surgele-halal' );
+$sh_render       = '';
 
 if ( is_product_category() ) {
 	$sh_term = get_queried_object();
@@ -17,6 +18,7 @@ if ( is_product_category() ) {
 		if ( $sh_zone['term'] && (int) $sh_zone['term']->term_id === (int) $sh_term->term_id ) {
 			$sh_zone_index = (int) $sh_zone['index'];
 			$sh_kicker     = $sh_zone['kicker'];
+			$sh_render     = $sh_zone['render'];
 		}
 	}
 	if ( ! $sh_zone_index ) {
@@ -30,6 +32,9 @@ if ( is_product_category() ) {
 $sh_heading_tag = $sh_is_home_shop ? 'h2' : 'h1';
 ?>
 <header class="sh-archive-head<?php echo $sh_zone_index ? ' sh-archive-head--zone' . (int) $sh_zone_index : ''; ?>">
+	<?php if ( $sh_render ) : ?>
+		<img class="sh-archive-head__render" src="<?php echo esc_url( $sh_render ); ?>" alt="" width="640" height="640" fetchpriority="high">
+	<?php endif; ?>
 	<div class="sh-container">
 		<p class="sh-kicker"><?php echo esc_html( $sh_kicker ); ?></p>
 		<<?php echo tag_escape( $sh_heading_tag ); ?> class="sh-archive-head__title">

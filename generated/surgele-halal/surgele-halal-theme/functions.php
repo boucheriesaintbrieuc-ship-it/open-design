@@ -149,10 +149,22 @@ add_action( 'wp_enqueue_scripts', 'sh_assets' );
 function sh_preload_fonts() {
 	printf(
 		'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
-		esc_url( SH_URI . '/assets/fonts/anton-latin.woff2' )
+		esc_url( SH_URI . '/assets/fonts/unbounded-latin.woff2' )
 	);
 }
 add_action( 'wp_head', 'sh_preload_fonts', 1 );
+
+/**
+ * Icône O'Surgelé par défaut tant qu'aucune icône de site n'est définie
+ * (Personnaliser › Identité du site).
+ */
+function sh_default_favicon() {
+	if ( has_site_icon() ) {
+		return;
+	}
+	printf( '<link rel="icon" type="image/svg+xml" href="%s">' . "\n", esc_url( SH_URI . '/assets/img/brand/osurgele-icon.svg' ) );
+}
+add_action( 'wp_head', 'sh_default_favicon', 2 );
 
 /**
  * Lien d'évitement + classe "js" posée avant le rendu (pas de flash).

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10.0 27.0 111.0 111.0" role="img" aria-label="O'Surgelé"><defs>
+<linearGradient id="osg-fire" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A1F"/><stop offset=".55" stop-color="#FF3B1F"/><stop offset="1" stop-color="#D8102B"/></linearGradient>
+<linearGradient id="osg-ice" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9FBFF"/><stop offset="1" stop-color="#7FD8FF"/></linearGradient>
+</defs><rect x="-10.0" y="27.0" width="111.0" height="111.0" rx="24.4" fill="#0B0B10"/><circle cx="45.50" cy="82.50" r="25.75" fill="#141826"/>
+<circle cx="45.50" cy="82.50" r="33.62" fill="none" stroke="url(#osg-fire)" stroke-width="15.75"/>
+<path d="M45.50 82.50L45.50 64.99 M45.50 71.99L49.46 68.03 M45.50 71.99L41.54 68.03 M45.50 82.50L30.34 73.75 M36.40 77.25L34.95 71.83 M36.40 77.25L30.99 78.70 M45.50 82.50L30.34 91.25 M36.40 87.75L30.99 86.30 M36.40 87.75L34.95 93.17 M45.50 82.50L45.50 100.01 M45.50 93.01L41.54 96.97 M45.50 93.01L49.46 96.97 M45.50 82.50L60.66 91.26 M54.60 87.75L56.05 93.17 M54.60 87.75L60.01 86.30 M45.50 82.50L60.66 73.75 M54.60 77.25L60.01 78.70 M54.60 77.25L56.05 71.83" fill="none" stroke="url(#osg-ice)" stroke-width="3.46" stroke-linecap="round"/></svg>

@@ -18,14 +18,14 @@ function sh_customize_register( $wp_customize ) {
 	$wp_customize->add_panel(
 		'sh_panel',
 		array(
-			'title'    => __( 'Surgelé Halal — Tasty Crousty', 'surgele-halal' ),
+			'title'    => __( 'O’Surgelé — réglages du thème', 'surgele-halal' ),
 			'priority' => 30,
 		)
 	);
 
 	$sections = array(
 		'sh_colors' => __( 'Couleurs', 'surgele-halal' ),
-		'sh_hero'   => __( 'Accueil — Hero & bandeau', 'surgele-halal' ),
+		'sh_hero'   => __( 'Accueil — Showroom 3D & bandeau', 'surgele-halal' ),
 		'sh_zones'  => __( 'Accueil — 3 zones (catégories)', 'surgele-halal' ),
 		'sh_trust'  => __( 'Accueil — Best-sellers & réassurance', 'surgele-halal' ),
 		'sh_shop'   => __( 'Boutique — badges & performance', 'surgele-halal' ),
@@ -37,11 +37,11 @@ function sh_customize_register( $wp_customize ) {
 
 	// Couleurs.
 	$colors = array(
-		'color_night'  => __( 'Fond nuit', 'surgele-halal' ),
-		'color_orange' => __( 'Orange sunset (boutons)', 'surgele-halal' ),
-		'color_pink'   => __( 'Rose néon (accents)', 'surgele-halal' ),
-		'color_yellow' => __( 'Jaune crousty (prix, liens)', 'surgele-halal' ),
-		'color_cream'  => __( 'Crème (texte clair)', 'surgele-halal' ),
+		'color_night'  => __( 'Fond (scène)', 'surgele-halal' ),
+		'color_orange' => __( 'Orange (dégradé principal)', 'surgele-halal' ),
+		'color_pink'   => __( 'Rouge (néons, accents)', 'surgele-halal' ),
+		'color_yellow' => __( 'Ambre (prix, liens)', 'surgele-halal' ),
+		'color_cream'  => __( 'Texte clair', 'surgele-halal' ),
 	);
 	foreach ( $colors as $key => $label ) {
 		$wp_customize->add_setting( 'sh_' . $key, array( 'default' => $d[ $key ], 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
@@ -61,11 +61,11 @@ function sh_customize_register( $wp_customize ) {
 	// Textes.
 	$texts = array(
 		'ticker_text'     => array( 'sh_hero', __( 'Bandeau défilant (haut de page)', 'surgele-halal' ), 'text' ),
-		'hero_badge'      => array( 'sh_hero', __( 'Badge « mission »', 'surgele-halal' ), 'text' ),
+		'hero_badge'      => array( 'sh_hero', __( 'Badge au-dessus du titre', 'surgele-halal' ), 'text' ),
 		'hero_title'      => array( 'sh_hero', __( 'Titre (début)', 'surgele-halal' ), 'text' ),
 		'hero_highlight'  => array( 'sh_hero', __( 'Titre (mot en surbrillance)', 'surgele-halal' ), 'text' ),
 		'hero_text'       => array( 'sh_hero', __( 'Sous-titre', 'surgele-halal' ), 'textarea' ),
-		'hero_cta_label'  => array( 'sh_hero', __( 'Bouton principal (vers la zone Crousty)', 'surgele-halal' ), 'text' ),
+		'hero_cta_label'  => array( 'sh_hero', __( 'Bouton principal (vers le produit sélectionné)', 'surgele-halal' ), 'text' ),
 		'hero_cta2_label' => array( 'sh_hero', __( 'Bouton secondaire', 'surgele-halal' ), 'text' ),
 		'zone1_kicker'    => array( 'sh_zones', __( 'Zone 1 — sur-titre', 'surgele-halal' ), 'text' ),
 		'zone1_text'      => array( 'sh_zones', __( 'Zone 1 — exemples', 'surgele-halal' ), 'text' ),
@@ -106,10 +106,10 @@ function sh_customize_register( $wp_customize ) {
 			$wp_customize,
 			'sh_hero_image',
 			array(
-				'label'       => __( 'Image du hero (optionnelle, détourée de préférence)', 'surgele-halal' ),
+				'label'       => __( 'Image de fond du showroom (optionnelle)', 'surgele-halal' ),
 				'section'     => 'sh_hero',
 				'mime_type'   => 'image',
-				'description' => __( 'Sans image, le hero reste 100 % CSS (le plus rapide).', 'surgele-halal' ),
+				'description' => __( 'Les produits 3D sont fournis avec le thème. Cette image s’affiche en fond, très atténuée.', 'surgele-halal' ),
 			)
 		)
 	);
