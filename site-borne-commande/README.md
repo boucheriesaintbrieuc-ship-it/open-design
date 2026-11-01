@@ -123,6 +123,44 @@ alimente votre suivi.
 
 ---
 
+## Récitation du Coran sur la page de commande
+
+`commander.html` porte un lecteur qui joue un fichier audio en boucle. Déposez
+votre enregistrement dans `audio/coran.mp3` et il fonctionne. Le nom du fichier,
+le volume et le titre affiché se règlent dans `assets/config.js`, sous `audio`.
+
+### Pourquoi le son ne démarre pas au chargement
+
+Chrome, Safari et Firefox refusent de lancer un son tant que le visiteur n'a pas
+interagi avec la page. Aucun site ne peut passer outre, et les contournements qui
+circulent, comme démarrer en muet puis monter le volume, sont bloqués eux aussi.
+
+Le lecteur fait donc le maximum de ce qui est permis : il tente la lecture au
+chargement, et si le navigateur refuse, il se relance au premier clic du
+visiteur, où qu'il clique sur la page. En pratique le son part dès qu'il touche
+quoi que ce soit.
+
+### Le reste du comportement
+
+Le bouton coupe et relance. Ce choix est mémorisé dans le navigateur : un
+visiteur qui a coupé ne verra pas le son redémarrer à chaque page. Si le fichier
+est absent ou dans un format refusé, le lecteur se retire de lui-même au lieu de
+laisser un bouton inerte. Le bouton de coupure n'est pas décoratif : un son qui
+dépasse trois secondes doit pouvoir être arrêté, c'est le critère WCAG 1.4.2.
+
+### Deux réserves
+
+Une récitation enregistrée appartient à son récitant et à son producteur.
+La diffuser sur un site marchand demande une autorisation, sauf si
+l'enregistrement est explicitement libre de droits.
+
+Pour le reste, c'est votre site et votre clientèle : sachez simplement qu'un son
+qui se déclenche sur une page de paiement fait partir une partie des visiteurs,
+surtout ceux qui naviguent au bureau ou dans les transports. Le bouton de
+coupure limite la casse. Si vous voulez mesurer l'effet, gardez le son sur
+`commander.html` seulement, comme c'est le cas aujourd'hui, et regardez le taux
+d'abandon avant et après dans Stripe.
+
 ## Ce qui doit être fait avant la mise en ligne
 
 ### Bloquant, sous peine d’infraction ou de site qui ment
@@ -278,6 +316,7 @@ Pour une correction ponctuelle sur une seule page, éditer directement le fichie
 | Blocage du paiement tant que les CGV ne sont pas acceptées | vérifié |
 | URL transmise à Stripe | vérifiée, avec `prefilled_email` et `client_reference_id` |
 | Syntaxe PHP | `php -l` sans erreur |
+| Lecteur audio | démarre au premier clic, boucle, coupe, choix mémorisé, se retire si le fichier manque |
 | Page envoyée **seule**, sans le dossier `assets/` | s’affiche complète : style, typographie, script |
 
 Trois défauts ont été trouvés et corrigés, tous invisibles à la lecture du code. La

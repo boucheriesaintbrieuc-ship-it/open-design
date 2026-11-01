@@ -86,6 +86,19 @@ SPRITE = """
   <symbol id="i-check" viewBox="0 0 24 24">
     <path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/>
   </symbol>
+  <symbol id="i-son" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g class="ecoute__onde" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M15.6 9.2a4 4 0 0 1 0 5.6"/>
+      <path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/>
+    </g>
+  </symbol>
+  <symbol id="i-son-coupe" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M16 9.5l5 5M21 9.5l-5 5"/>
+    </g>
+  </symbol>
   <symbol id="i-logo" viewBox="0 0 24 24">
     <rect x="6" y="2" width="12" height="15" rx="2" fill="currentColor"/>
     <rect x="11" y="17" width="2" height="4" fill="currentColor"/>
@@ -543,6 +556,16 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
       </div>
     </aside>
   </form>
+
+  <!-- Récitation. Masquée tant que le script n'a pas vérifié que le fichier
+       existe, pour ne pas afficher un bouton qui ne joue rien. -->
+  <div class="ecoute" id="ecoute" hidden>
+    <audio id="ecoute-audio" preload="auto" loop playsinline></audio>
+    <span class="ecoute__titre">Récitation du Coran</span>
+    <button type="button" class="ecoute__btn" id="ecoute-btn" aria-pressed="false" aria-label="Écouter la récitation">
+      <svg aria-hidden="true"><use id="ecoute-icone" href="#i-son-coupe"/></svg>
+    </button>
+  </div>
 </main>
 """
 

@@ -203,6 +203,69 @@
       });
     });
 
+    /* ---- Récitation du Coran ------------------------------------------
+       Les navigateurs refusent de lancer un son tant que le visiteur n'a
+       pas interagi avec la page : play() renvoie une promesse rejetée.
+       On tente quand même, et si c'est refusé on réessaie au premier clic
+       ou à la première touche. Le bouton reste là dans tous les cas, parce
+       qu'un son qui dure doit pouvoir être coupé (WCAG 1.4.2). */
+    const ecoute = $("#ecoute");
+    if (ecoute && C.audio && C.audio.fichier) {
+      const son    = $("#ecoute-audio");
+      const bouton = $("#ecoute-btn");
+      const CLE    = "coran-coupe";
+
+      let coupeParChoix = false;
+      try { coupeParChoix = localStorage.getItem(CLE) === "1"; } catch (e) { /* navigation privée */ }
+
+      son.src = C.audio.fichier;
+      son.loop = true;
+      son.volume = typeof C.audio.volume === "number" ? C.audio.volume : 0.35;
+
+      /* Fichier absent ou format refusé : on retire le lecteur au lieu
+         de laisser un bouton qui ne produit rien. */
+      son.addEventListener("error", () => { ecoute.hidden = true; }, { once: true });
+      ecoute.hidden = false;
+
+      const afficher = (joue) => {
+        ecoute.dataset.actif = joue ? "1" : "0";
+        bouton.setAttribute("aria-pressed", joue ? "true" : "false");
+        bouton.setAttribute("aria-label", joue ? "Couper la récitation" : "Écouter la récitation");
+        $("#ecoute-icone").setAttribute("href", joue ? "#i-son" : "#i-son-coupe");
+      };
+
+      let enAttenteDeClic = false;
+      const armerPremierGeste = () => {
+        if (enAttenteDeClic) return;
+        enAttenteDeClic = true;
+        const demarrer = () => {
+          enAttenteDeClic = false;
+          ["pointerdown", "keydown", "touchstart"].forEach(e => document.removeEventListener(e, demarrer));
+          son.play().then(() => afficher(true)).catch(() => afficher(false));
+        };
+        ["pointerdown", "keydown", "touchstart"].forEach(e =>
+          document.addEventListener(e, demarrer, { once: true, passive: true }));
+      };
+
+      son.addEventListener("play", () => afficher(true));
+      son.addEventListener("pause", () => afficher(false));
+      afficher(false);
+
+      if (C.audio.demarrerSeul !== false && !coupeParChoix) {
+        son.play().then(() => afficher(true)).catch(armerPremierGeste);
+      }
+
+      bouton.addEventListener("click", () => {
+        if (son.paused) {
+          son.play().catch(() => afficher(false));
+          try { localStorage.removeItem(CLE); } catch (e) { /* ignoré */ }
+        } else {
+          son.pause();
+          try { localStorage.setItem(CLE, "1"); } catch (e) { /* ignoré */ }
+        }
+      });
+    }
+
     /* ---- Page de confirmation : rappel de la référence Stripe --------- */
     const ref = $("#ref-commande");
     if (ref) {

@@ -52,6 +52,24 @@ window.CONFIG = {
 
   cheminPhp: "paiement/creer-session.php",
 
+  /* ---- Récitation du Coran sur la page de commande --------------------
+     Déposez votre fichier dans audio/ et indiquez son nom ci-dessous.
+     Format : MP3 ou M4A. Visez moins de 8 Mo, sinon la page met trop
+     longtemps à se charger sur un téléphone en 4G.
+
+     Le son ne peut pas démarrer tout seul : Chrome, Safari et Firefox
+     l'interdisent tant que le visiteur n'a pas cliqué sur la page. La
+     lecture démarre donc au premier clic, quel qu'il soit.
+
+     Mettez fichier à "" pour retirer complètement le lecteur.
+     ------------------------------------------------------------------- */
+  audio: {
+    fichier: "audio/coran.mp3",
+    titre:   "Récitation du Coran",
+    volume:  0.35,          /* entre 0 et 1 */
+    demarrerSeul: true      /* false : le visiteur doit cliquer sur le bouton */
+  },
+
   /* ---- Délais annoncés ----------------------------------------------- */
   delaiExpedition: "4 à 7 jours ouvrés",
   garantieMois: 24

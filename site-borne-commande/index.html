@@ -373,6 +373,37 @@
   .exclus li::before { content: "×"; color: #A03007; }
   .erreur { background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412; border-radius: var(--r); padding: .8rem 1rem; font-size: var(--t-sm); }
 }
+
+@layer composants {
+  /* ---------- Lecteur de récitation ----------
+     Pastille discrète, toujours atteignable au clavier. La couleur reste
+     celle de l'action : aucune teinte nouvelle n'entre dans la page. */
+  .ecoute {
+    position: fixed; left: var(--gout); bottom: var(--gout); z-index: 35;
+    display: flex; align-items: center; gap: .55rem;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: 999px;
+    padding: .35rem .35rem .35rem .85rem;
+    box-shadow: 0 2px 10px rgba(16, 17, 20, .10);
+    max-width: calc(100% - var(--gout) * 2);
+  }
+  .ecoute[hidden] { display: none; }
+  .ecoute__titre { font-size: var(--t-sm); color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ecoute__btn {
+    flex: none; width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer;
+    background: var(--indigo); color: #fff; border: 1px solid var(--indigo);
+    transition: background var(--duree) var(--courbe);
+  }
+  .ecoute__btn:hover { background: var(--indigo-f); border-color: var(--indigo-f); }
+  .ecoute__btn svg { width: 20px; height: 20px; }
+  /* Le trait d'onde pulse doucement quand ça joue, pour qu'on voie d'où vient le son. */
+  .ecoute[data-actif="1"] .ecoute__onde { animation: onde 1.6s ease-in-out infinite; transform-origin: left center; }
+  @keyframes onde { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  @media (max-width: 30rem) {
+    .ecoute__titre { display: none; }
+    .ecoute { padding: .3rem; }
+  }
+}
 </style>
 <script type="application/ld+json">{
  "@context": "https://schema.org",
@@ -577,6 +608,19 @@
 
   <symbol id="i-check" viewBox="0 0 24 24">
     <path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/>
+  </symbol>
+  <symbol id="i-son" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g class="ecoute__onde" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M15.6 9.2a4 4 0 0 1 0 5.6"/>
+      <path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/>
+    </g>
+  </symbol>
+  <symbol id="i-son-coupe" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M16 9.5l5 5M21 9.5l-5 5"/>
+    </g>
   </symbol>
   <symbol id="i-logo" viewBox="0 0 24 24">
     <rect x="6" y="2" width="12" height="15" rx="2" fill="currentColor"/>
@@ -890,6 +934,24 @@ window.CONFIG = {
 
   cheminPhp: "paiement/creer-session.php",
 
+  /* ---- Récitation du Coran sur la page de commande --------------------
+     Déposez votre fichier dans audio/ et indiquez son nom ci-dessous.
+     Format : MP3 ou M4A. Visez moins de 8 Mo, sinon la page met trop
+     longtemps à se charger sur un téléphone en 4G.
+
+     Le son ne peut pas démarrer tout seul : Chrome, Safari et Firefox
+     l'interdisent tant que le visiteur n'a pas cliqué sur la page. La
+     lecture démarre donc au premier clic, quel qu'il soit.
+
+     Mettez fichier à "" pour retirer complètement le lecteur.
+     ------------------------------------------------------------------- */
+  audio: {
+    fichier: "audio/coran.mp3",
+    titre:   "Récitation du Coran",
+    volume:  0.35,          /* entre 0 et 1 */
+    demarrerSeul: true      /* false : le visiteur doit cliquer sur le bouton */
+  },
+
   /* ---- Délais annoncés ----------------------------------------------- */
   delaiExpedition: "4 à 7 jours ouvrés",
   garantieMois: 24
@@ -1101,6 +1163,69 @@ window.CONFIG = {
         }
       });
     });
+
+    /* ---- Récitation du Coran ------------------------------------------
+       Les navigateurs refusent de lancer un son tant que le visiteur n'a
+       pas interagi avec la page : play() renvoie une promesse rejetée.
+       On tente quand même, et si c'est refusé on réessaie au premier clic
+       ou à la première touche. Le bouton reste là dans tous les cas, parce
+       qu'un son qui dure doit pouvoir être coupé (WCAG 1.4.2). */
+    const ecoute = $("#ecoute");
+    if (ecoute && C.audio && C.audio.fichier) {
+      const son    = $("#ecoute-audio");
+      const bouton = $("#ecoute-btn");
+      const CLE    = "coran-coupe";
+
+      let coupeParChoix = false;
+      try { coupeParChoix = localStorage.getItem(CLE) === "1"; } catch (e) { /* navigation privée */ }
+
+      son.src = C.audio.fichier;
+      son.loop = true;
+      son.volume = typeof C.audio.volume === "number" ? C.audio.volume : 0.35;
+
+      /* Fichier absent ou format refusé : on retire le lecteur au lieu
+         de laisser un bouton qui ne produit rien. */
+      son.addEventListener("error", () => { ecoute.hidden = true; }, { once: true });
+      ecoute.hidden = false;
+
+      const afficher = (joue) => {
+        ecoute.dataset.actif = joue ? "1" : "0";
+        bouton.setAttribute("aria-pressed", joue ? "true" : "false");
+        bouton.setAttribute("aria-label", joue ? "Couper la récitation" : "Écouter la récitation");
+        $("#ecoute-icone").setAttribute("href", joue ? "#i-son" : "#i-son-coupe");
+      };
+
+      let enAttenteDeClic = false;
+      const armerPremierGeste = () => {
+        if (enAttenteDeClic) return;
+        enAttenteDeClic = true;
+        const demarrer = () => {
+          enAttenteDeClic = false;
+          ["pointerdown", "keydown", "touchstart"].forEach(e => document.removeEventListener(e, demarrer));
+          son.play().then(() => afficher(true)).catch(() => afficher(false));
+        };
+        ["pointerdown", "keydown", "touchstart"].forEach(e =>
+          document.addEventListener(e, demarrer, { once: true, passive: true }));
+      };
+
+      son.addEventListener("play", () => afficher(true));
+      son.addEventListener("pause", () => afficher(false));
+      afficher(false);
+
+      if (C.audio.demarrerSeul !== false && !coupeParChoix) {
+        son.play().then(() => afficher(true)).catch(armerPremierGeste);
+      }
+
+      bouton.addEventListener("click", () => {
+        if (son.paused) {
+          son.play().catch(() => afficher(false));
+          try { localStorage.removeItem(CLE); } catch (e) { /* ignoré */ }
+        } else {
+          son.pause();
+          try { localStorage.setItem(CLE, "1"); } catch (e) { /* ignoré */ }
+        }
+      });
+    }
 
     /* ---- Page de confirmation : rappel de la référence Stripe --------- */
     const ref = $("#ref-commande");

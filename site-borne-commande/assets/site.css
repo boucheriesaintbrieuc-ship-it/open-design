@@ -355,3 +355,34 @@
   .exclus li::before { content: "×"; color: #A03007; }
   .erreur { background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412; border-radius: var(--r); padding: .8rem 1rem; font-size: var(--t-sm); }
 }
+
+@layer composants {
+  /* ---------- Lecteur de récitation ----------
+     Pastille discrète, toujours atteignable au clavier. La couleur reste
+     celle de l'action : aucune teinte nouvelle n'entre dans la page. */
+  .ecoute {
+    position: fixed; left: var(--gout); bottom: var(--gout); z-index: 35;
+    display: flex; align-items: center; gap: .55rem;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: 999px;
+    padding: .35rem .35rem .35rem .85rem;
+    box-shadow: 0 2px 10px rgba(16, 17, 20, .10);
+    max-width: calc(100% - var(--gout) * 2);
+  }
+  .ecoute[hidden] { display: none; }
+  .ecoute__titre { font-size: var(--t-sm); color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ecoute__btn {
+    flex: none; width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer;
+    background: var(--indigo); color: #fff; border: 1px solid var(--indigo);
+    transition: background var(--duree) var(--courbe);
+  }
+  .ecoute__btn:hover { background: var(--indigo-f); border-color: var(--indigo-f); }
+  .ecoute__btn svg { width: 20px; height: 20px; }
+  /* Le trait d'onde pulse doucement quand ça joue, pour qu'on voie d'où vient le son. */
+  .ecoute[data-actif="1"] .ecoute__onde { animation: onde 1.6s ease-in-out infinite; transform-origin: left center; }
+  @keyframes onde { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  @media (max-width: 30rem) {
+    .ecoute__titre { display: none; }
+    .ecoute { padding: .3rem; }
+  }
+}
