@@ -18,9 +18,9 @@ window.CONFIG = {
   /* ---- Tarifs, en euros hors taxes ----------------------------------- */
   tva: 0.20,
   paliers: [                                   /* à partir de N unités, prix unitaire HT */
-    { aPartirDe: 1, prixHT: 499 },
-    { aPartirDe: 2, prixHT: 469 },
-    { aPartirDe: 3, prixHT: 449 }
+    { aPartirDe: 1, prixHT: 600 },
+    { aPartirDe: 2, prixHT: 570 },
+    { aPartirDe: 3, prixHT: 540 }
   ],
   options: {
     miseEnService: { libelle: "Mise en service à distance",  prixHT: 149, parUnite: false },

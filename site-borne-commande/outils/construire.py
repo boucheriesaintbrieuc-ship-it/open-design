@@ -150,7 +150,7 @@ def pied():
     <div>
       <h2>Le produit</h2>
       <ul role="list">
-        <li><a href="index.html">La borne à 499 € HT</a></li>
+        <li><a href="index.html">La borne à 600 € HT</a></li>
         <li><a href="commander.html">Commander</a></li>
         <li><a href="guide-borne-de-commande-restaurant.html">Guide d’achat</a></li>
         <li><a href="blog.html">Blog</a></li>
@@ -214,7 +214,11 @@ JS_CONFIG = _lire("assets/config.js")
 JS_SITE = _lire("assets/site.js")
 JS_INTEGRE = JS_CONFIG + "\n\n/* ---------------------------------------------------------------- */\n\n" + JS_SITE
 
-def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
+def page(slug, titre, description, corps, ld=None, robots=None, classe_body="", script_page=None, style_page=None):
+    """script_page et style_page sont intégrés à cette page seulement.
+       Le configurateur de borne pèse plusieurs centaines de lignes : les
+       mettre dans le script commun alourdirait les vingt-neuf autres pages
+       pour rien."""
     blocs = ""
     for bloc in (ld or []):
         blocs += f'\n<script type="application/ld+json">{json.dumps(bloc, ensure_ascii=False, indent=1)}</script>'
@@ -240,6 +244,7 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 {{CSS_ICI}}
+{style_page or ""}
 </style>{blocs}
 </head>
 <body{f' class="{classe_body}"' if classe_body else ''}>
@@ -251,6 +256,7 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
 <script>
 {{JS_ICI}}
 </script>
+{f'<script>{script_page}</script>' if script_page else ""}
 </body>
 </html>
 """
@@ -277,10 +283,10 @@ CORPS_INDEX = """
     <div class="achat carte">
       <p class="surtitre">Borne de commande sur pied</p>
       <p class="achat__prix">
-        <span class="montant prix">499 €</span>
-        <span class="ttc">HT, soit 598,80 € TTC</span>
+        <span class="montant prix">720 €</span>
+        <span class="ttc">TTC, TVA 20 % comprise</span>
       </p>
-      <p class="note">Payé une fois. Aucun abonnement, aucun engagement. Livraison offerte en France métropolitaine, expédiée sous 4 à 7 jours ouvrés.</p>
+      <p class="note" style="margin-top:.2rem">600 € HT · <strong style="color:var(--valide)">livraison offerte</strong> · payé une fois, aucun abonnement</p>
       <a class="btn btn--large" href="commander.html">Commander une borne</a>
       <ul class="garanties mt-1" role="list">
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>0 € par mois, à vie</span></li>
@@ -299,7 +305,7 @@ CORPS_INDEX = """
     <div class="encadre-cle mt-2" data-reveal>
       <h2 style="font-size:var(--t-lg)">L’essentiel en dix secondes</h2>
       <dl>
-        <div><dt>Prix</dt><dd>499 € HT, payés une fois</dd></div>
+        <div><dt>Prix</dt><dd>600 € HT, payés une fois</dd></div>
         <div><dt>Abonnement</dt><dd>aucun, jamais</dd></div>
         <div><dt>Ce que c’est</dt><dd>un écran tactile sur pied, sous Android ouvert</dd></div>
         <div><dt>Particularité</dt><dd>l’écran pivote en paysage ou en portrait</dd></div>
@@ -333,6 +339,27 @@ CORPS_INDEX = """
   </div>
 </section>
 
+<section class="sec sec--alt" id="video">
+  <div class="env">
+    <p class="surtitre">En une minute</p>
+    <h2 style="font-size:var(--t-xl)">À quoi sert une borne de commande</h2>
+    <p class="prose mt-1">Si vous hésitez encore sur le principe, regardez. C’est plus rapide que de lire la page.</p>
+    <figure class="video mt-2" data-reveal>
+      <video id="film" controls preload="none" playsinline
+             poster="video/borne-de-commande-restaurant-poster.webp"
+             width="1280" height="720">
+        <source src="video/borne-de-commande-restaurant.mp4" type="video/mp4">
+        <p>Votre navigateur ne lit pas cette vidéo. <a href="video/borne-de-commande-restaurant.mp4">Téléchargez-la</a> pour la regarder.</p>
+      </video>
+      <button type="button" class="video__play" id="film-play" aria-label="Lire la vidéo de présentation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+        <span>Lire la présentation · 1 min 13</span>
+      </button>
+      <figcaption>La vidéo ne se télécharge qu’au moment où vous appuyez sur lecture.</figcaption>
+    </figure>
+  </div>
+</section>
+
 <section class="recit">
   <div class="env">
     <p class="surtitre" style="color:#9BA0A8">Pourquoi nous vendons ça</p>
@@ -344,11 +371,34 @@ CORPS_INDEX = """
       <p>Une fois les deux bornes installées et rentables, la suite s’est imposée toute seule : vendre le même matériel, au prix du matériel, à des restaurateurs qui se posaient les mêmes questions que nous.</p>
     </div>
     <div class="chiffres" data-reveal>
-      <div><b>499 €</b><span>le prix du matériel, sans la couche de services qu’on vous facture ailleurs</span></div>
+      <div><b>600 €</b><span>le prix du matériel, sans la couche de services qu’on vous facture ailleurs</span></div>
       <div><b>0 €</b><span>par mois, parce que nous ne vendons pas de logiciel</span></div>
       <div><b>2</b><span>bornes en service dans notre propre salle, tous les jours</span></div>
     </div>
     <p class="mt-2"><a href="logiciel-borne-de-commande-ia.html" style="color:#fff">Comment nous avons fabriqué notre logiciel avec l’IA</a></p>
+  </div>
+</section>
+
+<section class="sec" id="comment">
+  <div class="env">
+    <p class="surtitre">Comment ça se passe</p>
+    <h2 style="font-size:var(--t-xl)">De votre paiement à la borne en service</h2>
+    <p class="prose mt-1">Tout se fait depuis la page de commande, sans rendez-vous, sans devis à signer et sans commercial au téléphone.</p>
+    <ol class="deroule-v mt-2" role="list">
+      <li data-reveal><b>Vous construisez votre borne en ligne</b><span>Votre carte, vos prix, vos photos, vos suppléments. C’est gratuit, sans compte à créer, et vous pouvez télécharger le résultat pour l’essayer avant de payer.</span></li>
+      <li data-reveal><b>Vous payez 720 € TTC par carte</b><span>600 € hors taxes plus 20 % de TVA. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
+      <li data-reveal><b>Nous lançons la fabrication</b><span>La tablette part de notre atelier vers votre adresse. Vous recevez le numéro de suivi au départ du colis.</span></li>
+      <li data-reveal><b>Pendant le transport, nous montons votre page</b><span>Nous reprenons votre configuration et nous la mettons en ligne, soit sur votre site, soit sur un nouveau site que nous créons pour vous.</span></li>
+      <li data-reveal><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette adresse et la borne prend ses premières commandes. Comptez un quart d’heure.</span></li>
+    </ol>
+    <div class="avantages mt-2">
+      <div data-reveal><b>720 € TTC</b><span>TVA de 20 % comprise, rien à ajouter au moment de payer</span></div>
+      <div data-reveal><b>Livraison offerte</b><span>France métropolitaine, transport compris dans le prix</span></div>
+      <div data-reveal><b>0 € d’installation</b><span>Nous montons votre page de borne sans frais supplémentaires</span></div>
+      <div data-reveal><b>0 € par mois</b><span>Aucun abonnement, aucune commission sur vos ventes</span></div>
+    </div>
+    <p class="note mt-2">Seul l’hébergement de votre page reste à votre charge, parce qu’il est facturé par votre hébergeur et non par nous. Si vous n’avez pas de site, nous réservons votre nom de domaine pour 20 € par an et nous nous occupons de tout.</p>
+    <p class="mt-2"><a class="btn" href="commander.html">Construire ma borne</a></p>
   </div>
 </section>
 
@@ -421,6 +471,15 @@ CORPS_INDEX = """
         </table>
       </div>
       <p class="note mt-1">Les valeurs marquées « à confirmer » viennent de la fiche fabricant et seront remplacées par nos mesures sur exemplaire.</p>
+      <div class="prose mt-2">
+        <h3 style="font-size:var(--t-md)">Ce que c’est, précisément</h3>
+        <p>Un écran tactile de bureau monté sur une colonne et un socle rond lesté, le tout en blanc mat. L’écran se démonte de sa colonne et pivote à la main entre paysage et portrait, grâce à une rotule visible sur la photo.</p>
+        <p>À l’intérieur, un appareil Android complet : Play Store accessible, navigateur, Wi-Fi, caméra frontale désactivable et batterie intégrée. Ce n’est donc pas un écran passif branché sur un ordinateur, c’est un appareil autonome qui démarre seul sur la page que vous lui désignez.</p>
+        <p>Cette ouverture est le point important. Un écran verrouillé par son fabricant ne sert qu’avec le logiciel du fabricant, et s’éteint le jour où vous arrêtez de payer. Celui-ci accepte n’importe quelle application Android, y compris celle de votre éditeur de caisse, et la page que nous montons pour vous.</p>
+        <h3 style="font-size:var(--t-md)">Ce qu’il sait faire au-delà de la prise de commande</h3>
+        <p>Posé en paysage près de la cuisine, il affiche les commandes à préparer. En portrait dans une vitrine, il sert d’affichage de carte ou de promotion. Branché sur rien du tout, il reste une tablette de travail pour l’équipe.</p>
+        <p>La batterie change la façon de l’installer : vous le déplacez en terrasse à midi, vous le rentrez le soir, et vous évitez la rallonge qui traverse un passage, qui est en pratique la première cause de chute dans un établissement recevant du public.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -459,7 +518,7 @@ CORPS_INDEX = """
           <tr><th scope="row">Absorbe la file de 12 h 30</th><td class="oui">oui</td><td class="txt">un peu</td><td class="non">non</td></tr>
           <tr><th scope="row">Sert la vente à emporter</th><td class="oui">oui</td><td class="oui">oui</td><td class="non">non</td></tr>
           <tr><th scope="row">Sert le service à table</th><td class="non">non</td><td class="non">non</td><td class="oui">oui</td></tr>
-          <tr><th scope="row">Coût de départ</th><td>499 € HT</td><td class="txt">200 à 600 €</td><td class="txt">quasi nul</td></tr>
+          <tr><th scope="row">Coût de départ</th><td>600 € HT</td><td class="txt">200 à 600 €</td><td class="txt">quasi nul</td></tr>
           <tr><th scope="row">Abonnement</th><td class="oui">aucun</td><td class="txt">celui de votre logiciel</td><td class="txt">souvent mensuel</td></tr>
         </tbody>
       </table>
@@ -476,9 +535,9 @@ CORPS_INDEX = """
         <caption>Prix unitaire selon la quantité</caption>
         <thead><tr><th scope="col">Quantité</th><th scope="col">Prix unitaire HT</th><th scope="col">Prix unitaire TTC</th><th scope="col">Total HT</th></tr></thead>
         <tbody>
-          <tr><th scope="row">1 borne</th><td>499,00 €</td><td>598,80 €</td><td>499,00 €</td></tr>
-          <tr><th scope="row">2 bornes</th><td>469,00 €</td><td>562,80 €</td><td>938,00 €</td></tr>
-          <tr><th scope="row">3 bornes et plus</th><td>449,00 €</td><td>538,80 €</td><td>1 347,00 €</td></tr>
+          <tr><th scope="row">1 borne</th><td>600,00 €</td><td>720,00 €</td><td>600,00 €</td></tr>
+          <tr><th scope="row">2 bornes</th><td>570,00 €</td><td>684,00 €</td><td>1 140,00 €</td></tr>
+          <tr><th scope="row">3 bornes et plus</th><td>540,00 €</td><td>648,00 €</td><td>1 620,00 €</td></tr>
         </tbody>
       </table>
     </div>
@@ -520,7 +579,7 @@ CORPS_INDEX = """
     </figure>
     <div>
       <h2 style="font-size:var(--t-lg)">Borne de commande sur pied</h2>
-      <p class="note mt-1">499 € HT, sans abonnement, livraison offerte, garantie 2 ans. Paiement par carte, virement possible sur demande.</p>
+      <p class="note mt-1">600 € HT, sans abonnement, livraison offerte, garantie 2 ans. Paiement par carte, virement possible sur demande.</p>
     </div>
     <a class="btn" href="commander.html">Commander</a>
   </div>
@@ -529,7 +588,7 @@ CORPS_INDEX = """
 </main>
 
 <div class="barre-mobile">
-  <span class="prix">598,80 € TTC</span>
+  <span class="prix">720,00 € TTC</span>
   <a class="btn btn--petit" href="commander.html">Commander</a>
 </div>
 """
@@ -549,75 +608,208 @@ CORPS_INDEX = CORPS_INDEX.replace("{DERNIERS_ARTICLES}", "".join(
 CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
 <main id="contenu" class="env sec" style="padding-top:var(--pas)">
   <p class="surtitre">Commande</p>
-  <h1 style="font-size:var(--t-2xl)">Configurez votre commande</h1>
-  <p class="prose mt-1">Choisissez la quantité, ajoutez les options si vous en voulez, et payez par carte. Le paiement se fait sur une page hébergée par Stripe : votre numéro de carte ne transite jamais par ce site.</p>
+  <h1 style="font-size:var(--t-2xl)">Configurez votre borne, puis payez</h1>
+  <p class="prose mt-1">Vous construisez votre écran de commande ici, gratuitement et sans créer de compte. Vous pouvez même le télécharger pour l’essayer avant de payer quoi que ce soit.</p>
+
+  <div class="carte mt-2" data-reveal>
+    <h2 style="font-size:var(--t-lg)">Comment se passe la vente</h2>
+    <ol class="deroule" role="list">
+      <li><div><b>Vous configurez votre borne sur cette page</b><span>Votre carte, vos prix, vos photos. Rien n’est envoyé nulle part tant que vous n’avez pas payé.</span></div></li>
+      <li><div><b>Vous payez 720 € TTC par carte</b><span>600 € hors taxes plus 20 % de TVA. Livraison comprise, aucun frais d’installation, aucun abonnement.</span></div></li>
+      <li><div><b>Nous lançons la commande à notre usine</b><span>La tablette part de notre atelier en Chine vers votre adresse. Vous recevez le numéro de suivi au départ.</span></div></li>
+      <li><div><b>Pendant le transport, nous montons votre page de borne</b><span>Nous reprenons votre configuration, nous la mettons en ligne, et nous vous envoyons l’adresse à ouvrir sur la tablette.</span></div></li>
+      <li><div><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette page et la borne est en service. Comptez un quart d’heure.</span></div></li>
+    </ol>
+  </div>
 
   <form class="config mt-2" id="configurateur" novalidate>
     <div>
-      <fieldset class="carte">
-        <legend class="surtitre" style="padding:0 0 .6rem">Quantité</legend>
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-          <div class="compteur">
-            <button type="button" data-qte="-1" aria-label="Retirer une borne">−</button>
-            <output id="qte-valeur" aria-live="polite">1</output>
-            <button type="button" data-qte="1" aria-label="Ajouter une borne">+</button>
+
+      <!-- ============ 1. Matériel ============ -->
+      <section class="etape">
+        <div class="etape__tete"><span class="etape__num">1</span><h2>Votre matériel</h2></div>
+        <fieldset class="carte mt-1">
+          <legend class="surtitre" style="padding:0 0 .6rem">Quantité</legend>
+          <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+            <div class="compteur">
+              <button type="button" data-qte="-1" aria-label="Retirer une borne">−</button>
+              <output id="qte-valeur" aria-live="polite">1</output>
+              <button type="button" data-qte="1" aria-label="Ajouter une borne">+</button>
+            </div>
+            <p class="note" style="max-width:26rem">600 € HT l’unité, 570 € à partir de deux bornes, 540 € à partir de trois. La remise s’applique toute seule.</p>
           </div>
-          <p class="note" style="max-width:26rem">499 € HT l’unité, 469 € à partir de deux bornes, 449 € à partir de trois. La remise s’applique toute seule.</p>
-        </div>
-      </fieldset>
+        </fieldset>
 
-      <fieldset class="mt-2">
-        <legend class="surtitre" style="padding:0 0 .6rem">Options</legend>
-        <div style="display:grid;gap:.7rem">
-          <label class="option">
-            <input type="checkbox" id="opt-mise-en-service">
+        <fieldset class="mt-2">
+          <legend class="surtitre" style="padding:0 0 .6rem">Options</legend>
+          <div style="display:grid;gap:.7rem">
+            <label class="option">
+              <input type="checkbox" id="opt-mise-en-service">
+              <span>
+                <span class="titre-opt">Mise en service à distance</span>
+                <span class="desc-opt">Une heure en visio : nous installons votre page de borne sur la tablette, nous la verrouillons en mode kiosque et nous formons la personne qui s’en occupera.</span>
+              </span>
+              <span class="prix">149 € HT</span>
+            </label>
+            <label class="option">
+              <input type="checkbox" id="opt-garantie">
+              <span>
+                <span class="titre-opt">Extension de garantie à 3 ans</span>
+                <span class="desc-opt">Un an de garantie contractuelle supplémentaire, sur les mêmes pièces et la même main-d’œuvre. Facturée par borne.</span>
+              </span>
+              <span class="prix">79 € HT</span>
+            </label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ============ 2. La borne ============ -->
+      <section class="etape">
+        <div class="etape__tete"><span class="etape__num">2</span><h2>Votre borne</h2></div>
+        <p class="note mt-1">Modifiez la carte de démonstration ou repartez de zéro. <span id="cfg-compte"></span></p>
+
+        <div class="onglets" role="tablist">
+          <button type="button" role="tab" data-onglet="enseigne" aria-selected="true">Enseigne</button>
+          <button type="button" role="tab" data-onglet="carte" aria-selected="false">Carte et prix</button>
+          <button type="button" role="tab" data-onglet="images" aria-selected="false">Photos</button>
+          <button type="button" role="tab" data-onglet="apercu" aria-selected="false">Aperçu</button>
+        </div>
+        <p id="cfg-erreur" hidden></p>
+
+        <div data-panneau="enseigne" id="cfg-enseigne">
+          <div class="ens-grille">
+            <label class="champ"><span>Nom affiché sur la borne</span>
+              <input type="text" id="ens-nom" placeholder="Le Comptoir 22" autocomplete="organization">
+            </label>
+            <label class="champ"><span>Type d’établissement</span>
+              <select id="ens-type">
+                <option>Restauration rapide</option>
+                <option>Kebab</option>
+                <option>Pizzeria</option>
+                <option>Burger</option>
+                <option>Boulangerie</option>
+                <option>Brasserie</option>
+                <option>Snack</option>
+                <option>Food truck</option>
+                <option>Autre</option>
+              </select>
+            </label>
+            <label class="champ"><span>Couleur principale</span>
+              <input type="color" id="ens-couleur" value="#D4321C">
+            </label>
+            <div class="champ"><span>Logo</span>
+              <div class="ens-logo">
+                <div id="ens-logo-apercu"></div>
+                <div>
+                  <label class="btn btn--secondaire btn--petit" style="cursor:pointer">Choisir un fichier
+                    <input type="file" id="ens-logo" accept="image/*" hidden>
+                  </label>
+                  <button type="button" class="lien-sup" id="ens-logo-sup">Retirer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-panneau="carte" hidden>
+          <div id="cfg-carte"></div>
+          <button type="button" class="btn btn--secondaire btn--petit" id="add-cat">Ajouter une catégorie</button>
+
+          <h3 class="mt-2" style="font-size:var(--t-md)">Suppléments proposés à chaque produit</h3>
+          <p class="note">C’est ce qui fait monter le panier. L’écran les propose à chaque commande, sans jamais les oublier.</p>
+          <div id="cfg-supplements" class="mt-1"></div>
+          <button type="button" class="btn btn--secondaire btn--petit" id="add-supp">Ajouter un supplément</button>
+        </div>
+
+        <div data-panneau="images" hidden>
+          <p class="prose">Les photos se chargent depuis l’onglet « Carte et prix » : touchez le carré gris à gauche de chaque produit. Elles sont redimensionnées dans votre navigateur et intégrées au fichier de la borne, donc elle fonctionne même sans connexion.</p>
+          <ul class="inclus mt-1" role="list">
+            <li>Format carré, recadrage automatique au centre</li>
+            <li>Une photo par produit, aucune limite de nombre</li>
+            <li>Vos fichiers ne quittent pas votre ordinateur tant que vous n’avez pas payé</li>
+            <li>Pas de photo sous la main ? La borne affiche le nom et le prix, et vous les ajouterez plus tard</li>
+          </ul>
+          <p class="note mt-1">Nous reprenons ces mêmes photos pour monter votre page en ligne. Si vous préférez nous envoyer les originaux en haute définition, écrivez-nous après la commande.</p>
+        </div>
+
+        <div data-panneau="apercu" hidden>
+          <p class="prose">Essayez votre borne comme le fera votre client, puis téléchargez le fichier. Il fonctionne seul, sur n’importe quelle tablette, sans internet.</p>
+          <div class="generer-ligne">
+            <button type="button" class="btn btn--secondaire" id="apercu">Voir l’aperçu</button>
+            <button type="button" class="btn" id="generer">Télécharger ma borne</button>
+            <button type="button" class="lien-sup" id="reinit">Repartir de la démonstration</button>
+          </div>
+          <p id="generer-ok" hidden>Fichier téléchargé. Ouvrez-le dans un navigateur pour le tester.</p>
+          <iframe id="apercu-cadre" title="Aperçu de votre borne de commande" hidden></iframe>
+        </div>
+      </section>
+
+      <!-- ============ 3. Site ============ -->
+      <section class="etape" id="cfg-site">
+        <div class="etape__tete"><span class="etape__num">3</span><h2>Où votre borne sera hébergée</h2></div>
+        <p class="prose mt-1">Votre page de borne doit vivre à une adresse que la tablette ouvre au démarrage. Deux solutions, au choix.</p>
+
+        <div class="solutions mt-1">
+          <label class="solution">
+            <input type="radio" name="solution" value="existant">
             <span>
-              <span class="titre-opt">Mise en service à distance</span>
-              <span class="desc-opt">Une heure en visio : on installe votre application de commande, on verrouille la borne en mode kiosque et on forme la personne qui s’en occupera.</span>
+              <b>Je l’installe sur mon site</b>
+              <span class="d">Vous avez déjà un site. Nous vous livrons le fichier et l’adresse à créer, vous le déposez chez votre hébergeur. Aucun frais supplémentaire.</span>
             </span>
-            <span class="prix">149 € HT</span>
           </label>
-          <label class="option">
-            <input type="checkbox" id="opt-garantie">
+          <label class="solution">
+            <input type="radio" name="solution" value="nouveau" checked>
             <span>
-              <span class="titre-opt">Extension de garantie à 3 ans</span>
-              <span class="desc-opt">Un an de plus que la garantie légale de conformité, sur les mêmes pièces et la même main-d’œuvre. Facturée par borne.</span>
+              <b>Je n’ai pas de site, créez-le-moi</b>
+              <span class="d">Nous montons la page et la mettons en ligne. Vous ne payez que l’hébergement et le nom de domaine, directement au prestataire ou par nous.</span>
             </span>
-            <span class="prix">79 € HT</span>
           </label>
         </div>
-      </fieldset>
 
-      <fieldset class="mt-2">
-        <legend class="surtitre" style="padding:0 0 .6rem">Vos coordonnées</legend>
-        <div style="display:grid;gap:.9rem;max-width:30rem">
+        <div id="bloc-domaine" class="carte mt-2">
+          <h3 style="font-size:var(--t-md)">Votre nom de domaine</h3>
+          <p class="note mt-1">Nous le réservons et nous nous occupons de tout pour <strong>20 € par an</strong>. Vérifiez d’abord qu’il est libre.</p>
+          <div class="dom-ligne mt-1">
+            <label class="champ"><span>Nom souhaité, avec son extension</span>
+              <input type="text" id="dom-nom" placeholder="mon-restaurant.fr" autocomplete="off" spellcheck="false">
+            </label>
+            <button type="button" class="btn btn--secondaire" id="dom-verifier">Vérifier</button>
+          </div>
+          <p class="dom-rep" id="dom-reponse"></p>
+          <p class="note">La réponse vient du registre du domaine, pas d’une estimation. Si le registre ne répond pas, nous vérifions à la main au moment de la commande et nous vous prévenons.</p>
+        </div>
+      </section>
+
+      <!-- ============ 4. Coordonnées ============ -->
+      <section class="etape">
+        <div class="etape__tete"><span class="etape__num">4</span><h2>Vos coordonnées</h2></div>
+        <div style="display:grid;gap:.9rem;max-width:30rem" class="mt-1">
           <label class="champ"><span>Nom de l’établissement</span>
             <input type="text" id="client-etablissement" name="etablissement" autocomplete="organization" placeholder="Le Comptoir 22, Saint-Brieuc">
           </label>
           <label class="champ"><span>Adresse e-mail</span>
             <input type="email" id="client-email" name="email" autocomplete="email" placeholder="vous@votre-restaurant.fr">
           </label>
-          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher la commande à votre établissement. L’adresse de livraison et l’éventuel numéro de TVA se saisissent sur la page Stripe.</p>
+          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison et l’éventuel numéro de TVA se saisissent sur la page Stripe.</p>
         </div>
-      </fieldset>
+      </section>
     </div>
 
     <aside class="config__recap">
       <div class="carte">
-        <div class="scene" style="min-height:14rem;background:none;border:0;padding:0">
-          <div class="scene__sol" id="scene-bornes">
-            """ + borne("borne-commande", "borne") + borne("borne-commande", "borne", None, ' hidden') + borne("borne-commande", "borne", None, ' hidden') + """
-            <span id="scene-surplus" class="note prix" hidden></span>
-          </div>
-        </div>
+        <figure class="photo" style="margin-bottom:var(--pas)">
+          <img src="img/borne-de-commande-restaurant-ecran-portrait-600.webp" width="600" height="600" loading="lazy" decoding="async"
+               alt="La borne de commande sur son pied, écran vertical">
+        </figure>
 
-        <h2 style="font-size:var(--t-lg)" class="mt-1">Récapitulatif</h2>
+        <h2 style="font-size:var(--t-lg)">Récapitulatif</h2>
+        <p id="resume-borne" class="mt-1"></p>
         <div class="recap__lignes" id="recap-lignes"></div>
         <div class="recap__total">
-          <span>Total hors taxes</span>
-          <span class="prix" id="recap-total-ht">499,00 €</span>
+          <span>Total à payer</span>
+          <span class="prix" id="recap-total-ttc">720,00 €</span>
         </div>
-        <p class="note" style="text-align:right;margin-top:.3rem"><span id="recap-total-ttc">598,80 € TTC</span></p>
+        <p class="note" style="text-align:right;margin-top:.3rem"><span id="recap-total-ht">600,00 €</span> HT · TVA 20 % · livraison offerte</p>
 
         <label class="option mt-1" style="grid-template-columns:auto 1fr">
           <input type="checkbox" id="accepte-cgv">
@@ -628,9 +820,11 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
         <p class="erreur mt-1" id="erreur-paiement" hidden></p>
 
         <ul class="garanties mt-1" role="list">
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Livraison offerte</strong>, aucun frais d’installation</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>0 € par mois</strong>, aucun engagement</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>TVA 20 % comprise dans le prix affiché</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement traité par Stripe, aucune donnée bancaire sur ce site</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le paiement</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Livraison offerte, expédition sous 4 à 7 jours ouvrés</span></li>
         </ul>
 
         <p class="note mt-1">Vous préférez payer par virement, ou vous avez besoin d’un devis pour votre comptable&nbsp;? Écrivez à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a> ou appelez le <a data-tel href="tel:+33296000000">02 96 00 00 00</a>.</p>
@@ -735,7 +929,7 @@ CORPS_GUIDE = fil([("Accueil", "index.html"), ("Guide d’achat", None)]) + """
       <p>Le comportement du tactile enfin. Vos clients toucheront l’écran avec des doigts gras. Un tactile capacitif correct ne s’en soucie pas, un tactile bas de gamme commence à rater des appuis au bout de six mois. Si vous pouvez essayer une borne avant d’acheter, appuyez avec le pouce mouillé : c’est un test plus utile qu’une fiche technique.</p>
 
       <h2>Le logiciel, c’est là que se joue la facture</h2>
-      <p>Beaucoup de restaurateurs comparent le prix des écrans et découvrent l’abonnement après. Une borne vendue 1 200 € avec un logiciel à 89 € par mois coûte 4 400 € sur trois ans. Une borne à 499 € avec une application déjà comprise dans votre logiciel de caisse coûte 499 €. La différence ne se voit pas sur la page produit.</p>
+      <p>Beaucoup de restaurateurs comparent le prix des écrans et découvrent l’abonnement après. Une borne vendue 1 200 € avec un logiciel à 89 € par mois coûte 4 400 € sur trois ans. Une borne à 600 € avec une application déjà comprise dans votre logiciel de caisse coûte 600 €. La différence ne se voit pas sur la page produit.</p>
       <p>Trois configurations existent. Soit votre éditeur de caisse propose déjà une application de borne, et vous n’avez besoin que du matériel. Soit vous prenez un logiciel de borne indépendant, qui se branche sur votre caisse par une interface, avec un abonnement à la clé. Soit le fabricant vous vend un ensemble fermé, où le matériel ne sert à rien sans son logiciel : c’est le cas le plus confortable au départ et le plus difficile à quitter ensuite.</p>
       <p>Avant de signer, posez une question précise à votre éditeur de caisse : « avez-vous une application de prise de commande qui tourne sur une tablette Android, et à quelles conditions ? » La réponse détermine tout le reste.</p>
 
@@ -764,7 +958,7 @@ CORPS_GUIDE = fil([("Accueil", "index.html"), ("Guide d’achat", None)]) + """
     </div>
 
     <div class="prose mt-2">
-      <p>Pour savoir si l’investissement tient, prenez le chemin le plus court. Comptez le nombre de commandes que vous passez au pic, multipliez par la part que la borne prendra en charge, disons un tiers au démarrage, puis par la hausse de panier que vous jugez plausible. Sur 120 commandes par jour, 40 passées à la borne, un panier moyen de 14 € et une hausse de 10 %, cela fait 56 € par jour de chiffre d’affaires supplémentaire, soit environ 1 450 € par mois sur 26 jours. Une borne à 499 € est amortie en une semaine dans ce scénario, un ensemble à 4 400 € sur trois ans reste rentable mais vous engage beaucoup plus longtemps.</p>
+      <p>Pour savoir si l’investissement tient, prenez le chemin le plus court. Comptez le nombre de commandes que vous passez au pic, multipliez par la part que la borne prendra en charge, disons un tiers au démarrage, puis par la hausse de panier que vous jugez plausible. Sur 120 commandes par jour, 40 passées à la borne, un panier moyen de 14 € et une hausse de 10 %, cela fait 56 € par jour de chiffre d’affaires supplémentaire, soit environ 1 450 € par mois sur 26 jours. Une borne à 600 € est amortie en une semaine et demie dans ce scénario, un ensemble à 4 400 € sur trois ans reste rentable mais vous engage beaucoup plus longtemps.</p>
       <p>Faites le calcul avec vos vrais chiffres plutôt qu’avec les miens. Si la hausse de panier que vous jugez plausible est de 0 %, ne l’achetez pas.</p>
 
       <h2>Où la poser</h2>
@@ -790,7 +984,7 @@ CORPS_GUIDE = fil([("Accueil", "index.html"), ("Guide d’achat", None)]) + """
 
     <div class="carte mt-2">
       <h2 style="font-size:var(--t-lg)">Ce que nous vendons, pour être clair</h2>
-      <p class="note mt-1">Une borne sur pied à 499 € HT, sans logiciel et sans abonnement, livrée montée. Nous avons écrit ce guide en sachant qu’il vous conduira parfois à ne pas acheter chez nous. C’est un risque assumé : un restaurateur qui installe une borne dont il n’avait pas besoin la revend au bout de six mois et le dit autour de lui.</p>
+      <p class="note mt-1">Une borne sur pied à 600 € HT, sans logiciel et sans abonnement, livrée montée. Nous avons écrit ce guide en sachant qu’il vous conduira parfois à ne pas acheter chez nous. C’est un risque assumé : un restaurateur qui installe une borne dont il n’avait pas besoin la revend au bout de six mois et le dit autour de lui.</p>
       <p class="mt-1"><a class="btn" href="index.html">Voir la borne</a> <a class="btn btn--secondaire" href="commander.html" style="margin-left:.5rem">Commander</a></p>
     </div>
   </div>
@@ -1008,7 +1202,7 @@ PRODUIT = {
               f"{DOMAINE}/img/borne-de-commande-restaurant-rotation-1000.webp"],
     "offers": {
         "@type": "Offer",
-        "price": "499.00", "priceCurrency": "EUR",
+        "price": "600.00", "priceCurrency": "EUR",
         "valueAddedTaxIncluded": False,
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
@@ -1045,7 +1239,7 @@ FAQ_INDEX = faq([
  ("Le logiciel de commande est-il fourni avec la borne ?",
   "Non. La borne est un écran tactile sous Android verrouillé en mode kiosque. Vous y installez l'application de commande de votre choix, y compris celle de votre éditeur de caisse. Une mise en service à distance est proposée en option à 149 euros hors taxes."),
  ("Faut-il un abonnement pour utiliser cette borne de commande ?",
-  "Non. La borne est vendue 499 euros hors taxes, payés une fois. Si votre logiciel de commande est facturé au mois, cet abonnement reste entre votre éditeur et vous."),
+  "Non. La borne est vendue 600 euros hors taxes, payés une fois. Si votre logiciel de commande est facturé au mois, cet abonnement reste entre votre éditeur et vous."),
  ("Sous combien de temps la borne est-elle livrée ?",
   "Quatre à sept jours ouvrés en France métropolitaine, transport compris dans le prix. Le numéro de suivi est envoyé au départ du colis."),
  ("La borne fonctionne-t-elle avec ma caisse enregistreuse ?",
@@ -1089,8 +1283,8 @@ FICHIERS = []
 
 FICHIERS.append(page(
     "index.html",
-    "Borne de commande restaurant à 499 € HT, sans abonnement | " + MARQUE,
-    "Borne de commande tactile pour restaurant : écran vertical sur pied, 499 € HT, sans abonnement ni logiciel imposé. Livraison offerte, garantie 2 ans.",
+    "Borne de commande restaurant à 600 € HT, sans abonnement | " + MARQUE,
+    "Borne de commande tactile pour restaurant : écran vertical sur pied, 600 € HT, sans abonnement ni logiciel imposé. Livraison offerte, garantie 2 ans.",
     CORPS_INDEX, ld=[ORG, PRODUIT, FAQ_INDEX]))
 
 FICHIERS.append(page(
@@ -1101,9 +1295,11 @@ FICHIERS.append(page(
 
 FICHIERS.append(page(
     "commander.html",
-    "Commander une borne de commande restaurant | " + MARQUE,
-    "Configurez votre commande : quantité, mise en service à distance, extension de garantie. Paiement par carte sécurisé par Stripe, livraison offerte.",
-    CORPS_COMMANDER))
+    "Commander votre borne de commande restaurant | " + MARQUE,
+    "Construisez votre borne en ligne, essayez-la, puis commandez : 720 € TTC livraison comprise, sans abonnement ni frais d’installation.",
+    CORPS_COMMANDER,
+    style_page=_lire("assets/borne-builder.css"),
+    script_page=_lire("assets/borne-builder.js")))
 
 FICHIERS.append(page(
     "merci.html", "Commande enregistrée | " + MARQUE,
@@ -1185,7 +1381,7 @@ def corps_article(a):
     <h2>La borne dont nous nous servons</h2>
     {a["offre"]}
     <p class="liens">
-      <a class="btn" href="index.html">Voir la borne à 499 € HT</a>
+      <a class="btn" href="index.html">Voir la borne à 600 € HT</a>
       <a class="btn btn--secondaire" href="commander.html">Commander</a>
     </p>
   </aside>
@@ -1271,7 +1467,7 @@ FLUX = f"""<?xml version="1.0" encoding="UTF-8"?>
 <g:additional_image_link>{DOMAINE}/img/borne-de-commande-restaurant-ecran-portrait-1000.webp</g:additional_image_link>
 <g:additional_image_link>{DOMAINE}/img/borne-de-commande-restaurant-rotation-1000.webp</g:additional_image_link>
 <g:availability>in_stock</g:availability>
-<g:price>598.80 EUR</g:price>
+<g:price>720.00 EUR</g:price>
 <g:brand>{MARQUE}</g:brand>
 <g:mpn>BORNE-K1</g:mpn><g:identifier_exists>no</g:identifier_exists>
 <g:condition>new</g:condition>

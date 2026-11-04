@@ -120,7 +120,7 @@
         const cgv = $("#accepte-cgv");
         if (bouton) bouton.disabled = cgv ? !cgv.checked : false;
         if (totalHT)  totalHT.textContent  = euros(ht);
-        if (totalTTC) totalTTC.textContent = euros(ttc(ht)) + " TTC";
+        if (totalTTC) totalTTC.textContent = euros(ttc(ht));
         if (barrePrix) barrePrix.textContent = euros(ttc(ht)) + " TTC";
         dessinerScene();
       };
@@ -138,6 +138,13 @@
         const e = etat();
         const email = $("#client-email")?.value.trim() || "";
         const ref   = $("#client-etablissement")?.value.trim() || "";
+        /* La configuration de borne voyage avec la commande : elle reste en
+           local pour survivre à l'aller-retour vers Stripe, et part au
+           serveur quand il y en a un. */
+        try {
+          const cfg = typeof window.CONFIG_BORNE === "function" ? window.CONFIG_BORNE() : null;
+          if (cfg) localStorage.setItem("borne-commande-en-cours", JSON.stringify({ quand: Date.now(), etab: ref, email, config: cfg }));
+        } catch (err) { /* mode privé : la configuration sera redemandée par e-mail */ }
 
         if (C.modePaiement === "php") {
           bouton.disabled = true;
@@ -202,6 +209,18 @@
         }
       });
     });
+
+    /* ---- Vidéo de présentation ----
+       L'affiche sert de bouton : la vidéo ne se télécharge qu'au clic. */
+    const film = $("#film"), filmPlay = $("#film-play");
+    if (film && filmPlay) {
+      filmPlay.addEventListener("click", () => {
+        filmPlay.hidden = true;
+        film.setAttribute("preload", "auto");
+        film.play().catch(() => { filmPlay.hidden = false; });
+      });
+      film.addEventListener("pause", () => { if (film.currentTime === 0) filmPlay.hidden = false; });
+    }
 
     /* ---- Révélation au défilement --------------------------------------
        Un seul effet sur tout le site. Sans IntersectionObserver ou avec

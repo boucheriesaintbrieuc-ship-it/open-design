@@ -307,6 +307,111 @@ Elles doivent y être avant la première vente.
 
 ---
 
+## Le configurateur de borne
+
+`commander.html` porte un configurateur complet, placé avant le paiement. Le
+client y construit sa borne, la teste, puis paie. Tout se passe dans son
+navigateur : rien n'est envoyé nulle part tant qu'il n'a pas réglé.
+
+### Ce qu'il fait
+
+Quatre onglets. **Enseigne** : nom, type d'établissement, couleur principale,
+logo. **Carte et prix** : catégories, produits, descriptions, prix, photos.
+**Photos** : les images se chargent depuis la carte, sont recadrées en carré et
+ramenées à 420 px dans le navigateur, puis intégrées au fichier produit.
+**Aperçu** : la borne tourne pour de vrai dans un cadre, et se télécharge.
+
+Le fichier téléchargé est un HTML autonome d'une dizaine de kilo-octets, photos
+comprises. Il s'ouvre sur n'importe quelle tablette, sans connexion : grille de
+produits par catégorie, suppléments, panier, question sur place ou à emporter
+avec le taux de TVA correspondant, numéro d'appel, retour automatique à
+l'accueil au bout de sept secondes.
+
+Une carte de démonstration est préchargée. Un configurateur vide décourage, et
+celle-ci montre immédiatement ce que la borne sait afficher.
+
+### Le choix du site
+
+Deux solutions proposées à l'étape 3 : installation sur le site existant du
+client, ou création d'un nouveau site. Dans le second cas, un champ permet de
+saisir le nom de domaine souhaité.
+
+### La vérification du nom de domaine
+
+`paiement/verifier-domaine.php` interroge le registre du domaine par RDAP, le
+protocole qui a remplacé whois. Ce n'est pas une estimation : un domaine absent
+du registre renvoie 404, un domaine enregistré renvoie sa fiche. C'est la source
+qui fait foi, et elle est plus fiable qu'une réponse générée.
+
+La requête part du serveur, donc l'adresse IP du visiteur ne sort pas du site.
+Si PHP n'est pas disponible ou si le registre ne répond pas, l'interface le dit
+et annonce une vérification manuelle à la commande.
+
+Testé depuis ce serveur : `google.com` et `borne-restaurants.fr` ressortent
+pris, un nom inventé ressort libre.
+
+### Où va la configuration
+
+Elle est conservée dans le navigateur du client pour survivre à l'aller-retour
+vers Stripe, et jointe à la commande. Le client garde son fichier de borne
+téléchargé. Vous recevez sa configuration pour monter sa page.
+
+---
+
+## La vidéo de présentation
+
+Votre film de motion design est sur la page d'accueil, entre la fiche produit
+et le récit. Il a été réencodé en 720p à 2,6 Mo, contre 11,5 Mo à l'origine, et
+porte une affiche extraite de la vidéo elle-même.
+
+Il est en `preload="none"` : **rien ne se télécharge tant que le visiteur n'a
+pas appuyé sur lecture**. Vérifié au navigateur, zéro requête vers le MP4 avant
+le clic. C'est ce qui permet de mettre une vidéo d'une minute treize en haut de
+page sans ralentir personne.
+
+---
+
+## Prix et TVA
+
+| | HT | TTC |
+|---|---|---|
+| 1 borne | 600,00 € | 720,00 € |
+| 2 bornes | 570,00 € l'unité | 684,00 € l'unité |
+| 3 et plus | 540,00 € l'unité | 648,00 € l'unité |
+
+Le montant mis en avant partout est le TTC, puisque c'est celui qui sera
+débité. La livraison est annoncée offerte en France métropolitaine, et elle
+figure comme avantage sur la page d'accueil, dans le récapitulatif de commande
+et dans le déroulé de la vente.
+
+Un changement de prix se fait dans `assets/config.js` pour les paliers, puis
+dans `outils/articles.py` et `outils/construire.py` pour les mentions
+rédactionnelles. Les trente pages se régénèrent ensuite d'un coup.
+
+---
+
+## Point bloquant : l'expédition depuis la Chine
+
+La page annonce désormais que la tablette part de votre atelier. Cela change
+deux choses par rapport à un envoi depuis la France, et les deux doivent être
+tranchées avant la première vente.
+
+**Le délai.** Les pages annoncent encore 4 à 7 jours ouvrés, ce qui correspond à
+un envoi depuis un stock européen. Un envoi direct depuis la Chine se compte en
+semaines. Corrigez ce délai partout, ou expédiez depuis un stock européen.
+
+**Les droits et la TVA à l'import.** Si le colis part de Chine vers votre client
+français, quelqu'un paie les droits et la TVA à l'entrée dans l'Union. Si ce
+n'est pas vous, votre client recevra un appel du transporteur et une facture
+surprise, après avoir payé un prix annoncé TTC. C'est exactement le scénario qui
+produit un litige et un avis négatif.
+
+La parade est d'expédier en DDP, droits et taxes payés par l'expéditeur, et de
+le confirmer par écrit à votre transitaire. Tant que ce point n'est pas réglé,
+ne lancez pas la vente : vous vendez un prix tout compris que vous ne tenez pas.
+
+---
+
 ## Ce qui doit être fait avant la mise en ligne
 
 ### Bloquant, sous peine d’infraction ou de site qui ment

@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Commander une borne de commande restaurant | Bornéa</title>
-<meta name="description" content="Configurez votre commande : quantité, mise en service à distance, extension de garantie. Paiement par carte sécurisé par Stripe, livraison offerte.">
+<title>Commander votre borne de commande restaurant | Bornéa</title>
+<meta name="description" content="Construisez votre borne en ligne, essayez-la, puis commandez : 720 € TTC livraison comprise, sans abonnement ni frais d’installation.">
 <link rel="canonical" href="https://borne-restaurants.fr/commander.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Bornéa">
-<meta property="og:title" content="Commander une borne de commande restaurant | Bornéa">
-<meta property="og:description" content="Configurez votre commande : quantité, mise en service à distance, extension de garantie. Paiement par carte sécurisé par Stripe, livraison offerte.">
+<meta property="og:title" content="Commander votre borne de commande restaurant | Bornéa">
+<meta property="og:description" content="Construisez votre borne en ligne, essayez-la, puis commandez : 720 € TTC livraison comprise, sans abonnement ni frais d’installation.">
 <meta property="og:url" content="https://borne-restaurants.fr/commander.html">
 <meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
@@ -485,6 +485,123 @@
   .recit .chiffres b { display: block; font-family: var(--f-data); font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem); font-weight: 700; color: #fff; letter-spacing: -.03em; }
   .recit .chiffres span { font-size: var(--t-sm); color: #9BA0A8; }
 }
+
+@layer composants {
+  /* ---------- Vidéo de présentation ----------
+     preload="none" : rien ne part sur le réseau avant que le visiteur
+     appuie sur lecture. Le bouton couvre l'affiche et disparaît au clic. */
+  .video { position: relative; border-radius: var(--r); overflow: hidden; background: #0D0D0F; border: 1px solid var(--trait); }
+  .video video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; }
+  .video__play {
+    position: absolute; inset: 0; width: 100%; border: 0; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .9rem;
+    background: rgba(13, 13, 15, .35); color: #fff; font-weight: 600; font-size: var(--t-md);
+    transition: background var(--duree) var(--courbe);
+  }
+  .video__play:hover { background: rgba(13, 13, 15, .18); }
+  .video__play svg { width: 4.5rem; height: 4.5rem; background: var(--indigo); border-radius: 50%; padding: .9rem; }
+  .video__play[hidden] { display: none; }
+  .video figcaption { font-size: var(--t-sm); color: var(--gris); padding: .7rem var(--pas); background: var(--carte); border-top: 1px solid var(--trait); }
+
+  /* ---------- Déroulé vertical ---------- */
+  .deroule-v { counter-reset: dv; list-style: none; display: grid; gap: 0; max-width: 46rem; }
+  .deroule-v li { counter-increment: dv; display: grid; grid-template-columns: 2.6rem 1fr; gap: .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait); }
+  .deroule-v li::before { content: counter(dv, decimal-leading-zero); font-family: var(--f-data); font-weight: 700; color: var(--indigo); font-size: var(--t-sm); }
+  /* b et span sont des enfants directs de la grille : sans grid-column, le
+     span retombe dans la colonne du numéro et le texte se casse à un mot
+     par ligne. */
+  .deroule-v b { grid-column: 2; display: block; font-size: var(--t-md); }
+  .deroule-v span { grid-column: 2; display: block; color: var(--gris); font-size: var(--t-sm); margin-top: .25rem; max-width: 42rem; }
+
+  /* ---------- Bandeau d'avantages ---------- */
+  .avantages { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+  .avantages div { border-top: 2px solid var(--valide); padding-top: .8rem; }
+  .avantages b { display: block; font-family: var(--f-data); font-size: clamp(1.2rem, 1rem + .9vw, 1.6rem); font-weight: 700; letter-spacing: -.03em; }
+  .avantages span { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .25rem; }
+}
+/* =========================================================================
+   Styles du configurateur de borne. Intégrés uniquement à commander.html :
+   les vingt-neuf autres pages n'en ont pas besoin et ne doivent pas les
+   porter, puisque chaque page embarque son style.
+   ========================================================================= */
+
+.etape { border-top: 1px solid var(--trait); padding-top: var(--gout); margin-top: var(--section); }
+.etape:first-of-type { border-top: 0; margin-top: var(--gout); padding-top: 0; }
+.etape__num {
+  display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--noir); color: #fff; font-family: var(--f-data); font-size: .8rem; font-weight: 700;
+}
+.etape__tete { display: flex; align-items: center; gap: .8rem; }
+.etape__tete h2 { font-size: var(--t-lg); }
+
+/* ---- Onglets ---- */
+.onglets { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: var(--pas); border-bottom: 1px solid var(--trait); }
+.onglets button {
+  padding: .7rem 1.1rem; background: transparent; border: 0; border-bottom: 2px solid transparent;
+  cursor: pointer; font-weight: 600; font-size: var(--t-sm); color: var(--gris); min-height: 44px;
+}
+.onglets button[aria-selected="true"] { color: var(--indigo); border-bottom-color: var(--indigo); }
+.onglets button:hover { color: var(--noir); }
+[data-panneau] { padding-top: var(--pas); }
+
+/* ---- Enseigne ---- */
+.ens-grille { display: grid; gap: var(--pas); }
+@media (min-width: 46rem) { .ens-grille { grid-template-columns: 1fr 1fr; } }
+.ens-logo { display: flex; align-items: center; gap: var(--pas); }
+#ens-logo-apercu { width: 72px; height: 72px; border: 1px dashed var(--trait); border-radius: var(--r); display: grid; place-items: center; background: var(--carte); overflow: hidden; }
+#ens-logo-apercu img { width: 100%; height: 100%; object-fit: contain; }
+input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); cursor: pointer; }
+
+/* ---- Carte ---- */
+.cat { border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); padding: var(--pas); margin-bottom: var(--pas); }
+.cat__tete { display: flex; align-items: center; gap: .8rem; margin-bottom: .8rem; }
+.cat__nom { flex: 1; font-weight: 700; font-size: var(--t-md); border: 0; border-bottom: 1px dashed var(--trait); background: transparent; padding: .3rem 0; min-height: 40px; }
+.cat__nom:focus { border-bottom-color: var(--indigo); outline: none; }
+.produits { display: grid; gap: .5rem; margin-bottom: .8rem; }
+.prod { display: grid; grid-template-columns: 56px 1fr 7.5rem auto; gap: .6rem; align-items: center; }
+@media (max-width: 40rem) { .prod { grid-template-columns: 48px 1fr auto; } .prod__prix { grid-column: 2; } }
+.prod__img { width: 56px; height: 56px; border: 1px dashed var(--trait); border-radius: var(--r); display: grid; place-items: center; cursor: pointer; overflow: hidden; background: var(--studio-2); font-size: .62rem; color: var(--gris); text-align: center; }
+.prod__img img { width: 100%; height: 100%; object-fit: cover; }
+.prod__img:hover { border-color: var(--indigo); }
+.prod__champs { display: grid; gap: .3rem; min-width: 0; }
+.prod__champs input, .prod__prix input, .supp input {
+  min-height: 40px; padding: .4rem .6rem; border: 1px solid var(--trait); border-radius: 4px; background: var(--carte); width: 100%;
+}
+.prod__prix { font-size: var(--t-sm); display: flex; align-items: center; gap: .3rem; }
+.prod__prix input { text-align: right; font-family: var(--f-data); }
+.lien-sup { background: none; border: 0; color: var(--gris); cursor: pointer; font-size: var(--t-sm); padding: .4rem; min-height: 40px; min-width: 40px; }
+.lien-sup:hover { color: #A03007; }
+.supp { display: grid; grid-template-columns: 1fr 7rem auto; gap: .5rem; align-items: center; margin-bottom: .4rem; }
+.supp input[type="number"] { text-align: right; font-family: var(--f-data); }
+
+/* ---- Site et domaine ---- */
+.solutions { display: grid; gap: var(--pas); }
+@media (min-width: 46rem) { .solutions { grid-template-columns: 1fr 1fr; } }
+.solution { display: grid; grid-template-columns: auto 1fr; gap: .8rem; align-items: start; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); padding: var(--pas); cursor: pointer; }
+.solution:has(input:checked) { border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
+.solution input { width: 24px; height: 24px; accent-color: var(--indigo); margin-top: .1rem; }
+.solution b { display: block; }
+.solution span.d { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .25rem; }
+.dom-ligne { display: flex; gap: .5rem; flex-wrap: wrap; align-items: flex-end; }
+.dom-ligne .champ { flex: 1; min-width: 14rem; }
+.dom-rep { font-size: var(--t-sm); color: var(--gris); margin-top: .5rem; min-height: 1.4em; }
+.dom-rep--oui { color: var(--valide); font-weight: 600; }
+.dom-rep--non { color: #A03007; font-weight: 600; }
+
+/* ---- Aperçu ---- */
+#apercu-cadre { width: 100%; height: 34rem; border: 1px solid var(--trait); border-radius: var(--r); background: #0D0D0F; margin-top: var(--pas); }
+.generer-ligne { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; margin-top: var(--pas); }
+#generer-ok { font-size: var(--t-sm); color: var(--valide); font-weight: 600; }
+#cfg-erreur { background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412; border-radius: var(--r); padding: .7rem 1rem; font-size: var(--t-sm); margin-top: .7rem; }
+#cfg-compte { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--gris); }
+#resume-borne { font-size: var(--t-sm); color: var(--gris); }
+
+/* ---- Déroulé de la vente ---- */
+.deroule { counter-reset: d; display: grid; gap: 0; margin-top: var(--gout); }
+.deroule li { counter-increment: d; display: grid; grid-template-columns: 2.4rem 1fr; gap: .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait); }
+.deroule li::before { content: counter(d); font-family: var(--f-data); font-weight: 700; color: var(--indigo); }
+.deroule b { display: block; }
+.deroule span { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
 </style>
 </head>
 <body>
@@ -582,75 +699,208 @@
 <nav class="env fil" aria-label="Fil d’Ariane"><ol><li><a href="index.html">Accueil</a></li><li><span aria-current="page">Commander</span></li></ol></nav><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://borne-restaurants.fr/"}, {"@type": "ListItem", "position": 2, "name": "Commander"}]}</script>
 <main id="contenu" class="env sec" style="padding-top:var(--pas)">
   <p class="surtitre">Commande</p>
-  <h1 style="font-size:var(--t-2xl)">Configurez votre commande</h1>
-  <p class="prose mt-1">Choisissez la quantité, ajoutez les options si vous en voulez, et payez par carte. Le paiement se fait sur une page hébergée par Stripe : votre numéro de carte ne transite jamais par ce site.</p>
+  <h1 style="font-size:var(--t-2xl)">Configurez votre borne, puis payez</h1>
+  <p class="prose mt-1">Vous construisez votre écran de commande ici, gratuitement et sans créer de compte. Vous pouvez même le télécharger pour l’essayer avant de payer quoi que ce soit.</p>
+
+  <div class="carte mt-2" data-reveal>
+    <h2 style="font-size:var(--t-lg)">Comment se passe la vente</h2>
+    <ol class="deroule" role="list">
+      <li><div><b>Vous configurez votre borne sur cette page</b><span>Votre carte, vos prix, vos photos. Rien n’est envoyé nulle part tant que vous n’avez pas payé.</span></div></li>
+      <li><div><b>Vous payez 720 € TTC par carte</b><span>600 € hors taxes plus 20 % de TVA. Livraison comprise, aucun frais d’installation, aucun abonnement.</span></div></li>
+      <li><div><b>Nous lançons la commande à notre usine</b><span>La tablette part de notre atelier en Chine vers votre adresse. Vous recevez le numéro de suivi au départ.</span></div></li>
+      <li><div><b>Pendant le transport, nous montons votre page de borne</b><span>Nous reprenons votre configuration, nous la mettons en ligne, et nous vous envoyons l’adresse à ouvrir sur la tablette.</span></div></li>
+      <li><div><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette page et la borne est en service. Comptez un quart d’heure.</span></div></li>
+    </ol>
+  </div>
 
   <form class="config mt-2" id="configurateur" novalidate>
     <div>
-      <fieldset class="carte">
-        <legend class="surtitre" style="padding:0 0 .6rem">Quantité</legend>
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-          <div class="compteur">
-            <button type="button" data-qte="-1" aria-label="Retirer une borne">−</button>
-            <output id="qte-valeur" aria-live="polite">1</output>
-            <button type="button" data-qte="1" aria-label="Ajouter une borne">+</button>
+
+      <!-- ============ 1. Matériel ============ -->
+      <section class="etape">
+        <div class="etape__tete"><span class="etape__num">1</span><h2>Votre matériel</h2></div>
+        <fieldset class="carte mt-1">
+          <legend class="surtitre" style="padding:0 0 .6rem">Quantité</legend>
+          <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+            <div class="compteur">
+              <button type="button" data-qte="-1" aria-label="Retirer une borne">−</button>
+              <output id="qte-valeur" aria-live="polite">1</output>
+              <button type="button" data-qte="1" aria-label="Ajouter une borne">+</button>
+            </div>
+            <p class="note" style="max-width:26rem">600 € HT l’unité, 570 € à partir de deux bornes, 540 € à partir de trois. La remise s’applique toute seule.</p>
           </div>
-          <p class="note" style="max-width:26rem">499 € HT l’unité, 469 € à partir de deux bornes, 449 € à partir de trois. La remise s’applique toute seule.</p>
-        </div>
-      </fieldset>
+        </fieldset>
 
-      <fieldset class="mt-2">
-        <legend class="surtitre" style="padding:0 0 .6rem">Options</legend>
-        <div style="display:grid;gap:.7rem">
-          <label class="option">
-            <input type="checkbox" id="opt-mise-en-service">
+        <fieldset class="mt-2">
+          <legend class="surtitre" style="padding:0 0 .6rem">Options</legend>
+          <div style="display:grid;gap:.7rem">
+            <label class="option">
+              <input type="checkbox" id="opt-mise-en-service">
+              <span>
+                <span class="titre-opt">Mise en service à distance</span>
+                <span class="desc-opt">Une heure en visio : nous installons votre page de borne sur la tablette, nous la verrouillons en mode kiosque et nous formons la personne qui s’en occupera.</span>
+              </span>
+              <span class="prix">149 € HT</span>
+            </label>
+            <label class="option">
+              <input type="checkbox" id="opt-garantie">
+              <span>
+                <span class="titre-opt">Extension de garantie à 3 ans</span>
+                <span class="desc-opt">Un an de garantie contractuelle supplémentaire, sur les mêmes pièces et la même main-d’œuvre. Facturée par borne.</span>
+              </span>
+              <span class="prix">79 € HT</span>
+            </label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- ============ 2. La borne ============ -->
+      <section class="etape">
+        <div class="etape__tete"><span class="etape__num">2</span><h2>Votre borne</h2></div>
+        <p class="note mt-1">Modifiez la carte de démonstration ou repartez de zéro. <span id="cfg-compte"></span></p>
+
+        <div class="onglets" role="tablist">
+          <button type="button" role="tab" data-onglet="enseigne" aria-selected="true">Enseigne</button>
+          <button type="button" role="tab" data-onglet="carte" aria-selected="false">Carte et prix</button>
+          <button type="button" role="tab" data-onglet="images" aria-selected="false">Photos</button>
+          <button type="button" role="tab" data-onglet="apercu" aria-selected="false">Aperçu</button>
+        </div>
+        <p id="cfg-erreur" hidden></p>
+
+        <div data-panneau="enseigne" id="cfg-enseigne">
+          <div class="ens-grille">
+            <label class="champ"><span>Nom affiché sur la borne</span>
+              <input type="text" id="ens-nom" placeholder="Le Comptoir 22" autocomplete="organization">
+            </label>
+            <label class="champ"><span>Type d’établissement</span>
+              <select id="ens-type">
+                <option>Restauration rapide</option>
+                <option>Kebab</option>
+                <option>Pizzeria</option>
+                <option>Burger</option>
+                <option>Boulangerie</option>
+                <option>Brasserie</option>
+                <option>Snack</option>
+                <option>Food truck</option>
+                <option>Autre</option>
+              </select>
+            </label>
+            <label class="champ"><span>Couleur principale</span>
+              <input type="color" id="ens-couleur" value="#D4321C">
+            </label>
+            <div class="champ"><span>Logo</span>
+              <div class="ens-logo">
+                <div id="ens-logo-apercu"></div>
+                <div>
+                  <label class="btn btn--secondaire btn--petit" style="cursor:pointer">Choisir un fichier
+                    <input type="file" id="ens-logo" accept="image/*" hidden>
+                  </label>
+                  <button type="button" class="lien-sup" id="ens-logo-sup">Retirer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-panneau="carte" hidden>
+          <div id="cfg-carte"></div>
+          <button type="button" class="btn btn--secondaire btn--petit" id="add-cat">Ajouter une catégorie</button>
+
+          <h3 class="mt-2" style="font-size:var(--t-md)">Suppléments proposés à chaque produit</h3>
+          <p class="note">C’est ce qui fait monter le panier. L’écran les propose à chaque commande, sans jamais les oublier.</p>
+          <div id="cfg-supplements" class="mt-1"></div>
+          <button type="button" class="btn btn--secondaire btn--petit" id="add-supp">Ajouter un supplément</button>
+        </div>
+
+        <div data-panneau="images" hidden>
+          <p class="prose">Les photos se chargent depuis l’onglet « Carte et prix » : touchez le carré gris à gauche de chaque produit. Elles sont redimensionnées dans votre navigateur et intégrées au fichier de la borne, donc elle fonctionne même sans connexion.</p>
+          <ul class="inclus mt-1" role="list">
+            <li>Format carré, recadrage automatique au centre</li>
+            <li>Une photo par produit, aucune limite de nombre</li>
+            <li>Vos fichiers ne quittent pas votre ordinateur tant que vous n’avez pas payé</li>
+            <li>Pas de photo sous la main ? La borne affiche le nom et le prix, et vous les ajouterez plus tard</li>
+          </ul>
+          <p class="note mt-1">Nous reprenons ces mêmes photos pour monter votre page en ligne. Si vous préférez nous envoyer les originaux en haute définition, écrivez-nous après la commande.</p>
+        </div>
+
+        <div data-panneau="apercu" hidden>
+          <p class="prose">Essayez votre borne comme le fera votre client, puis téléchargez le fichier. Il fonctionne seul, sur n’importe quelle tablette, sans internet.</p>
+          <div class="generer-ligne">
+            <button type="button" class="btn btn--secondaire" id="apercu">Voir l’aperçu</button>
+            <button type="button" class="btn" id="generer">Télécharger ma borne</button>
+            <button type="button" class="lien-sup" id="reinit">Repartir de la démonstration</button>
+          </div>
+          <p id="generer-ok" hidden>Fichier téléchargé. Ouvrez-le dans un navigateur pour le tester.</p>
+          <iframe id="apercu-cadre" title="Aperçu de votre borne de commande" hidden></iframe>
+        </div>
+      </section>
+
+      <!-- ============ 3. Site ============ -->
+      <section class="etape" id="cfg-site">
+        <div class="etape__tete"><span class="etape__num">3</span><h2>Où votre borne sera hébergée</h2></div>
+        <p class="prose mt-1">Votre page de borne doit vivre à une adresse que la tablette ouvre au démarrage. Deux solutions, au choix.</p>
+
+        <div class="solutions mt-1">
+          <label class="solution">
+            <input type="radio" name="solution" value="existant">
             <span>
-              <span class="titre-opt">Mise en service à distance</span>
-              <span class="desc-opt">Une heure en visio : on installe votre application de commande, on verrouille la borne en mode kiosque et on forme la personne qui s’en occupera.</span>
+              <b>Je l’installe sur mon site</b>
+              <span class="d">Vous avez déjà un site. Nous vous livrons le fichier et l’adresse à créer, vous le déposez chez votre hébergeur. Aucun frais supplémentaire.</span>
             </span>
-            <span class="prix">149 € HT</span>
           </label>
-          <label class="option">
-            <input type="checkbox" id="opt-garantie">
+          <label class="solution">
+            <input type="radio" name="solution" value="nouveau" checked>
             <span>
-              <span class="titre-opt">Extension de garantie à 3 ans</span>
-              <span class="desc-opt">Un an de plus que la garantie légale de conformité, sur les mêmes pièces et la même main-d’œuvre. Facturée par borne.</span>
+              <b>Je n’ai pas de site, créez-le-moi</b>
+              <span class="d">Nous montons la page et la mettons en ligne. Vous ne payez que l’hébergement et le nom de domaine, directement au prestataire ou par nous.</span>
             </span>
-            <span class="prix">79 € HT</span>
           </label>
         </div>
-      </fieldset>
 
-      <fieldset class="mt-2">
-        <legend class="surtitre" style="padding:0 0 .6rem">Vos coordonnées</legend>
-        <div style="display:grid;gap:.9rem;max-width:30rem">
+        <div id="bloc-domaine" class="carte mt-2">
+          <h3 style="font-size:var(--t-md)">Votre nom de domaine</h3>
+          <p class="note mt-1">Nous le réservons et nous nous occupons de tout pour <strong>20 € par an</strong>. Vérifiez d’abord qu’il est libre.</p>
+          <div class="dom-ligne mt-1">
+            <label class="champ"><span>Nom souhaité, avec son extension</span>
+              <input type="text" id="dom-nom" placeholder="mon-restaurant.fr" autocomplete="off" spellcheck="false">
+            </label>
+            <button type="button" class="btn btn--secondaire" id="dom-verifier">Vérifier</button>
+          </div>
+          <p class="dom-rep" id="dom-reponse"></p>
+          <p class="note">La réponse vient du registre du domaine, pas d’une estimation. Si le registre ne répond pas, nous vérifions à la main au moment de la commande et nous vous prévenons.</p>
+        </div>
+      </section>
+
+      <!-- ============ 4. Coordonnées ============ -->
+      <section class="etape">
+        <div class="etape__tete"><span class="etape__num">4</span><h2>Vos coordonnées</h2></div>
+        <div style="display:grid;gap:.9rem;max-width:30rem" class="mt-1">
           <label class="champ"><span>Nom de l’établissement</span>
             <input type="text" id="client-etablissement" name="etablissement" autocomplete="organization" placeholder="Le Comptoir 22, Saint-Brieuc">
           </label>
           <label class="champ"><span>Adresse e-mail</span>
             <input type="email" id="client-email" name="email" autocomplete="email" placeholder="vous@votre-restaurant.fr">
           </label>
-          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher la commande à votre établissement. L’adresse de livraison et l’éventuel numéro de TVA se saisissent sur la page Stripe.</p>
+          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison et l’éventuel numéro de TVA se saisissent sur la page Stripe.</p>
         </div>
-      </fieldset>
+      </section>
     </div>
 
     <aside class="config__recap">
       <div class="carte">
-        <div class="scene" style="min-height:14rem;background:none;border:0;padding:0">
-          <div class="scene__sol" id="scene-bornes">
-            <svg class="borne" viewBox="0 0 200 660" aria-hidden="true"><use href="#borne-commande"/></svg><svg class="borne" viewBox="0 0 200 660" aria-hidden="true" hidden><use href="#borne-commande"/></svg><svg class="borne" viewBox="0 0 200 660" aria-hidden="true" hidden><use href="#borne-commande"/></svg>
-            <span id="scene-surplus" class="note prix" hidden></span>
-          </div>
-        </div>
+        <figure class="photo" style="margin-bottom:var(--pas)">
+          <img src="img/borne-de-commande-restaurant-ecran-portrait-600.webp" width="600" height="600" loading="lazy" decoding="async"
+               alt="La borne de commande sur son pied, écran vertical">
+        </figure>
 
-        <h2 style="font-size:var(--t-lg)" class="mt-1">Récapitulatif</h2>
+        <h2 style="font-size:var(--t-lg)">Récapitulatif</h2>
+        <p id="resume-borne" class="mt-1"></p>
         <div class="recap__lignes" id="recap-lignes"></div>
         <div class="recap__total">
-          <span>Total hors taxes</span>
-          <span class="prix" id="recap-total-ht">499,00 €</span>
+          <span>Total à payer</span>
+          <span class="prix" id="recap-total-ttc">720,00 €</span>
         </div>
-        <p class="note" style="text-align:right;margin-top:.3rem"><span id="recap-total-ttc">598,80 € TTC</span></p>
+        <p class="note" style="text-align:right;margin-top:.3rem"><span id="recap-total-ht">600,00 €</span> HT · TVA 20 % · livraison offerte</p>
 
         <label class="option mt-1" style="grid-template-columns:auto 1fr">
           <input type="checkbox" id="accepte-cgv">
@@ -661,9 +911,11 @@
         <p class="erreur mt-1" id="erreur-paiement" hidden></p>
 
         <ul class="garanties mt-1" role="list">
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Livraison offerte</strong>, aucun frais d’installation</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>0 € par mois</strong>, aucun engagement</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>TVA 20 % comprise dans le prix affiché</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement traité par Stripe, aucune donnée bancaire sur ce site</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le paiement</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Livraison offerte, expédition sous 4 à 7 jours ouvrés</span></li>
         </ul>
 
         <p class="note mt-1">Vous préférez payer par virement, ou vous avez besoin d’un devis pour votre comptable&nbsp;? Écrivez à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a> ou appelez le <a data-tel href="tel:+33296000000">02 96 00 00 00</a>.</p>
@@ -691,7 +943,7 @@
     <div>
       <h2>Le produit</h2>
       <ul role="list">
-        <li><a href="index.html">La borne à 499 € HT</a></li>
+        <li><a href="index.html">La borne à 600 € HT</a></li>
         <li><a href="commander.html">Commander</a></li>
         <li><a href="guide-borne-de-commande-restaurant.html">Guide d’achat</a></li>
         <li><a href="blog.html">Blog</a></li>
@@ -741,9 +993,9 @@ window.CONFIG = {
   /* ---- Tarifs, en euros hors taxes ----------------------------------- */
   tva: 0.20,
   paliers: [                                   /* à partir de N unités, prix unitaire HT */
-    { aPartirDe: 1, prixHT: 499 },
-    { aPartirDe: 2, prixHT: 469 },
-    { aPartirDe: 3, prixHT: 449 }
+    { aPartirDe: 1, prixHT: 600 },
+    { aPartirDe: 2, prixHT: 570 },
+    { aPartirDe: 3, prixHT: 540 }
   ],
   options: {
     miseEnService: { libelle: "Mise en service à distance",  prixHT: 149, parUnite: false },
@@ -922,7 +1174,7 @@ window.CONFIG = {
         const cgv = $("#accepte-cgv");
         if (bouton) bouton.disabled = cgv ? !cgv.checked : false;
         if (totalHT)  totalHT.textContent  = euros(ht);
-        if (totalTTC) totalTTC.textContent = euros(ttc(ht)) + " TTC";
+        if (totalTTC) totalTTC.textContent = euros(ttc(ht));
         if (barrePrix) barrePrix.textContent = euros(ttc(ht)) + " TTC";
         dessinerScene();
       };
@@ -940,6 +1192,13 @@ window.CONFIG = {
         const e = etat();
         const email = $("#client-email")?.value.trim() || "";
         const ref   = $("#client-etablissement")?.value.trim() || "";
+        /* La configuration de borne voyage avec la commande : elle reste en
+           local pour survivre à l'aller-retour vers Stripe, et part au
+           serveur quand il y en a un. */
+        try {
+          const cfg = typeof window.CONFIG_BORNE === "function" ? window.CONFIG_BORNE() : null;
+          if (cfg) localStorage.setItem("borne-commande-en-cours", JSON.stringify({ quand: Date.now(), etab: ref, email, config: cfg }));
+        } catch (err) { /* mode privé : la configuration sera redemandée par e-mail */ }
 
         if (C.modePaiement === "php") {
           bouton.disabled = true;
@@ -1004,6 +1263,18 @@ window.CONFIG = {
         }
       });
     });
+
+    /* ---- Vidéo de présentation ----
+       L'affiche sert de bouton : la vidéo ne se télécharge qu'au clic. */
+    const film = $("#film"), filmPlay = $("#film-play");
+    if (film && filmPlay) {
+      filmPlay.addEventListener("click", () => {
+        filmPlay.hidden = true;
+        film.setAttribute("preload", "auto");
+        film.play().catch(() => { filmPlay.hidden = false; });
+      });
+      film.addEventListener("pause", () => { if (film.currentTime === 0) filmPlay.hidden = false; });
+    }
 
     /* ---- Révélation au défilement --------------------------------------
        Un seul effet sur tout le site. Sans IntersectionObserver ou avec
@@ -1103,5 +1374,610 @@ window.CONFIG = {
     : init();
 })();
 </script>
+<script>/* =========================================================================
+   Configurateur de borne.
+
+   Chargé uniquement par commander.html. Il fait trois choses :
+   1. recueillir l'enseigne, la carte, les suppléments et le choix de site ;
+   2. produire un fichier HTML autonome qui tourne sur la tablette, hors ligne,
+      images comprises (elles sont redimensionnées puis intégrées au fichier) ;
+   3. transmettre cette configuration avec la commande.
+
+   Rien ne part sur un serveur tant que le client n'a pas validé : tout vit
+   dans son navigateur, et la configuration est conservée en local pour
+   survivre à l'aller-retour vers la page de paiement.
+   ========================================================================= */
+(() => {
+  "use strict";
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const CLE = "borne-config-v1";
+
+  const euros = n => Number(n || 0).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const esc = s => String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  const uid = () => Math.random().toString(36).slice(2, 9);
+
+  /* ---- Carte de départ -------------------------------------------------
+     Un configurateur vide décourage. Celle-ci est modifiable entièrement et
+     sert surtout à montrer ce que la borne sait afficher. */
+  const DEPART = {
+    enseigne: { nom: "", type: "Restauration rapide", couleur: "#D4321C", logo: "" },
+    tva: { place: 10, emporter: 5.5 },
+    categories: [
+      { id: uid(), nom: "Menus", produits: [
+        { id: uid(), nom: "Menu burger", prix: 12.9, desc: "Burger, frites et boisson", image: "" },
+        { id: uid(), nom: "Menu poulet", prix: 11.5, desc: "Poulet croustillant, frites et boisson", image: "" },
+        { id: uid(), nom: "Menu enfant", prix: 7.5, desc: "Petit burger, frites et jus", image: "" },
+      ]},
+      { id: uid(), nom: "À la carte", produits: [
+        { id: uid(), nom: "Burger simple", prix: 8.5, desc: "Steak, cheddar, salade, sauce maison", image: "" },
+        { id: uid(), nom: "Frites", prix: 3.2, desc: "Portion généreuse", image: "" },
+      ]},
+      { id: uid(), nom: "Boissons", produits: [
+        { id: uid(), nom: "Soda 33 cl", prix: 2.5, desc: "Au gobelet", image: "" },
+        { id: uid(), nom: "Eau minérale 50 cl", prix: 1.8, desc: "Bouteille", image: "" },
+        { id: uid(), nom: "Café", prix: 1.5, desc: "Expresso", image: "" },
+      ]},
+      { id: uid(), nom: "Desserts", produits: [
+        { id: uid(), nom: "Brownie", prix: 3.5, desc: "Fait maison", image: "" },
+      ]},
+    ],
+    supplements: [
+      { id: uid(), nom: "Bacon", prix: 1.5 },
+      { id: uid(), nom: "Cheddar", prix: 1 },
+      { id: uid(), nom: "Frites XL", prix: 1.2 },
+      { id: uid(), nom: "Sauce maison", prix: 0.6 },
+    ],
+    site: { solution: "nouveau", domaine: "", statut: "" },
+  };
+
+  let E = charger() || structuredClone(DEPART);
+
+  function charger() {
+    try { const v = localStorage.getItem(CLE); return v ? JSON.parse(v) : null; }
+    catch (e) { return null; }
+  }
+  function sauver() {
+    try { localStorage.setItem(CLE, JSON.stringify(E)); } catch (e) { /* mode privé */ }
+  }
+
+  /* ---- Images : redimensionnées dans le navigateur ---------------------
+     Une photo de téléphone pèse 4 Mo. Intégrée telle quelle dans le fichier
+     de la borne, elle le rendrait inutilisable. On la ramène à 420 px. */
+  function redimensionner(fichier, max = 420) {
+    return new Promise((ok, non) => {
+      if (!fichier.type.startsWith("image/")) return non(new Error("ce fichier n’est pas une image"));
+      const fr = new FileReader();
+      fr.onerror = () => non(new Error("lecture impossible"));
+      fr.onload = () => {
+        const im = new Image();
+        im.onerror = () => non(new Error("image illisible"));
+        im.onload = () => {
+          const c = Math.min(im.width, im.height);
+          const cv = document.createElement("canvas");
+          cv.width = cv.height = max;
+          const x = cv.getContext("2d");
+          x.drawImage(im, (im.width - c) / 2, (im.height - c) / 2, c, c, 0, 0, max, max);
+          ok(cv.toDataURL("image/jpeg", 0.74));
+        };
+        im.src = fr.result;
+      };
+      fr.readAsDataURL(fichier);
+    });
+  }
+
+  /* =====================================================================
+     Rendu du configurateur
+     ===================================================================== */
+  function rendreEnseigne() {
+    const z = $("#cfg-enseigne");
+    if (!z) return;
+    $("#ens-nom").value = E.enseigne.nom;
+    $("#ens-type").value = E.enseigne.type;
+    $("#ens-couleur").value = E.enseigne.couleur;
+    const ap = $("#ens-logo-apercu");
+    ap.innerHTML = E.enseigne.logo
+      ? '<img src="' + E.enseigne.logo + '" alt="Logo de votre enseigne" width="72" height="72">'
+      : '<span class="note">Aucun logo</span>';
+  }
+
+  function rendreCarte() {
+    const z = $("#cfg-carte");
+    if (!z) return;
+    z.innerHTML = "";
+    E.categories.forEach((cat, ic) => {
+      const bloc = document.createElement("section");
+      bloc.className = "cat";
+      bloc.innerHTML =
+        '<header class="cat__tete">' +
+          '<input class="cat__nom" value="' + esc(cat.nom) + '" aria-label="Nom de la catégorie">' +
+          '<button type="button" class="lien-sup" data-sup-cat="' + ic + '">Retirer la catégorie</button>' +
+        '</header>' +
+        '<div class="produits"></div>' +
+        '<button type="button" class="btn btn--secondaire btn--petit" data-add-prod="' + ic + '">Ajouter un produit</button>';
+      const liste = $(".produits", bloc);
+      cat.produits.forEach((p, ip) => {
+        const l = document.createElement("div");
+        l.className = "prod";
+        l.innerHTML =
+          '<label class="prod__img">' +
+            (p.image ? '<img src="' + p.image + '" alt="">' : '<span>photo</span>') +
+            '<input type="file" accept="image/*" data-img="' + ic + ':' + ip + '" hidden>' +
+          '</label>' +
+          '<div class="prod__champs">' +
+            '<input value="' + esc(p.nom) + '" data-ch="nom" data-i="' + ic + ':' + ip + '" placeholder="Nom du produit" aria-label="Nom du produit">' +
+            '<input value="' + esc(p.desc) + '" data-ch="desc" data-i="' + ic + ':' + ip + '" placeholder="Description courte" aria-label="Description">' +
+          '</div>' +
+          '<div class="prod__prix">' +
+            '<input type="number" step="0.10" min="0" value="' + Number(p.prix).toFixed(2) + '" data-ch="prix" data-i="' + ic + ':' + ip + '" aria-label="Prix en euros"> €' +
+          '</div>' +
+          '<button type="button" class="lien-sup" data-sup-prod="' + ic + ':' + ip + '" aria-label="Retirer ce produit">×</button>';
+        liste.append(l);
+      });
+      z.append(bloc);
+    });
+
+    const sup = $("#cfg-supplements");
+    sup.innerHTML = "";
+    E.supplements.forEach((s, i) => {
+      const l = document.createElement("div");
+      l.className = "supp";
+      l.innerHTML =
+        '<input value="' + esc(s.nom) + '" data-sch="nom" data-si="' + i + '" placeholder="Nom" aria-label="Nom du supplément">' +
+        '<input type="number" step="0.10" min="0" value="' + Number(s.prix).toFixed(2) + '" data-sch="prix" data-si="' + i + '" aria-label="Prix du supplément"> €' +
+        '<button type="button" class="lien-sup" data-sup-supp="' + i + '" aria-label="Retirer">×</button>';
+      sup.append(l);
+    });
+
+    const n = E.categories.reduce((t, c) => t + c.produits.length, 0);
+    $("#cfg-compte").textContent = n + (n > 1 ? " produits" : " produit") + " dans " + E.categories.length + " catégories";
+  }
+
+  function rendreSite() {
+    const z = $("#cfg-site");
+    if (!z) return;
+    $$("input[name=solution]").forEach(r => { r.checked = (r.value === E.site.solution); });
+    $("#dom-nom").value = E.site.domaine;
+    $("#bloc-domaine").hidden = (E.site.solution !== "nouveau");
+  }
+
+  /* =====================================================================
+     Le fichier de borne produit
+     ===================================================================== */
+  function genererBorne() {
+    const ens = E.enseigne;
+    const nom = ens.nom.trim() || "Votre enseigne";
+    const c = ens.couleur || "#D4321C";
+    const data = {
+      nom, couleur: c, logo: ens.logo,
+      tva: E.tva,
+      categories: E.categories.map(cat => ({
+        nom: cat.nom,
+        produits: cat.produits.filter(p => p.nom.trim()).map(p => ({
+          nom: p.nom, prix: Number(p.prix) || 0, desc: p.desc, image: p.image
+        }))
+      })).filter(cat => cat.produits.length),
+      supplements: E.supplements.filter(s => s.nom.trim()).map(s => ({ nom: s.nom, prix: Number(s.prix) || 0 })),
+    };
+
+    return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>${esc(nom)} — Commande</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0D0D0F;color:#fff;
+ font-family:"Helvetica Neue","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+ -webkit-tap-highlight-color:transparent;user-select:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+#app{display:flex;flex-direction:column;height:100%}
+header{display:flex;align-items:center;gap:14px;padding:14px 20px;background:#141417;border-bottom:1px solid #26262B}
+header img{width:44px;height:44px;object-fit:contain;border-radius:8px}
+header h1{font-size:20px;margin:0;letter-spacing:-.02em}
+header .h{margin-left:auto;font-variant-numeric:tabular-nums;color:#8E8E96;font-size:15px}
+nav{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;background:#101013;border-bottom:1px solid #26262B}
+nav button{padding:10px 18px;border-radius:999px;background:#1C1C21;color:#C9C9D1;white-space:nowrap;font-size:16px}
+nav button[aria-selected=true]{background:${c};color:#fff;font-weight:600}
+main{flex:1;display:flex;min-height:0}
+#grille{flex:1;overflow-y:auto;padding:18px;display:grid;gap:14px;
+ grid-template-columns:repeat(auto-fill,minmax(180px,1fr));align-content:start}
+.carte{background:#17171B;border:1px solid #26262B;border-radius:14px;overflow:hidden;text-align:left;display:flex;flex-direction:column}
+.carte:active{transform:scale(.98)}
+.carte .ph{aspect-ratio:1;background:#1F1F25;display:grid;place-items:center;color:#4A4A55;font-size:13px}
+.carte .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.carte .t{padding:12px}
+.carte .n{font-weight:600;font-size:16px;line-height:1.25}
+.carte .d{font-size:13px;color:#8E8E96;margin-top:4px;line-height:1.35}
+.carte .p{margin-top:8px;font-weight:700;font-variant-numeric:tabular-nums;color:${c}}
+aside{width:340px;background:#141417;border-left:1px solid #26262B;display:flex;flex-direction:column}
+aside h2{font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:#8E8E96;margin:0;padding:18px 18px 10px}
+#panier{flex:1;overflow-y:auto;padding:0 18px}
+#panier .vide{color:#6A6A74;font-size:15px;padding:20px 0}
+.ligne{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-top:1px solid #26262B}
+.ligne:first-child{border-top:0}
+.ligne .q{background:${c};color:#fff;min-width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+.ligne .i{flex:1;font-size:15px;line-height:1.3}
+.ligne .i small{display:block;color:#8E8E96;font-size:13px;margin-top:2px}
+.ligne .m{font-variant-numeric:tabular-nums;font-weight:600}
+.ligne .x{color:#6A6A74;font-size:20px;line-height:1;padding:0 4px}
+#bas{padding:18px;border-top:1px solid #26262B}
+#total{display:flex;justify-content:space-between;align-items:baseline;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+#total span:first-child{font-size:15px;color:#8E8E96;font-weight:400}
+.gros{width:100%;margin-top:14px;padding:18px;border-radius:12px;background:${c};color:#fff;font-size:19px;font-weight:700}
+.gros[disabled]{opacity:.35}
+dialog{border:0;border-radius:18px;padding:0;background:#17171B;color:#fff;width:min(94vw,520px);max-height:88vh}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+.dlg{padding:22px}
+.dlg h3{margin:0 0 4px;font-size:24px}
+.dlg .dd{color:#8E8E96;font-size:15px;margin:0 0 18px}
+.opts{display:grid;gap:9px;max-height:38vh;overflow-y:auto;margin-bottom:18px}
+.opt{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid #2E2E36;border-radius:11px;font-size:16px}
+.opt[aria-pressed=true]{border-color:${c};background:rgba(255,255,255,.04)}
+.opt .pp{margin-left:auto;font-variant-numeric:tabular-nums;color:#8E8E96}
+.rangee{display:flex;gap:10px}
+.rangee button{flex:1;padding:16px;border-radius:12px;font-size:17px;font-weight:600}
+.sec{background:#24242B;color:#fff}
+#fin{position:fixed;inset:0;background:#0D0D0F;display:none;place-items:center;text-align:center;padding:30px;z-index:9}
+#fin.on{display:grid}
+#fin .num{font-size:19vh;font-weight:800;line-height:1;color:${c};font-variant-numeric:tabular-nums}
+#fin p{font-size:21px;color:#C9C9D1;margin:18px 0 0}
+@media (max-width:860px){
+ main{flex-direction:column}
+ aside{width:auto;border-left:0;border-top:1px solid #26262B;max-height:46%}
+ #grille{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    ${ens.logo ? '<img src="' + ens.logo + '" alt="">' : ""}
+    <h1>${esc(nom)}</h1>
+    <span class="h" id="heure"></span>
+  </header>
+  <nav id="cats" role="tablist"></nav>
+  <main>
+    <div id="grille"></div>
+    <aside>
+      <h2>Votre commande</h2>
+      <div id="panier"></div>
+      <div id="bas">
+        <div id="total"><span>Total</span><span id="mt">0,00 €</span></div>
+        <button class="gros" id="valider" disabled>Valider ma commande</button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<dialog id="dlg"><div class="dlg">
+  <h3 id="d-nom"></h3>
+  <p class="dd" id="d-desc"></p>
+  <div class="opts" id="d-opts"></div>
+  <div class="rangee">
+    <button class="sec" id="d-annuler">Annuler</button>
+    <button class="gros" id="d-ok" style="margin:0">Ajouter</button>
+  </div>
+</div></dialog>
+
+<dialog id="dlg2"><div class="dlg">
+  <h3>Vous mangez…</h3>
+  <p class="dd">Le taux de TVA appliqué en dépend.</p>
+  <div class="rangee">
+    <button class="gros" style="margin:0" data-ou="place">Sur place</button>
+    <button class="gros" style="margin:0" data-ou="emporter">À emporter</button>
+  </div>
+  <div class="rangee" style="margin-top:10px"><button class="sec" id="d2-annuler">Retour</button></div>
+</div></dialog>
+
+<div id="fin"><div>
+  <p style="font-size:19px;color:#8E8E96;margin:0">Commande envoyée en cuisine</p>
+  <div class="num" id="f-num">—</div>
+  <p id="f-txt"></p>
+</div></div>
+
+<script>
+(function(){
+"use strict";
+var D = ${JSON.stringify(data)};
+var panier = [], cat = 0, enCours = null, opts = [], numero = 1;
+var eur = function(n){ return n.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}) + " \\u20AC"; };
+var $ = function(s){ return document.querySelector(s); };
+
+function heure(){
+  var d = new Date();
+  $("#heure").textContent = ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);
+}
+heure(); setInterval(heure, 10000);
+
+function cats(){
+  var n = $("#cats"); n.innerHTML = "";
+  D.categories.forEach(function(c,i){
+    var b = document.createElement("button");
+    b.type = "button"; b.setAttribute("role","tab");
+    b.setAttribute("aria-selected", i===cat ? "true" : "false");
+    b.textContent = c.nom;
+    b.onclick = function(){ cat = i; cats(); grille(); };
+    n.append(b);
+  });
+}
+function grille(){
+  var g = $("#grille"); g.innerHTML = "";
+  (D.categories[cat] ? D.categories[cat].produits : []).forEach(function(p){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "carte";
+    b.innerHTML = '<div class="ph">' + (p.image ? '<img src="'+p.image+'" alt="">' : 'photo') + '</div>' +
+      '<div class="t"><div class="n"></div><div class="d"></div><div class="p"></div></div>';
+    b.querySelector(".n").textContent = p.nom;
+    b.querySelector(".d").textContent = p.desc || "";
+    b.querySelector(".p").textContent = eur(p.prix);
+    b.onclick = function(){ ouvrir(p); };
+    g.append(b);
+  });
+}
+function ouvrir(p){
+  enCours = p; opts = [];
+  $("#d-nom").textContent = p.nom;
+  $("#d-desc").textContent = p.desc || "";
+  var z = $("#d-opts"); z.innerHTML = "";
+  D.supplements.forEach(function(s){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "opt"; b.setAttribute("aria-pressed","false");
+    b.innerHTML = '<span></span><span class="pp">+ ' + eur(s.prix) + '</span>';
+    b.firstChild.textContent = s.nom;
+    b.onclick = function(){
+      var i = opts.indexOf(s);
+      if (i < 0) { opts.push(s); b.setAttribute("aria-pressed","true"); }
+      else { opts.splice(i,1); b.setAttribute("aria-pressed","false"); }
+    };
+    z.append(b);
+  });
+  if (!D.supplements.length) z.innerHTML = '<p class="dd" style="margin:0">Aucun supplément disponible.</p>';
+  $("#dlg").showModal();
+}
+$("#d-annuler").onclick = function(){ $("#dlg").close(); };
+$("#d-ok").onclick = function(){
+  panier.push({ p: enCours, o: opts.slice() });
+  $("#dlg").close(); rendre();
+};
+function total(){
+  return panier.reduce(function(t,l){
+    return t + l.p.prix + l.o.reduce(function(a,s){ return a + s.prix; },0);
+  },0);
+}
+function rendre(){
+  var z = $("#panier"); z.innerHTML = "";
+  if (!panier.length) { z.innerHTML = '<p class="vide">Touchez un produit pour commencer.</p>'; }
+  panier.forEach(function(l,i){
+    var d = document.createElement("div"); d.className = "ligne";
+    d.innerHTML = '<span class="q">1</span><span class="i"><b></b><small></small></span>' +
+      '<span class="m"></span><button class="x" type="button" aria-label="Retirer">\\u00D7</button>';
+    d.querySelector("b").textContent = l.p.nom;
+    d.querySelector("small").textContent = l.o.map(function(s){ return "+ " + s.nom; }).join(", ");
+    d.querySelector(".m").textContent = eur(l.p.prix + l.o.reduce(function(a,s){ return a+s.prix; },0));
+    d.querySelector(".x").onclick = function(){ panier.splice(i,1); rendre(); };
+    z.append(d);
+  });
+  $("#mt").textContent = eur(total());
+  $("#valider").disabled = !panier.length;
+}
+$("#valider").onclick = function(){ $("#dlg2").showModal(); };
+$("#d2-annuler").onclick = function(){ $("#dlg2").close(); };
+Array.prototype.forEach.call(document.querySelectorAll("[data-ou]"), function(b){
+  b.onclick = function(){
+    var ou = b.getAttribute("data-ou");
+    var taux = ou === "place" ? D.tva.place : D.tva.emporter;
+    $("#dlg2").close();
+    $("#f-num").textContent = numero;
+    $("#f-txt").textContent = "Présentez ce numéro au comptoir. " + eur(total()) +
+      " \\u00B7 " + (ou === "place" ? "Sur place" : "\\u00C0 emporter") + " \\u00B7 TVA " + String(taux).replace(".",",") + " %";
+    $("#fin").classList.add("on");
+    numero = numero >= 99 ? 1 : numero + 1;
+    setTimeout(function(){
+      $("#fin").classList.remove("on");
+      panier = []; rendre();
+    }, 7000);
+  };
+});
+cats(); grille(); rendre();
+})();
+<\/script>
+</body>
+</html>`;
+  }
+
+  function telecharger(nomFichier, contenu) {
+    const b = new Blob([contenu], { type: "text/html;charset=utf-8" });
+    const u = URL.createObjectURL(b);
+    const a = document.createElement("a");
+    a.href = u; a.download = nomFichier;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+  }
+
+  /* =====================================================================
+     Branchements
+     ===================================================================== */
+  function init() {
+    if (!$("#cfg-carte")) return;
+
+    /* Onglets */
+    $$("[data-onglet]").forEach(b => b.addEventListener("click", () => {
+      const cible = b.dataset.onglet;
+      $$("[data-onglet]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+      $$("[data-panneau]").forEach(p => { p.hidden = (p.dataset.panneau !== cible); });
+    }));
+
+    /* Enseigne */
+    $("#ens-nom").addEventListener("input", e => { E.enseigne.nom = e.target.value; sauver(); majResume(); });
+    $("#ens-type").addEventListener("change", e => { E.enseigne.type = e.target.value; sauver(); });
+    $("#ens-couleur").addEventListener("input", e => { E.enseigne.couleur = e.target.value; sauver(); });
+    $("#ens-logo").addEventListener("change", async e => {
+      const f = e.target.files[0]; if (!f) return;
+      try { E.enseigne.logo = await redimensionner(f, 180); sauver(); rendreEnseigne(); }
+      catch (err) { alerte(err.message); }
+    });
+    $("#ens-logo-sup").addEventListener("click", () => { E.enseigne.logo = ""; sauver(); rendreEnseigne(); });
+
+    /* Carte : délégation, le markup est reconstruit à chaque rendu */
+    $("#cfg-carte").addEventListener("input", e => {
+      const t = e.target;
+      if (t.dataset.ch) {
+        const [ic, ip] = t.dataset.i.split(":").map(Number);
+        const p = E.categories[ic].produits[ip];
+        p[t.dataset.ch] = t.dataset.ch === "prix" ? Number(t.value) : t.value;
+        sauver(); majResume();
+      } else if (t.classList.contains("cat__nom")) {
+        const ic = [...$$(".cat")].indexOf(t.closest(".cat"));
+        E.categories[ic].nom = t.value; sauver();
+      }
+    });
+    $("#cfg-carte").addEventListener("change", async e => {
+      const t = e.target;
+      if (!t.dataset.img) return;
+      const f = t.files[0]; if (!f) return;
+      const [ic, ip] = t.dataset.img.split(":").map(Number);
+      try {
+        E.categories[ic].produits[ip].image = await redimensionner(f);
+        sauver(); rendreCarte();
+      } catch (err) { alerte(err.message); }
+    });
+    $("#cfg-carte").addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.addProd !== undefined) {
+        E.categories[+b.dataset.addProd].produits.push({ id: uid(), nom: "", prix: 0, desc: "", image: "" });
+      } else if (b.dataset.supProd) {
+        const [ic, ip] = b.dataset.supProd.split(":").map(Number);
+        E.categories[ic].produits.splice(ip, 1);
+      } else if (b.dataset.supCat !== undefined) {
+        E.categories.splice(+b.dataset.supCat, 1);
+      } else return;
+      sauver(); rendreCarte(); majResume();
+    });
+    $("#add-cat").addEventListener("click", () => {
+      E.categories.push({ id: uid(), nom: "Nouvelle catégorie", produits: [] });
+      sauver(); rendreCarte();
+    });
+
+    /* Suppléments */
+    $("#cfg-supplements").addEventListener("input", e => {
+      const t = e.target; if (!t.dataset.sch) return;
+      const s = E.supplements[+t.dataset.si];
+      s[t.dataset.sch] = t.dataset.sch === "prix" ? Number(t.value) : t.value;
+      sauver();
+    });
+    $("#cfg-supplements").addEventListener("click", e => {
+      const b = e.target.closest("[data-sup-supp]"); if (!b) return;
+      E.supplements.splice(+b.dataset.supSupp, 1); sauver(); rendreCarte();
+    });
+    $("#add-supp").addEventListener("click", () => {
+      E.supplements.push({ id: uid(), nom: "", prix: 0 }); sauver(); rendreCarte();
+    });
+
+    /* Site et domaine */
+    $$("input[name=solution]").forEach(r => r.addEventListener("change", () => {
+      E.site.solution = r.value; sauver(); rendreSite(); majResume();
+    }));
+    $("#dom-nom").addEventListener("input", e => {
+      E.site.domaine = e.target.value.trim().toLowerCase();
+      E.site.statut = ""; $("#dom-reponse").textContent = ""; sauver();
+    });
+    $("#dom-verifier").addEventListener("click", verifierDomaine);
+
+    /* Génération */
+    $("#generer").addEventListener("click", () => {
+      const nom = (E.enseigne.nom.trim() || "ma-borne")
+        .toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      telecharger("borne-" + nom + ".html", genererBorne());
+      $("#generer-ok").hidden = false;
+    });
+    $("#apercu").addEventListener("click", () => {
+      const f = $("#apercu-cadre");
+      f.hidden = false;
+      f.srcdoc = genererBorne();
+      f.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    $("#reinit").addEventListener("click", () => {
+      if (!confirm("Repartir de la carte de démonstration ? Vos saisies seront perdues.")) return;
+      E = structuredClone(DEPART); sauver();
+      rendreEnseigne(); rendreCarte(); rendreSite(); majResume();
+    });
+
+    rendreEnseigne(); rendreCarte(); rendreSite(); majResume();
+
+    /* La configuration part avec la commande */
+    window.CONFIG_BORNE = () => E;
+  }
+
+  function alerte(msg) {
+    const z = $("#cfg-erreur");
+    if (!z) return;
+    z.hidden = false; z.textContent = msg;
+    setTimeout(() => { z.hidden = true; }, 6000);
+  }
+
+  function majResume() {
+    const n = E.categories.reduce((t, c) => t + c.produits.filter(p => p.nom.trim()).length, 0);
+    const r = $("#resume-borne");
+    if (!r) return;
+    const parts = [];
+    parts.push(E.enseigne.nom.trim() || "Enseigne à nommer");
+    parts.push(n + (n > 1 ? " produits" : " produit"));
+    parts.push(E.site.solution === "nouveau"
+      ? (E.site.domaine ? "nouveau site : " + E.site.domaine : "nouveau site à créer")
+      : "installation sur votre site");
+    r.textContent = parts.join(" · ");
+  }
+
+  /* ---- Disponibilité du nom de domaine ---------------------------------
+     Interrogation du registre via un petit script côté serveur. Si PHP n'est
+     pas disponible, on le dit et la vérification se fait à la commande. */
+  async function verifierDomaine() {
+    const champ = $("#dom-nom");
+    const rep = $("#dom-reponse");
+    const d = champ.value.trim().toLowerCase();
+    if (!/^[a-z0-9][a-z0-9-]{0,61}\.[a-z]{2,24}$/.test(d)) {
+      rep.className = "dom-rep dom-rep--non";
+      rep.textContent = "Écrivez le nom complet avec son extension, par exemple mon-restaurant.fr";
+      return;
+    }
+    rep.className = "dom-rep";
+    rep.textContent = "Vérification auprès du registre…";
+    $("#dom-verifier").disabled = true;
+    try {
+      const r = await fetch("paiement/verifier-domaine.php?d=" + encodeURIComponent(d), { headers: { Accept: "application/json" } });
+      const j = await r.json();
+      if (j.statut === "libre") {
+        rep.className = "dom-rep dom-rep--oui";
+        rep.textContent = d + " est libre. Nous pouvons le réserver pour vous, 20 € par an.";
+        E.site.statut = "libre";
+      } else if (j.statut === "pris") {
+        rep.className = "dom-rep dom-rep--non";
+        rep.textContent = d + " est déjà enregistré. Essayez une autre orthographe ou une autre extension.";
+        E.site.statut = "pris";
+      } else {
+        rep.className = "dom-rep";
+        rep.textContent = "Le registre n’a pas répondu. Nous vérifierons ce nom à la commande.";
+        E.site.statut = "inconnu";
+      }
+    } catch (e) {
+      rep.className = "dom-rep";
+      rep.textContent = "Vérification automatique indisponible. Nous contrôlerons ce nom à la commande et vous préviendrons s’il est pris.";
+      E.site.statut = "inconnu";
+    }
+    $("#dom-verifier").disabled = false;
+    sauver(); majResume();
+  }
+
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", init, { once: true })
+    : init();
+})();</script>
 </body>
 </html>

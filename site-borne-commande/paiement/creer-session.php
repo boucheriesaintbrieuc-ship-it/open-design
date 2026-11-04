@@ -35,7 +35,7 @@ if (empty($config['cle_secrete']) || str_contains((string) $config['cle_secrete'
 }
 
 /* ---- Tarifs, en centimes hors taxes. Source de vérité unique. ---------- */
-const PALIERS = [3 => 44900, 2 => 46900, 1 => 49900];   // à partir de N unités
+const PALIERS = [3 => 54000, 2 => 57000, 1 => 60000];   // à partir de N unités
 const PRIX_MISE_EN_SERVICE = 14900;                      // forfait, une fois
 const PRIX_GARANTIE        =  7900;                      // par borne
 

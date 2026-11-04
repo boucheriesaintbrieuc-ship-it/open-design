@@ -66,7 +66,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>C’est en cherchant ces cinq critères pour notre propre restaurant que nous avons fini par importer nos tablettes nous-mêmes. Nous avons une usine en Chine, et un restaurant à faire tourner : relier les deux était la seule façon d’obtenir le bon matériel sans payer le prix d’une borne de marque.</p>
-<p>Celle que nous vendons coche les cinq points, pivote entre paysage et portrait, embarque sa batterie, et coûte <strong>499 € hors taxes, sans aucun abonnement</strong>.</p>
+<p>Celle que nous vendons coche les cinq points, pivote entre paysage et portrait, embarque sa batterie, et coûte <strong>600 € hors taxes, sans aucun abonnement</strong>.</p>
 """,
  "voisins": ["borne-tactile-commande-prix", "borne-de-commande-ou-caisse-enregistreuse", "installer-borne-de-commande-restaurant"],
 },
@@ -121,11 +121,11 @@ ARTICLES = [
   ("Une borne de commande est-elle amortissable comptablement ?",
    "Une borne achetée est une immobilisation, amortissable sur sa durée d’usage, généralement trois à cinq ans. Une borne louée passe en charge d’exploitation. Votre comptable tranchera selon votre situation ; les deux se défendent."),
   ("Combien coûte une borne sans abonnement ?",
-   "Le prix du matériel seul, une fois. Chez nous, 499 € hors taxes. Il vous reste à fournir le logiciel de prise de commande, soit par votre éditeur de caisse s’il en propose un, soit en le construisant vous-même."),
+   "Le prix du matériel seul, une fois. Chez nous, 600 € hors taxes. Il vous reste à fournir le logiciel de prise de commande, soit par votre éditeur de caisse s’il en propose un, soit en le construisant vous-même."),
  ],
  "offre": """
 <p>Notre réponse à ce calcul a été simple : nous fabriquons déjà du matériel en Chine, et nous avons un restaurant. Nous avons fait venir nos propres tablettes au lieu de signer un contrat à 185 € par mois.</p>
-<p>Le même matériel, sans le reste, revient à <strong>499 € HT payés une fois</strong>. Sur trois ans, l’écart avec le devis ci-dessus dépasse 6 000 € par borne.</p>
+<p>Le même matériel, sans le reste, revient à <strong>600 € HT payés une fois</strong>. Sur trois ans, l’écart avec le devis ci-dessus dépasse 6 000 € par borne.</p>
 """,
  "voisins": ["borne-de-commande-sans-abonnement", "tablette-tactile-pour-restaurant", "logiciel-borne-de-commande-ia"],
 },
@@ -183,7 +183,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Les sept étapes ci-dessus, nous les faisons tourner tous les jours dans notre établissement, sur le matériel que nous importons nous-mêmes depuis notre usine.</p>
-<p>La tablette est vendue nue, à <strong>499 € HT</strong>, sans abonnement : vous y installez l’application de commande qui vous va, et vous gardez la main sur les sept étapes.</p>
+<p>La tablette est vendue nue, à <strong>600 € HT</strong>, sans abonnement : vous y installez l’application de commande qui vous va, et vous gardez la main sur les sept étapes.</p>
 """,
  "voisins": ["installer-borne-de-commande-restaurant", "logiciel-borne-de-commande-ia", "borne-de-commande-kebab-pizzeria-snack"],
 },
@@ -244,7 +244,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous avons pris ce chemin pour notre propre salle avant de le proposer à d’autres. L’usine que nous avons en Chine fabrique déjà des écrans ; il ne restait qu’à les faire venir et à nous occuper du logiciel nous-mêmes.</p>
-<p>La tablette part à <strong>499 € HT, une fois, sans mensualité et sans engagement</strong>. Si vous arrêtez de nous parler demain, elle continue de fonctionner.</p>
+<p>La tablette part à <strong>600 € HT, une fois, sans mensualité et sans engagement</strong>. Si vous arrêtez de nous parler demain, elle continue de fonctionner.</p>
 """,
  "voisins": ["borne-tactile-commande-prix", "logiciel-borne-de-commande-ia", "borne-de-commande-ou-caisse-enregistreuse"],
 },
@@ -303,7 +303,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous ne vendons pas ce logiciel : il est taillé pour notre carte et il ne vous servirait pas tel quel. Nous vendons le matériel sur lequel il tourne, et nous expliquons volontiers comment nous l’avons fait.</p>
-<p>La tablette, écran pivotant et batterie intégrée, est à <strong>499 € HT sans abonnement</strong>. Elle est livrée nue, sous Android ouvert, prête à recevoir l’application que vous choisirez ou celle que vous construirez.</p>
+<p>La tablette, écran pivotant et batterie intégrée, est à <strong>600 € HT sans abonnement</strong>. Elle est livrée nue, sous Android ouvert, prête à recevoir l’application que vous choisirez ou celle que vous construirez.</p>
 """,
  "voisins": ["borne-de-commande-sans-abonnement", "tablette-de-commande-restaurant-fonctionnement", "borne-tactile-commande-prix"],
 },
@@ -358,7 +358,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous tenons un restaurant, pas un service commercial. Les quatre points de cette page viennent de notre propre salle, et le matériel dont nous nous servons sort de notre usine en Chine.</p>
-<p>C’est celui que nous vendons : <strong>499 € HT, sans abonnement</strong>, avec un écran qui pivote en vertical pour tenir dans un couloir étroit.</p>
+<p>C’est celui que nous vendons : <strong>600 € HT, sans abonnement</strong>, avec un écran qui pivote en vertical pour tenir dans un couloir étroit.</p>
 """,
  "voisins": ["tablette-de-commande-restaurant-fonctionnement", "installer-borne-de-commande-restaurant", "tablette-tactile-pour-restaurant"],
 },
@@ -406,11 +406,11 @@ ARTICLES = [
   ("Peut-on installer une borne sans caisse du tout ?",
    "Techniquement oui, la borne imprimera en cuisine. Mais vous resterez tenu d’enregistrer vos encaissements avec un système conforme, donc le problème est seulement déplacé. Ce montage ne tient que pour un établissement qui n’encaisse pas de particuliers."),
   ("Quel budget prévoir pour les deux ?",
-   "Une caisse conforme démarre autour de 30 à 80 € par mois selon l’éditeur, matériel compris ou non. Pour la borne, seul l’écran s’ajoute si votre caisse propose déjà une application, soit 499 € hors taxes chez nous, une fois."),
+   "Une caisse conforme démarre autour de 30 à 80 € par mois selon l’éditeur, matériel compris ou non. Pour la borne, seul l’écran s’ajoute si votre caisse propose déjà une application, soit 600 € hors taxes chez nous, une fois."),
  ],
  "offre": """
 <p>Nous vendons l’écran, pas la caisse, et c’est volontaire : votre caisse est déjà là et c’est elle qui doit rester le point de vérité de votre chiffre d’affaires.</p>
-<p>La tablette sur pied est à <strong>499 € HT sans abonnement</strong>. Dites-nous quel logiciel de caisse vous utilisez : si rien ne s’y branche correctement, nous vous le dirons avant la vente plutôt qu’après.</p>
+<p>La tablette sur pied est à <strong>600 € HT sans abonnement</strong>. Dites-nous quel logiciel de caisse vous utilisez : si rien ne s’y branche correctement, nous vous le dirons avant la vente plutôt qu’après.</p>
 """,
  "voisins": ["tablette-de-commande-restaurant-fonctionnement", "borne-de-commande-sans-abonnement", "borne-tactile-commande-prix"],
 },
@@ -474,7 +474,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Les cotes de cette page sont celles que nous avons appliquées dans notre propre salle, après avoir déplacé la borne trois fois.</p>
-<p>Le modèle que nous importons depuis notre usine tient sur 40 cm de socle, embarque sa batterie pour se passer de rallonge, et pivote en vertical pour les couloirs étroits. <strong>499 € HT, sans abonnement, livré monté.</strong></p>
+<p>Le modèle que nous importons depuis notre usine tient sur 40 cm de socle, embarque sa batterie pour se passer de rallonge, et pivote en vertical pour les couloirs étroits. <strong>600 € HT, sans abonnement, livré monté.</strong></p>
 """,
  "voisins": ["borne-de-commande-kebab-pizzeria-snack", "tablette-tactile-pour-restaurant", "tablette-de-commande-restaurant-fonctionnement"],
 },
@@ -526,7 +526,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Dans notre salle, les titres passent au comptoir et la borne ne fait que prendre la commande. C’est le montage le plus simple, et il n’a jamais posé de problème à un client.</p>
-<p>La borne que nous vendons suit cette logique : elle prend la commande, le reste se règle où vous encaissez déjà. <strong>499 € HT, sans abonnement, sans contrat monétique supplémentaire.</strong></p>
+<p>La borne que nous vendons suit cette logique : elle prend la commande, le reste se règle où vous encaissez déjà. <strong>600 € HT, sans abonnement, sans contrat monétique supplémentaire.</strong></p>
 """,
  "voisins": ["tablette-de-commande-restaurant-fonctionnement", "borne-de-commande-ou-caisse-enregistreuse", "commission-plateformes-livraison-vs-borne"],
 },
@@ -578,7 +578,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Notre écran pivote, ce qui règle précisément le problème de la boutique étroite : en vertical, il tient là où un écran large ne passe pas.</p>
-<p>Il est vendu <strong>499 € HT, une fois, sans abonnement</strong>, et vous y installez l’application qui gère votre façon de vendre, y compris au poids si vous en avez besoin.</p>
+<p>Il est vendu <strong>600 € HT, une fois, sans abonnement</strong>, et vous y installez l’application qui gère votre façon de vendre, y compris au poids si vous en avez besoin.</p>
 """,
  "voisins": ["borne-de-commande-kebab-pizzeria-snack", "installer-borne-de-commande-restaurant", "tablette-tactile-pour-restaurant"],
 },
@@ -637,7 +637,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous préférons vous dire non sur le pied plutôt que de vous vendre un matériel qui finira rangé au fond du camion.</p>
-<p>Cela dit, notre écran se démonte de sa colonne et embarque sa batterie : posé sur un comptoir, il rend exactement le service décrit ici, pour <strong>499 € HT sans abonnement</strong>. Appelez-nous avant de commander, on regardera votre configuration ensemble.</p>
+<p>Cela dit, notre écran se démonte de sa colonne et embarque sa batterie : posé sur un comptoir, il rend exactement le service décrit ici, pour <strong>600 € HT sans abonnement</strong>. Appelez-nous avant de commander, on regardera votre configuration ensemble.</p>
 """,
  "voisins": ["borne-de-commande-kebab-pizzeria-snack", "tablette-tactile-pour-restaurant", "borne-de-commande-boulangerie"],
 },
@@ -688,7 +688,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous avons écrit cette page en sachant qu’elle dessert notre propre argumentaire. C’est volontaire : un restaurateur qui achète sur un chiffre gonflé revend son matériel six mois plus tard et le dit autour de lui.</p>
-<p>Notre réponse à ce problème est ailleurs. À <strong>499 € HT sans abonnement</strong>, la borne est amortie avec une hausse de panier bien plus faible que celle que la profession annonce. Vous n’avez pas besoin de croire un chiffre pour que le calcul tienne.</p>
+<p>Notre réponse à ce problème est ailleurs. À <strong>600 € HT sans abonnement</strong>, la borne est amortie avec une hausse de panier bien plus faible que celle que la profession annonce. Vous n’avez pas besoin de croire un chiffre pour que le calcul tienne.</p>
 """,
  "voisins": ["borne-tactile-commande-prix", "borne-de-commande-sans-abonnement", "tablette-de-commande-restaurant-fonctionnement"],
 },
@@ -741,7 +741,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous ne vendons pas de logiciel, donc nous ne paramétrons pas vos taux. Nous vous disons simplement, parce que nous sommes passés par là, de faire relire cette table avant d’ouvrir.</p>
-<p>Le matériel, lui, est à <strong>499 € HT sans abonnement</strong>, et il accepte l’application de commande qui gère correctement votre carte.</p>
+<p>Le matériel, lui, est à <strong>600 € HT sans abonnement</strong>, et il accepte l’application de commande qui gère correctement votre carte.</p>
 """,
  "voisins": ["borne-de-commande-ou-caisse-enregistreuse", "tablette-de-commande-restaurant-fonctionnement", "logiciel-borne-de-commande-ia"],
 },
@@ -799,7 +799,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Notre écran se règle en hauteur selon le montage choisi, et son interface dépend de l’application que vous y installez : les quatre réglages gratuits listés plus haut sont donc entre vos mains.</p>
-<p>Le matériel reste à <strong>499 € HT sans abonnement</strong>. Si vous équipez plusieurs établissements, dites-le nous : la question de la conformité ne se pose pas pareil à cette échelle.</p>
+<p>Le matériel reste à <strong>600 € HT sans abonnement</strong>. Si vous équipez plusieurs établissements, dites-le nous : la question de la conformité ne se pose pas pareil à cette échelle.</p>
 """,
  "voisins": ["installer-borne-de-commande-restaurant", "borne-de-commande-ou-caisse-enregistreuse", "tva-restauration-borne-de-commande"],
 },
@@ -856,7 +856,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>C’est exactement le raisonnement qui nous a poussés à acheter du matériel plutôt qu’à louer un service. Un équipement payé une fois ne prend rien sur votre croissance.</p>
-<p>Notre borne coûte <strong>499 € HT, zéro euro par mois et zéro pourcentage sur vos ventes</strong>. Le jour où votre volume double, elle coûte toujours 499 €.</p>
+<p>Notre borne coûte <strong>600 € HT, zéro euro par mois et zéro pourcentage sur vos ventes</strong>. Le jour où votre volume double, elle coûte toujours 600 €.</p>
 """,
  "voisins": ["borne-de-commande-sans-abonnement", "borne-tactile-commande-prix", "augmentation-ticket-moyen-borne-chiffres"],
 },
@@ -915,7 +915,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Notre écran arrive sous Android ouvert, donc les trois niveaux décrits ici sont à votre disposition. Rien n’est verrouillé par nous, et rien ne vous oblige à passer par un outil payant.</p>
-<p>À <strong>499 € HT sans abonnement</strong>, vous achetez un appareil dont vous êtes réellement propriétaire, verrouillage compris.</p>
+<p>À <strong>600 € HT sans abonnement</strong>, vous achetez un appareil dont vous êtes réellement propriétaire, verrouillage compris.</p>
 """,
  "voisins": ["logiciel-borne-de-commande-ia", "tablette-de-commande-restaurant-fonctionnement", "borne-de-commande-sans-abonnement"],
 },
@@ -959,8 +959,8 @@ ARTICLES = [
 <p>Entre professionnels, un achat d’occasion de particulier à particulier ou de pro à pro ne vous laisse en pratique que la garantie des vices cachés, difficile à mobiliser. Vous achetez le risque avec l’appareil.</p>
 
 <h2>Le calcul qui tranche</h2>
-<p>Une borne d’occasion à 400 €, avec un tactile incertain, sans garantie et sans bloc d’alimentation de rechange, se compare à un matériel neuf à 499 € garanti deux ans.</p>
-<p>L’écart est de 99 €. Il faut vraiment que l’occasion soit exceptionnelle pour que ce calcul penche de son côté, et c’est la raison pour laquelle ce marché reste étroit.</p>
+<p>Une borne d’occasion à 450 €, avec un tactile incertain, sans garantie et sans bloc d’alimentation de rechange, se compare à un matériel neuf à 600 € garanti deux ans.</p>
+<p>L’écart est de 150 €. Il faut vraiment que l’occasion soit exceptionnelle pour que ce calcul penche de son côté, et c’est la raison pour laquelle ce marché reste étroit.</p>
 <p>Le seul cas où elle se défend : un modèle récent, sous Android ouvert, vendu avec son bloc et testé devant vous. Si les trois conditions sont réunies, foncez.</p>
 """,
  "faq": [
@@ -975,7 +975,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Nous ne vendons pas d’occasion, et cette page vous conduira peut-être à en acheter une ailleurs. C’est assumé : une borne d’occasion saine est une bonne affaire.</p>
-<p>Simplement, vérifiez les six points ci-dessus avant de payer. Si l’écart avec du neuf se réduit à quelques dizaines d’euros, notre matériel est à <strong>499 € HT, garanti deux ans, sans abonnement</strong>.</p>
+<p>Simplement, vérifiez les six points ci-dessus avant de payer. Si l’écart avec du neuf se réduit à quelques dizaines d’euros, notre matériel est à <strong>600 € HT, garanti deux ans, sans abonnement</strong>.</p>
 """,
  "voisins": ["borne-tactile-commande-prix", "mode-kiosque-android-restaurant", "tablette-tactile-pour-restaurant"],
 },
@@ -1028,7 +1028,7 @@ ARTICLES = [
  ],
  "offre": """
 <p>Notre écran pivote en paysage, ce qui en fait un affichage de cuisine utilisable, à condition de le placer à l’abri de la vapeur.</p>
-<p>Même matériel, même prix : <strong>499 € HT sans abonnement</strong>. Certains clients en prennent deux, un en salle et un en cuisine, et profitent du tarif dégressif à partir du deuxième.</p>
+<p>Même matériel, même prix : <strong>600 € HT sans abonnement</strong>. Certains clients en prennent deux, un en salle et un en cuisine, et profitent du tarif dégressif à partir du deuxième.</p>
 """,
  "voisins": ["tablette-de-commande-restaurant-fonctionnement", "installer-borne-de-commande-restaurant", "tablette-tactile-pour-restaurant"],
 },
