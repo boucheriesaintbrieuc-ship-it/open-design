@@ -1,6 +1,6 @@
 # Site « Borne de commande restaurant »
 
-Site marchand mono-produit, vingt pages dont un blog de huit articles, tunnel
+Site marchand mono-produit, trente pages dont un blog de dix-huit articles, tunnel
 complet jusqu’au paiement Stripe.
 Aucune dépendance externe : pas de CDN, pas de police tierce, pas de bibliothèque
 JavaScript, aucune requête réseau au chargement.
@@ -167,35 +167,66 @@ coupure limite la casse. Si vous voulez mesurer l'effet, gardez le son sur
 `commander.html` seulement, comme c'est le cas aujourd'hui, et regardez le taux
 d'abandon avant et après dans Stripe.
 
-## Le blog : huit articles, huit requêtes
+## Le blog : dix-huit articles, dix-huit requêtes
 
 Le blog vise les requêtes d'information autour de la borne de commande. La page
-de vente garde la requête transactionnelle ; aucun article ne la vise, pour que
-vos propres pages ne se fassent pas concurrence.
+de vente garde seule la requête transactionnelle ; aucun article ne la vise,
+pour que vos propres pages ne se fassent pas concurrence.
 
-| Article | Requête principale | Intention |
-|---|---|---|
-| `tablette-tactile-pour-restaurant.html` | tablette tactile pour restaurant | choix du matériel |
-| `borne-tactile-commande-prix.html` | borne tactile commande prix | budget |
-| `tablette-de-commande-restaurant-fonctionnement.html` | tablette de commande restaurant | comprendre |
-| `borne-de-commande-sans-abonnement.html` | borne de commande sans abonnement | modèle économique |
-| `logiciel-borne-de-commande-ia.html` | logiciel borne de commande | votre récit |
-| `borne-de-commande-kebab-pizzeria-snack.html` | borne de commande kebab | longue traîne |
-| `borne-de-commande-ou-caisse-enregistreuse.html` | borne de commande ou caisse | comparaison |
-| `installer-borne-de-commande-restaurant.html` | installer borne de commande restaurant | pratique |
+Les requêtes ont été choisies après lecture des SERP françaises, pas au jugé.
+Deux constats ont guidé la sélection : les requêtes principales sont tenues par
+des comparateurs et des éditeurs de logiciels, difficiles à déloger ; en
+revanche plusieurs sujets n'ont aucune couverture sérieuse en français, au
+premier rang desquels le paiement en titres-restaurant sur une borne, sur
+lequel la recherche n'a rien remonté du tout.
+
+| Article | Requête principale |
+|---|---|
+| `accessibilite-borne-de-commande.html` | accessibilité borne de commande |
+| `augmentation-ticket-moyen-borne-chiffres.html` | augmentation ticket moyen borne de commande |
+| `borne-de-commande-boulangerie.html` | borne de commande boulangerie |
+| `borne-de-commande-food-truck.html` | borne de commande food truck |
+| `borne-de-commande-kebab-pizzeria-snack.html` | borne de commande kebab |
+| `borne-de-commande-occasion.html` | borne de commande occasion |
+| `borne-de-commande-ou-caisse-enregistreuse.html` | borne de commande ou caisse enregistreuse |
+| `borne-de-commande-sans-abonnement.html` | borne de commande sans abonnement |
+| `borne-tactile-commande-prix.html` | borne tactile commande prix |
+| `commission-plateformes-livraison-vs-borne.html` | commission plateforme livraison restaurant |
+| `installer-borne-de-commande-restaurant.html` | installer borne de commande restaurant |
+| `logiciel-borne-de-commande-ia.html` | logiciel borne de commande |
+| `mode-kiosque-android-restaurant.html` | mode kiosque android tablette |
+| `tablette-de-commande-restaurant-fonctionnement.html` | tablette de commande restaurant |
+| `tablette-tactile-pour-restaurant.html` | tablette tactile pour restaurant |
+| `titres-restaurant-borne-de-commande.html` | titres restaurant borne de commande |
+| `tva-restauration-borne-de-commande.html` | tva restauration rapide 10 ou 5,5 |
+| `ecran-cuisine-restaurant.html` | écran de cuisine restaurant |
 
 Chaque article se termine par un bloc qui renvoie vers la page de vente et vers
 la commande, rédigé différemment à chaque fois. C'est le passage le plus exposé
 au copier-coller, donc celui qui ferait tomber le site en contenu dupliqué.
 
+### Les quatre articles qui portent le plus
+
+- **Titres-restaurant sur borne** : aucune source française ne traite le sujet,
+  alors que la demande existe et que la question bloque des ventes au midi.
+- **Food truck** : le sujet n'est couvert par personne, et l'article conclut
+  qu'une borne sur pied n'y convient pas, ce qui le rend crédible.
+- **Hausse du ticket moyen** : il remonte la piste du chiffre de 15 à 30 %
+  affiché partout et constate qu'aucune étude publique ne le soutient. Un
+  contenu de ce genre se fait citer, y compris par les moteurs de réponse.
+- **Commission des plateformes** : forte charge émotionnelle chez les
+  restaurateurs, et il mène naturellement au seul argument qui compte ici,
+  l'absence de pourcentage sur vos ventes.
+
 ### Contrôle de duplication
 
 `python3 outils/doublons.py` compare le texte de toutes les pages par séquences
 de huit mots et refuse tout recouvrement au-dessus de 15 %. Les grilles de
-cartes et les blocs « à lire ensuite » sont exclus de la comparaison : ils
-répètent des titres par construction, c'est de la navigation, pas du contenu.
+cartes et les blocs « à lire ensuite » sont exclus : ils répètent des titres par
+construction, c'est de la navigation, pas du contenu.
 
-Dernier passage : **3,7 % au pire**, titres, descriptions et H1 tous uniques.
+Dernier passage sur les trente pages : **3,7 % au pire**, titres, descriptions
+et H1 tous uniques.
 
 ### Ajouter un article
 
@@ -204,6 +235,25 @@ Tout se passe dans `outils/articles.py`. Copiez une entrée, remplissez `slug`,
 `offre` et `voisins`, puis relancez `python3 outils/construire.py`. Le menu, le
 sitemap, l'index du blog, les données structurées et le maillage se mettent à
 jour seuls.
+
+---
+
+## Un point de droit qui vous concerne comme vendeur
+
+L'article sur l'accessibilité documente la directive européenne entrée en
+application le 28 juin 2025, qui impose une évaluation de conformité et un
+marquage CE à certains terminaux en libre-service.
+
+La fiche publiée par la DGCCRF en juillet 2025 cite les terminaux de paiement,
+les distributeurs de billets, de titres de transport et de tickets de file
+d'attente. **Les bornes de commande en restauration n'y figurent pas
+nommément**, parce que le texte vise les terminaux servant les services qu'il
+couvre, et que la restauration n'en fait pas partie. En revanche, un lecteur de
+carte intégré à une borne relève bien du texte.
+
+L'article dit exactement cela, sans trancher à votre place. Si vous ajoutez un
+jour un terminal de paiement à la borne, faites vérifier ce point par un
+juriste : vous seriez alors l'importateur d'un produit couvert.
 
 ---
 

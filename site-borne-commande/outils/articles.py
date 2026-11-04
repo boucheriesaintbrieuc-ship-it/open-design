@@ -478,5 +478,559 @@ ARTICLES = [
 """,
  "voisins": ["borne-de-commande-kebab-pizzeria-snack", "tablette-tactile-pour-restaurant", "tablette-de-commande-restaurant-fonctionnement"],
 },
+# =========================================================================
+{
+ "slug": "titres-restaurant-borne-de-commande",
+ "accroche": "Plafond journalier, paiement mixte, émetteurs acceptés. La question que personne ne traite, et qui bloque une vente sur cinq le midi.",
+ "cle": "titres restaurant borne de commande",
+ "titre": "Titres-restaurant sur borne de commande : ce qu’il faut savoir",
+ "h1": "Payer en titres-restaurant sur une borne de commande : comment ça se passe",
+ "description": "Plafond de 25 € par jour, paiement mixte avec la carte bancaire, émetteurs acceptés : ce que votre borne doit savoir faire pour encaisser un titre-restaurant.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 6,
+ "resume": "Une part importante de votre clientèle du midi paie en titres-restaurant dématérialisés. Si la borne ne sait pas les traiter, ces clients retournent au comptoir, et votre borne perd son intérêt à l’heure où elle devait servir.",
+ "corps": """
+<p>C’est la question qu’on nous pose le plus souvent après la démonstration, et c’est aussi celle qu’aucun comparateur ne traite. Nous avons cherché avant d’écrire cette page : on trouve des dizaines d’articles sur le plafond des titres-restaurant, aucun sur leur usage à une borne.</p>
+<p>Le sujet n’est pourtant pas anodin. Dans un quartier de bureaux, les titres représentent souvent un tiers à la moitié des règlements du midi.</p>
+
+<h2>Le plafond, d’abord</h2>
+<p>Le montant maximal utilisable en titres-restaurant est de 25 € par jour, relevé de 19 à 25 € au 1<sup>er</sup> octobre 2022 et toujours en vigueur en 2026 selon les émetteurs. Ce plafond est journalier, pas par achat : un client peut le consommer en une fois ou le répartir sur plusieurs passages dans la journée.</p>
+<p>Conséquence pratique pour vous : le plafond n’est pas vérifiable de votre côté. C’est la carte du client et le serveur de l’émetteur qui savent ce qu’il a déjà dépensé ailleurs le matin.</p>
+
+<h2>Le vrai sujet : le paiement mixte</h2>
+<p>Un client qui commande pour 31 € avec 25 € de solde disponible doit payer 6 € autrement. Avec une carte dématérialisée, le basculement vers la carte bancaire associée est automatique chez la plupart des émetteurs.</p>
+<p>Mais cela se passe sur le terminal de paiement, pas dans votre logiciel de commande. Une borne qui calcule un total et renvoie vers un terminal n’a rien de particulier à gérer : c’est le terminal qui découpe le règlement.</p>
+<p>En revanche, une borne qui prétend encaisser elle-même doit savoir afficher ce que le client vient de payer en titres et ce qui reste dû. Faute de quoi le client reste planté devant l’écran, et c’est à ce moment qu’il abandonne.</p>
+
+<h2>Les trois montages possibles</h2>
+<p><strong>Le client paie au comptoir.</strong> Le plus simple, et celui que nous utilisons. La borne prend la commande et édite un numéro, le règlement se fait au terminal du comptoir qui accepte déjà vos titres. Aucun matériel supplémentaire, aucun contrat à signer.</p>
+<p><strong>Un terminal dédié à la borne.</strong> Vous ajoutez un lecteur accepté par les émetteurs. C’est le montage le plus fluide pour le client, et le plus coûteux pour vous, parce qu’il ajoute un contrat monétique et un loyer de terminal.</p>
+<p><strong>Le paiement en ligne depuis le téléphone.</strong> Le client scanne un code affiché par la borne et paie sur son téléphone. Les cartes titres-restaurant fonctionnent en ligne chez les principaux émetteurs, mais vérifiez-le pour chacun avant d’annoncer quoi que ce soit à vos clients.</p>
+
+<h2>Ce qu’il faut vérifier auprès de votre émetteur</h2>
+<p>Vous êtes déjà affilié chez un ou plusieurs émetteurs, Edenred, Pluxee, Swile ou un autre. Votre affiliation porte sur votre établissement, pas sur un appareil : ajouter une borne ne demande en principe aucune démarche supplémentaire.</p>
+<p>Deux points méritent quand même un appel : l’acceptation sur un nouveau terminal si vous en ajoutez un, et le traitement en ligne si vous passez par le téléphone du client.</p>
+
+<h2>Le détail qui fait partir les clients</h2>
+<p>Affichez les moyens de paiement acceptés sur l’écran d’accueil de la borne, avant que le client compose sa commande. Un client qui découvre au moment de payer que ses titres ne passent pas abandonne un panier déjà rempli, et il ne revient pas forcément le lendemain.</p>
+<p>C’est un détail d’interface, il coûte deux minutes de paramétrage, et c’est celui qui a le plus d’effet sur le taux d’abandon au midi.</p>
+""",
+ "faq": [
+  ("Peut-on payer en titres-restaurant sur une borne de commande ?",
+   "Oui, dès lors que le règlement passe par un terminal accepté par votre émetteur, que ce soit le terminal du comptoir ou un lecteur fixé à la borne. La borne elle-même ne fait que transmettre un montant : c’est le terminal qui gère le titre."),
+  ("Quel est le plafond journalier des titres-restaurant ?",
+   "Vingt-cinq euros par jour depuis le 1er octobre 2022, toujours applicable en 2026. Le plafond porte sur la journée et non sur chaque achat, et il tient compte de ce que le salarié a dépensé ailleurs dans la même journée."),
+  ("Que se passe-t-il si la commande dépasse le plafond ?",
+   "Avec une carte dématérialisée, le montant excédentaire bascule automatiquement sur la carte bancaire associée chez la plupart des émetteurs. Votre interface doit simplement afficher clairement le reste à payer, sinon le client abandonne devant l’écran."),
+  ("Faut-il une affiliation différente pour encaisser à la borne ?",
+   "Non. Votre affiliation porte sur l’établissement et non sur l’appareil. Un appel à votre émetteur reste utile si vous ajoutez un terminal de paiement dédié à la borne ou si vous encaissez en ligne depuis le téléphone du client."),
+ ],
+ "offre": """
+<p>Dans notre salle, les titres passent au comptoir et la borne ne fait que prendre la commande. C’est le montage le plus simple, et il n’a jamais posé de problème à un client.</p>
+<p>La borne que nous vendons suit cette logique : elle prend la commande, le reste se règle où vous encaissez déjà. <strong>499 € HT, sans abonnement, sans contrat monétique supplémentaire.</strong></p>
+""",
+ "voisins": ["tablette-de-commande-restaurant-fonctionnement", "borne-de-commande-ou-caisse-enregistreuse", "commission-plateformes-livraison-vs-borne"],
+},
+
+# =========================================================================
+{
+ "slug": "borne-de-commande-boulangerie",
+ "accroche": "Deux pics au lieu d’un, un panier à 4 € et des ruptures toute la matinée. La boulangerie ne se règle pas comme un fast-food.",
+ "cle": "borne de commande boulangerie",
+ "titre": "Borne de commande en boulangerie : ce qui change",
+ "h1": "Borne de commande en boulangerie : deux pics, petits paniers et ruptures permanentes",
+ "description": "Deux pics par jour, un panier moyen bas et des ruptures toutes les heures : pourquoi une borne en boulangerie demande un réglage très différent d’un fast-food.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 6,
+ "resume": "Les bornes se vendent en pensant au fast-food. Une boulangerie travaille autrement : deux pointes dans la journée, un panier de quelques euros, et des produits qui disparaissent au fil des heures.",
+ "corps": """
+<p>Nous avons cherché ce qui existait sur le sujet avant d’écrire cette page. On trouve une fiche chez un comparateur, qui donne une fourchette de 2 000 à 7 000 € sans expliquer à quoi elle correspond, et rien d’autre. Le métier mérite mieux.</p>
+
+<h2>Deux pointes, pas une</h2>
+<p>Un fast-food concentre son flux entre 12 h et 13 h 30. Une boulangerie en a deux : le matin, court et dense, et le midi, plus long. Les deux ne posent pas le même problème.</p>
+<p>Le matin, les clients savent ce qu’ils veulent et paient en quelques secondes. Une borne les ralentirait. Le midi, en revanche, le client hésite entre six sandwichs et une formule, et c’est là qu’un écran libère la vendeuse.</p>
+<p>Conséquence : la borne doit pouvoir être mise en veille le matin et activée à 11 h 30. Si elle reste allumée toute la journée sur un écran de sandwichs, elle encombre sans servir.</p>
+
+<h2>Un panier moyen qui change tout</h2>
+<p>Un fast-food travaille autour de 12 à 15 € par commande. Une boulangerie tourne entre 3 et 8 €, hors formules du midi. La hausse de panier que vous pouvez espérer se compte donc en centimes, pas en euros.</p>
+<p>Cela ne rend pas la borne inutile, mais cela change ce qu’elle doit viser. Son intérêt n’est pas d’augmenter le ticket, il est de faire passer plus de clients à l’heure, et d’éviter que la file déborde sur le trottoir.</p>
+<p>Le calcul de rentabilité se fait donc sur le nombre de clients servis en plus, pas sur une hausse de panier. Comptez les gens qui repartent quand la file dépasse votre vitrine : c’est votre vrai gisement.</p>
+
+<h2>Les ruptures, le point le plus sous-estimé</h2>
+<p>À 11 h, il n’y a plus de pains au chocolat. À 13 h 15, il reste deux sandwichs sur sept. Une carte figée qui propose des produits épuisés fait trois choses, toutes mauvaises : elle fait perdre du temps au client, elle crée une réclamation au comptoir, et elle donne l’impression que la maison ne suit pas.</p>
+<p>Vérifiez une chose avant d’acheter quoi que ce soit : combien de gestes faut-il pour masquer un produit épuisé. Si la réponse dépasse trois appuis sur un téléphone, la fonction ne sera jamais utilisée en plein service.</p>
+
+<h2>La vente à la pièce et au poids</h2>
+<p>Une boulangerie vend des produits à l’unité, parfois au poids pour les pâtisseries ou les parts de quiche. Toutes les applications de borne ne gèrent pas la vente au poids, parce qu’elles ont été écrites pour des burgers.</p>
+<p>Si une part de votre chiffre se fait à la balance, ce point élimine la moitié des solutions du marché. Posez la question avant le devis.</p>
+
+<h2>Où la poser dans une boutique étroite</h2>
+<p>Les boulangeries ont souvent une surface de vente réduite et une file qui longe la vitrine. Une borne sur pied prend de la place dans le passage, et c’est le premier motif de retour que nous entendons.</p>
+<p>Un écran en orientation verticale réduit l’emprise. Comptez 40 cm de socle et 90 cm de dégagement, et placez-la du côté opposé à la file pour qu’elle crée un second flux au lieu de doubler le premier.</p>
+""",
+ "faq": [
+  ("Une borne de commande est-elle utile en boulangerie ?",
+   "Surtout au service du midi, quand les clients hésitent devant les sandwichs et les formules. Le matin, les achats sont rapides et décidés d’avance : une borne y ralentit plutôt le passage. Prévoyez de pouvoir l’activer et la mettre en veille selon l’heure."),
+  ("La borne gère-t-elle la vente au poids ?",
+   "Cela dépend entièrement de l’application que vous installez. Beaucoup sont écrites pour la restauration rapide et ne prévoient que la vente à l’unité. Si une part de votre chiffre se fait à la balance, posez la question avant tout devis."),
+  ("Comment gérer les produits épuisés en cours de journée ?",
+   "Exigez de pouvoir masquer un produit en moins de trois gestes depuis un téléphone. Une fonction plus longue que cela ne sera jamais utilisée en plein service, et la borne continuera de proposer des viennoiseries qui n’existent plus."),
+  ("Quelle place prend une borne dans une petite boutique ?",
+   "Environ 40 cm de socle au sol, plus 90 cm de dégagement devant pour le passage. En orientation verticale, l’emprise reste contenue. Placez-la à l’opposé de la file existante, pour créer un second flux plutôt que d’allonger le premier."),
+ ],
+ "offre": """
+<p>Notre écran pivote, ce qui règle précisément le problème de la boutique étroite : en vertical, il tient là où un écran large ne passe pas.</p>
+<p>Il est vendu <strong>499 € HT, une fois, sans abonnement</strong>, et vous y installez l’application qui gère votre façon de vendre, y compris au poids si vous en avez besoin.</p>
+""",
+ "voisins": ["borne-de-commande-kebab-pizzeria-snack", "installer-borne-de-commande-restaurant", "tablette-tactile-pour-restaurant"],
+},
+
+# =========================================================================
+{
+ "slug": "borne-de-commande-food-truck",
+ "accroche": "Pas de prise, pas de réseau, de la pluie et un comptoir qui bouge. Pourquoi une borne sur pied n’y a pas sa place, et ce qui marche.",
+ "cle": "borne de commande food truck",
+ "titre": "Borne de commande pour food truck : ce qui marche vraiment",
+ "h1": "Food truck : pourquoi une borne sur pied n’est pas la bonne réponse",
+ "description": "Alimentation, réseau mobile, pluie, rangement du soir : les quatre contraintes d’un camion qui éliminent la borne classique, et le montage qui fonctionne à la place.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 6,
+ "resume": "Nous vendons des bornes, et nous allons vous expliquer pourquoi vous ne devriez probablement pas en poser une devant votre camion. Puis ce qui marche à la place.",
+ "corps": """
+<p>La demande revient régulièrement, et la réponse honnête commence par un refus. Une borne sur pied est pensée pour une salle : un sol plat, une prise, un réseau, et personne pour la faire tomber la nuit. Un camion ne coche aucune de ces cases.</p>
+
+<h2>Les quatre contraintes d’un camion</h2>
+
+<h3>Le sol</h3>
+<p>Un socle lesté tient sur du carrelage. Sur un parking en pente, un sol gravillonné ou une place de marché, il bascule. Le premier coup de vent sur un écran plat de 50 cm de large suffit.</p>
+
+<h3>L’alimentation</h3>
+<p>Votre groupe ou votre raccordement sert déjà la plancha, la friteuse et la vitrine réfrigérée. Ajouter un poste permanent sur un circuit déjà chargé n’est pas une bonne idée, et tirer une rallonge au sol dans une zone de passage public l’est encore moins.</p>
+
+<h3>Le réseau</h3>
+<p>Pas de box, donc pas de Wi-Fi local. Vous dépendez de la 4G, qui s’effondre exactement là où vous travaillez le mieux : festivals, marchés, sorties d’usine à midi. Une installation qui a besoin du réseau pour prendre une commande vous lâchera au pire moment.</p>
+
+<h3>Le rangement</h3>
+<p>Tout ce qui sort doit rentrer en fin de service, en quelques minutes, souvent sous la pluie. Un écran sur pied de 20 kg, démonté et remonté deux fois par jour, ne tient pas une saison.</p>
+
+<h2>Ce qui marche à la place</h2>
+<p>Un écran tactile posé sur le comptoir du camion, côté client, relié à rien d’autre qu’à lui-même. Le client compose, l’écran affiche un numéro, vous préparez. Pas de pied, pas de prise obligatoire si l’appareil a sa batterie, pas de dépendance au réseau si l’application garde la carte en local.</p>
+<p>C’est moins impressionnant qu’une borne, et c’est ce qui fonctionne. Le gain reste le même : la personne qui prenait les commandes retourne à la production.</p>
+
+<h2>Les trois caractéristiques à exiger</h2>
+<ul>
+<li><strong>Une batterie.</strong> Elle vous dispense d’un circuit dédié et vous permet de servir pendant une coupure de groupe.</li>
+<li><strong>Une carte stockée en local.</strong> L’appareil doit prendre les commandes sans réseau, et synchroniser plus tard. Posez la question explicitement : beaucoup d’applications affichent une page blanche hors ligne.</li>
+<li><strong>Un écran lisible dehors.</strong> C’est le critère le plus dur à satisfaire. En plein soleil, un écran à 300 cd/m² est inutilisable, et l’auvent du camion ne suffit pas toujours. Testez l’appareil dehors avant de l’acheter, pas en boutique.</li>
+</ul>
+
+<h2>Le cas où une borne sur pied se justifie</h2>
+<p>Un seul : un emplacement fixe, couvert, avec électricité, où vous revenez tous les jours. Une halle, un marché couvert permanent, une zone de food trucks aménagée. Là, la borne reprend tout son intérêt et vous rentrez dans le cas d’une salle.</p>
+<p>Partout ailleurs, gardez l’écran sur le comptoir.</p>
+""",
+ "faq": [
+  ("Peut-on installer une borne de commande devant un food truck ?",
+   "Techniquement oui, mais le sol, l’alimentation, le réseau mobile et le rangement du soir s’y opposent dans la plupart des cas. Un écran posé sur le comptoir côté client rend le même service sans aucune de ces contraintes."),
+  ("La commande fonctionne-t-elle sans réseau sur un marché ?",
+   "Seulement si l’application garde votre carte en mémoire sur l’appareil. Beaucoup affichent une page blanche dès que la 4G faiblit. Demandez une démonstration en mode avion avant de choisir : c’est le test le plus parlant."),
+  ("Quelle autonomie prévoir pour un service en extérieur ?",
+   "De quoi tenir le service complet, en comptant que la luminosité maximale, nécessaire dehors, consomme nettement plus qu’en intérieur. Prévoyez aussi une batterie externe ou un point de recharge pour les journées de festival."),
+  ("Un écran d’intérieur tient-il dehors ?",
+   "Rarement. Sous 350 cd/m², il devient illisible en plein jour, et l’humidité abîme la connectique si l’appareil n’est pas protégé. Si votre service se fait au soleil, testez l’écran dehors avant l’achat, jamais en boutique."),
+ ],
+ "offre": """
+<p>Nous préférons vous dire non sur le pied plutôt que de vous vendre un matériel qui finira rangé au fond du camion.</p>
+<p>Cela dit, notre écran se démonte de sa colonne et embarque sa batterie : posé sur un comptoir, il rend exactement le service décrit ici, pour <strong>499 € HT sans abonnement</strong>. Appelez-nous avant de commander, on regardera votre configuration ensemble.</p>
+""",
+ "voisins": ["borne-de-commande-kebab-pizzeria-snack", "tablette-tactile-pour-restaurant", "borne-de-commande-boulangerie"],
+},
+
+# =========================================================================
+{
+ "slug": "augmentation-ticket-moyen-borne-chiffres",
+ "accroche": "15 %, 25 %, 30 % : trois chiffres, aucune étude publique. D’où ils viennent et ce qu’on peut raisonnablement en retenir.",
+ "cle": "augmentation ticket moyen borne de commande",
+ "titre": "+15 à 30 % de ticket moyen : d’où sort ce chiffre ?",
+ "h1": "La borne augmente le ticket moyen de 15 à 30 % : nous avons cherché la source",
+ "description": "Tous les vendeurs de bornes annoncent 15 à 30 % de hausse du panier. Nous avons remonté la piste de ces chiffres, et voici ce qu’on peut honnêtement en conclure.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 7,
+ "resume": "Le chiffre est partout et sa source nulle part. Voici ce que nous avons trouvé en remontant la piste, et la méthode pour estimer le gain chez vous sans croire personne sur parole.",
+ "corps": """
+<p>Lisez trois pages de vendeurs de bornes et vous verrez le même argument : la borne augmente le panier moyen de 15 à 30 %. Certains annoncent 25 %. Un comparateur attribue 15 % à un cabinet de conseil.</p>
+<p>Nous vendons des bornes, et nous avons quand même cherché d’où venait ce chiffre, parce que c’est sur lui que des restaurateurs signent des contrats à 185 € par mois.</p>
+
+<h2>Ce que nous avons trouvé</h2>
+<p>Trois fourchettes circulent, publiées en novembre 2026 encore : 15 à 30 % chez un éditeur de logiciel de caisse, 25 % dans le guide d’un fournisseur de solutions de paiement, environ 15 % attribués à un cabinet d’audit par un troisième.</p>
+<p>Aucune de ces pages ne renvoie vers une étude consultable. Pas de méthodologie, pas de périmètre, pas de taille d’échantillon, pas de date. Le chiffre attribué au cabinet d’audit ne pointe vers aucun document publié.</p>
+<p>Cela ne veut pas dire que le chiffre est faux. Cela veut dire qu’il n’est pas vérifiable, et qu’il provient dans tous les cas d’acteurs qui vendent la solution.</p>
+
+<h2>Pourquoi l’effet existe quand même</h2>
+<p>Le mécanisme, lui, est solide et ne demande aucune étude pour être compris. Trois choses se produisent devant un écran, et elles jouent toutes dans le même sens.</p>
+<p>Le client n’est pressé par personne, donc il lit la carte en entier. L’écran propose le supplément à chaque commande, là où une équipe en rush cesse de le faire vers 12 h 40. Et le client qui veut ajouter un dessert n’a plus à relancer quelqu’un qui est déjà passé à autre chose.</p>
+<p>Ce qui est discutable, ce n’est pas l’existence de l’effet. C’est son ampleur, qui dépend entièrement de votre carte, de votre clientèle et de la part de commandes qui passe réellement à l’écran.</p>
+
+<h2>Les trois raisons pour lesquelles le chiffre ne s’applique pas chez vous</h2>
+<p><strong>Il porte sur les commandes de la borne, pas sur votre chiffre d’affaires.</strong> Si 30 % de vos commandes passent à l’écran et que leur panier monte de 20 %, votre chiffre global progresse de 6 %, pas de 20 %.</p>
+<p><strong>Il dépend de ce que vous avez à vendre en plus.</strong> Un établissement avec six suppléments et trois desserts a de la matière. Une carte sans options n’a rien à proposer, et la borne ne crée pas de produits.</p>
+<p><strong>Il suppose une carte bien paramétrée.</strong> Un parcours où le supplément arrive après le paiement ne vend rien. La moitié de l’écart entre deux établissements équipés du même matériel vient de là.</p>
+
+<h2>Comment estimer le gain chez vous</h2>
+<p>Prenez vos quatre derniers mois. Comptez le nombre de commandes au pic. Estimez la part qui passerait à l’écran, en restant pessimiste, disons un tiers au démarrage. Appliquez une hausse de panier que vous jugez plausible au vu de votre carte, pas celle d’une page de vente.</p>
+<p>Multipliez, comparez au coût total sur trois ans, abonnement compris. Si le compte n’y est qu’avec 25 % de hausse, c’est que le projet ne tient pas.</p>
+<p>Dans notre salle, nous observons un effet réel et nettement plus modeste que les chiffres affichés par la profession. Nous ne publions pas notre pourcentage, pour une raison simple : il vaut pour notre carte et il ne vous dirait rien d’utile.</p>
+""",
+ "faq": [
+  ("La borne augmente-t-elle vraiment le ticket moyen ?",
+   "Le mécanisme est réel : plus de temps pour lire la carte et un supplément proposé à chaque commande. L’ampleur, en revanche, dépend de votre carte et de la part de commandes passées à l’écran. Les fourchettes publiées par les vendeurs ne sont pas vérifiables."),
+  ("D’où vient le chiffre de 15 à 30 % ?",
+   "De pages commerciales d’éditeurs de logiciels et de fournisseurs de paiement, consultées en novembre 2026. Aucune ne renvoie à une étude publiée avec sa méthodologie et son échantillon, y compris celles qui citent un cabinet d’audit."),
+  ("Comment calculer le gain réel pour mon établissement ?",
+   "Multipliez votre nombre de commandes au pic par la part qui passerait à l’écran, puis par une hausse de panier que vous jugez plausible au vu de votre carte. Comparez au coût total sur trois ans, abonnement compris."),
+  ("Une carte sans suppléments profite-t-elle d’une borne ?",
+   "Beaucoup moins, parce que la borne ne crée pas de produits à vendre. Son intérêt se déplace alors vers le débit : servir plus de clients à l’heure de pointe, ce qui se mesure en nombre de commandes et non en panier moyen."),
+ ],
+ "offre": """
+<p>Nous avons écrit cette page en sachant qu’elle dessert notre propre argumentaire. C’est volontaire : un restaurateur qui achète sur un chiffre gonflé revend son matériel six mois plus tard et le dit autour de lui.</p>
+<p>Notre réponse à ce problème est ailleurs. À <strong>499 € HT sans abonnement</strong>, la borne est amortie avec une hausse de panier bien plus faible que celle que la profession annonce. Vous n’avez pas besoin de croire un chiffre pour que le calcul tienne.</p>
+""",
+ "voisins": ["borne-tactile-commande-prix", "borne-de-commande-sans-abonnement", "tablette-de-commande-restaurant-fonctionnement"],
+},
+# =========================================================================
+{
+ "slug": "tva-restauration-borne-de-commande",
+ "accroche": "10 %, 5,5 % ou 20 % selon le produit et son contenant. La règle complète, et ce que l’écran doit demander au client.",
+ "cle": "tva restauration rapide 10 ou 5,5",
+ "titre": "TVA en restauration : 10 %, 5,5 % ou 20 % ? La règle",
+ "h1": "TVA 10 %, 5,5 % ou 20 % : ce que votre borne doit demander avant le paiement",
+ "description": "La règle complète des taux de TVA en restauration selon le produit, le mode de consommation et le contenant, et la question que l’écran doit poser au client.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 7,
+ "resume": "Le taux ne dépend pas du canal de vente mais du produit et de son contenant. Une borne mal paramétrée ne crée pas d’erreur visible : elle la rend systématique, ligne après ligne, jusqu’au bilan.",
+ "corps": """
+<p>C’est le sujet sur lequel nous avons fait relire notre paramétrage par un comptable avant d’ouvrir, et c’est le seul endroit où nous déconseillons formellement de se fier à son intuition.</p>
+<p>Une erreur de taux ne se voit pas. L’écran affiche un total juste, le client paie, la journée se passe bien. Elle apparaît en fin d’exercice, multipliée par le nombre de commandes.</p>
+
+<h2>Les trois taux, et ce qui les déclenche</h2>
+<p><strong>10 %</strong> : les ventes à consommer sur place, et les ventes à emporter de produits destinés à une consommation immédiate. Un sandwich, un plat chaud, une part de pizza emportée pour être mangée tout de suite.</p>
+<p><strong>5,5 %</strong> : les produits à emporter conditionnés de façon à permettre leur conservation. Une boîte de conserve, un plat sous vide, un paquet de biscuits, une bouteille d’eau refermable.</p>
+<p><strong>20 %</strong> : toutes les boissons alcoolisées, quel que soit le mode de consommation. Sur place ou à emporter ne change rien.</p>
+
+<h2>Le piège du contenant</h2>
+<p>C’est la partie qui surprend le plus. Pour une boisson non alcoolisée, le taux dépend du contenant.</p>
+<p>Servie dans un gobelet, donc dans un contenant non refermable, elle est destinée à une consommation immédiate : 10 %. Vendue en bouteille refermable à emporter, elle relève de 5,5 %.</p>
+<p>La même boisson, le même client, le même jour, deux taux différents selon que vous la servez au verre ou que vous lui tendez la bouteille. Une borne doit donc distinguer vos références au niveau du produit, pas au niveau de la commande.</p>
+
+<h2>Ce que l’écran doit poser comme question</h2>
+<p>Une seule, avant le paiement : sur place ou à emporter. Elle est indispensable pour trancher entre consommation immédiate et conservation, et elle doit être obligatoire, pas facultative.</p>
+<p>Le reste se règle au paramétrage. Chaque produit porte son propre taux par défaut, et seuls ceux dont le taux change selon le mode de consommation doivent être liés à la réponse du client.</p>
+<p>La ventilation doit ensuite remonter ligne par ligne à votre caisse, pas sous forme d’un total global. Un total global vous oblige à reconstituer la ventilation à la main, ce qui est exactement le travail que la borne était censée vous éviter.</p>
+
+<h2>L’erreur de paramétrage la plus fréquente</h2>
+<p>Appliquer un taux unique à toute une famille de produits. On range toutes les boissons à 10 % parce que la majorité part au gobelet, et les bouteilles vendues à emporter passent au mauvais taux toute l’année.</p>
+<p>Prenez votre carte, et pour chaque ligne posez deux questions : contient-elle de l’alcool, et le client peut-il la refermer. Les deux réponses donnent le taux.</p>
+
+<h2>Ce qui relève de votre comptable, pas de nous</h2>
+<p>Nous vendons un écran et nous décrivons la règle telle que nous l’avons appliquée. Les situations particulières existent : vente de produits mixtes, formules associant plusieurs taux, activité de traiteur, livraison.</p>
+<p>Faites valider votre table de taux avant de mettre quoi que ce soit en service. C’est une heure de votre comptable, et elle vous évite une régularisation qui se compte en milliers d’euros.</p>
+""",
+ "faq": [
+  ("Quel taux de TVA pour un sandwich à emporter ?",
+   "Dix pour cent, parce qu’il s’agit d’un produit destiné à une consommation immédiate. Le taux réduit de 5,5 % vise les produits conditionnés de façon à permettre leur conservation, ce qui n’est pas le cas d’un sandwich préparé à la demande."),
+  ("Une boisson change-t-elle de taux selon le contenant ?",
+   "Oui, pour les boissons non alcoolisées. Servie en gobelet non refermable, elle relève de la consommation immédiate à 10 %. Vendue en bouteille refermable à emporter, elle relève de 5,5 %. L’alcool reste à 20 % dans tous les cas."),
+  ("La borne applique-t-elle le bon taux automatiquement ?",
+   "Seulement si vous l’avez paramétrée produit par produit et si la question sur place ou à emporter est obligatoire avant le paiement. Aucune borne ne devine le taux : elle applique ce que vous avez saisi, correct ou non."),
+  ("Qui est responsable en cas d’erreur de taux ?",
+   "Vous, en tant qu’exploitant. Ni le fabricant de l’écran ni l’éditeur de l’application ne portent cette responsabilité. C’est la raison pour laquelle une relecture de votre table de taux par un comptable, avant la mise en service, est un investissement et non une dépense."),
+ ],
+ "offre": """
+<p>Nous ne vendons pas de logiciel, donc nous ne paramétrons pas vos taux. Nous vous disons simplement, parce que nous sommes passés par là, de faire relire cette table avant d’ouvrir.</p>
+<p>Le matériel, lui, est à <strong>499 € HT sans abonnement</strong>, et il accepte l’application de commande qui gère correctement votre carte.</p>
+""",
+ "voisins": ["borne-de-commande-ou-caisse-enregistreuse", "tablette-de-commande-restaurant-fonctionnement", "logiciel-borne-de-commande-ia"],
+},
+
+# =========================================================================
+{
+ "slug": "accessibilite-borne-de-commande",
+ "accroche": "Zone d’atteinte, comptoir qui reste ouvert, et la directive européenne entrée en application le 28 juin 2025. Ce qui vous concerne vraiment.",
+ "cle": "accessibilité borne de commande",
+ "titre": "Accessibilité d’une borne de commande : les règles réelles",
+ "h1": "Borne de commande et accessibilité : ce que la loi impose à votre établissement",
+ "description": "Zone d’atteinte, obligation de maintenir une alternative, et portée réelle de la directive européenne accessibilité pour une borne de commande en restaurant.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 7,
+ "resume": "Deux régimes se superposent : les règles françaises d’accessibilité des établissements recevant du public, et une directive européenne entrée en application en juin 2025 dont la portée exacte pour un restaurant mérite d’être précisée.",
+ "corps": """
+<p>Le sujet est traité nulle part correctement, et il revient dès qu’un exploitant accueille du public. Voici ce que nous avons compris, avec ce qui est certain et ce qui ne l’est pas.</p>
+
+<h2>Ce qui est certain : votre établissement reçoit du public</h2>
+<p>Un restaurant est un établissement recevant du public. À ce titre, les équipements mis à disposition de la clientèle doivent pouvoir être utilisés par les personnes handicapées.</p>
+<p>L’arrêté du 20 avril 2017 fixe la zone d’atteinte des commandes entre 0,90 m et 1,30 m du sol. Un écran dont les boutons sortent de cette plage est hors des clous, même s’il fonctionne parfaitement.</p>
+<p>Il faut aussi un dégagement de 90 cm devant l’appareil pour permettre l’approche d’un fauteuil, et un sol qui ne présente pas d’obstacle sur ce passage. Une rallonge qui traverse ce dégagement suffit à le disqualifier.</p>
+
+<h2>La règle que presque personne n’applique</h2>
+<p>La borne ne doit jamais être le seul moyen de commander. Un client qui ne peut pas utiliser l’écran, pour une raison de vue, de motricité ou simplement parce qu’il ne veut pas, doit pouvoir commander autrement.</p>
+<p>Un comptoir ouvert en permanence règle la question entièrement. C’est de toute façon ce que vous voulez pour d’autres raisons : une borne en panne un vendredi soir ne doit pas arrêter votre service.</p>
+
+<h2>La directive européenne : ce qui est entré en application</h2>
+<p>La directive européenne sur l’accessibilité des produits et services s’applique depuis le 28 juin 2025. Elle impose à certains terminaux en libre-service une évaluation de conformité et un marquage CE spécifique.</p>
+<p>La fiche publiée par la DGCCRF en juillet 2025 cite les terminaux de paiement, les distributeurs automatiques de billets de banque, les distributeurs de titres de transport et les distributeurs de tickets de file d’attente. Les bornes de commande en restauration n’y figurent pas nommément.</p>
+<p>La raison tient au mécanisme du texte : il vise les terminaux utilisés pour fournir les services qu’il couvre, parmi lesquels la restauration ne figure pas. En revanche, dès que votre borne intègre un terminal de paiement, ce composant-là entre bien dans le champ.</p>
+<p>Pour les appareils déjà en service avant le 28 juin 2025, la DGCCRF retient une période transitoire allant jusqu’à la fin de leur durée de vie économique, sans excéder quinze ans à compter de leur mise en service.</p>
+
+<h2>Ce que nous en tirons comme consigne</h2>
+<p>Nous ne sommes pas juristes et nous vous le disons. Notre lecture est que la borne de commande d’un restaurant n’est pas visée nommément, que le lecteur de carte qu’on y ajoute l’est, et que la situation est assez incertaine pour qu’il soit plus simple de concevoir accessible d’emblée.</p>
+<p>Concrètement : respectez la zone d’atteinte, gardez le comptoir ouvert, exigez du fabricant sa déclaration de conformité, et faites valider votre installation si vous équipez plusieurs établissements.</p>
+
+<h2>Les réglages qui coûtent zéro euro</h2>
+<ul>
+<li>Texte d’au moins 16 px, contraste franc entre le texte et le fond, jamais de gris clair sur blanc.</li>
+<li>Boutons d’au moins 44 px de côté, espacés, pour une main qui tremble.</li>
+<li>Pas de parcours chronométré : un écran qui revient à l’accueil au bout de dix secondes exclut tous ceux qui lisent lentement.</li>
+<li>Aucune information portée par la couleur seule, un symbole ou un mot en plus.</li>
+</ul>
+<p>Ces quatre points relèvent du paramétrage de votre application. Ils améliorent l’usage pour tout le monde, y compris pour le client pressé de midi.</p>
+""",
+ "faq": [
+  ("Une borne de commande doit-elle être accessible aux personnes handicapées ?",
+   "Les équipements mis à disposition de la clientèle d’un établissement recevant du public doivent pouvoir être utilisés par tous. L’arrêté du 20 avril 2017 fixe la zone d’atteinte des commandes entre 0,90 m et 1,30 m du sol, avec 90 cm de dégagement devant."),
+  ("La directive européenne accessibilité s’applique-t-elle aux bornes de restaurant ?",
+   "La fiche DGCCRF de juillet 2025 cite les terminaux de paiement, les distributeurs de billets, de titres de transport et de tickets de file d’attente, sans nommer les bornes de restauration. Un lecteur de carte intégré à la borne relève en revanche du texte."),
+  ("Peut-on n’avoir que des bornes et plus de comptoir ?",
+   "Non. Un client qui ne peut pas ou ne veut pas utiliser l’écran doit disposer d’une alternative. Un comptoir ouvert en permanence règle la question, et il vous protège aussi le jour où la borne tombe en panne."),
+  ("Que faire des bornes installées avant juin 2025 ?",
+   "La DGCCRF prévoit une période transitoire : les terminaux en service avant le 28 juin 2025 peuvent continuer d’être utilisés jusqu’à la fin de leur durée de vie économique, dans la limite de quinze ans après leur mise en service."),
+ ],
+ "offre": """
+<p>Notre écran se règle en hauteur selon le montage choisi, et son interface dépend de l’application que vous y installez : les quatre réglages gratuits listés plus haut sont donc entre vos mains.</p>
+<p>Le matériel reste à <strong>499 € HT sans abonnement</strong>. Si vous équipez plusieurs établissements, dites-le nous : la question de la conformité ne se pose pas pareil à cette échelle.</p>
+""",
+ "voisins": ["installer-borne-de-commande-restaurant", "borne-de-commande-ou-caisse-enregistreuse", "tva-restauration-borne-de-commande"],
+},
+
+# =========================================================================
+{
+ "slug": "commission-plateformes-livraison-vs-borne",
+ "accroche": "Une commande à 20 € vous laisse environ 14 € sur une plateforme. Le calcul complet, et ce que la même commande rapporte en direct.",
+ "cle": "commission plateforme livraison restaurant",
+ "titre": "30 % de commission : ce que les plateformes vous prennent",
+ "h1": "Commission des plateformes de livraison : le calcul que peu de restaurateurs font jusqu’au bout",
+ "description": "Ce qu’il reste d’une commande à 20 € passée par une plateforme de livraison, poste par poste, et ce que la même commande rapporte en vente directe.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 7,
+ "resume": "La commission n’est pas le seul prélèvement. Entre le pourcentage, la TVA sur la commission et le coût matière inchangé, une commande livrée rapporte beaucoup moins qu’elle n’en a l’air.",
+ "corps": """
+<p>Les plateformes apportent du volume, et ce volume a de la valeur, surtout le soir et en hiver. Personne de sérieux ne dira le contraire.</p>
+<p>Ce qui pose problème, c’est que peu de restaurateurs refont le calcul jusqu’au bout, parce que le versement arrive net et mensuel. On voit un virement, pas une ponction.</p>
+
+<h2>Le calcul sur une commande à 20 €</h2>
+<p>Prenons une commande de 20 € TTC, avec une commission de 30 % et un coût matière de 30 %, qui sont des ordres de grandeur courants en restauration rapide.</p>
+<ul>
+<li>Encaissé : 20,00 € TTC, soit 18,18 € hors taxes à 10 %</li>
+<li>Commission de la plateforme : 6,00 € TTC sur le montant TTC, soit 5,00 € hors taxes</li>
+<li>Coût matière : environ 5,45 € hors taxes</li>
+<li>Reste avant charges de production : <strong>environ 7,73 € hors taxes</strong></li>
+</ul>
+<p>La même commande passée chez vous, à la borne ou au comptoir, laisse environ 12,73 € hors taxes avant les mêmes charges. L’écart est de 5 € par commande, soit 65 % de marge en plus.</p>
+<p>Sur quarante commandes par jour et vingt-six jours par mois, l’écart atteint 5 200 € par mois. C’est le chiffre qui décide.</p>
+
+<h2>Les prélèvements qu’on oublie</h2>
+<p><strong>La commission porte sur le TTC.</strong> Vous payez donc un pourcentage sur une somme dont une partie ne vous appartient pas : la TVA que vous reversez à l’État.</p>
+<p><strong>Le coût matière ne baisse pas.</strong> Il est identique que la commande vienne d’une plateforme ou de votre comptoir. Toute la commission sort donc de votre marge, pas de votre chiffre d’affaires.</p>
+<p><strong>L’emballage de livraison coûte plus cher</strong> qu’un emballage à emporter classique, et il est rarement refacturé.</p>
+<p><strong>Vous ne récupérez pas le client.</strong> Son nom, son adresse et ses habitudes restent chez la plateforme. Vous louez un flux, vous ne construisez pas une clientèle.</p>
+
+<h2>Ce que ça ne veut pas dire</h2>
+<p>Pas de quitter les plateformes. Une commande à 7,73 € de marge reste meilleure qu’une commande qui n’existe pas, et le volume couvre des créneaux que vous ne rempliriez pas autrement.</p>
+<p>Cela veut dire qu’une commande en direct vaut environ une commande et demie passée par plateforme. Tout euro investi pour faire basculer des clients vers le direct se compare à ce ratio, pas à zéro.</p>
+
+<h2>Où se situe une borne dans ce calcul</h2>
+<p>Une borne ne remplace pas la livraison : elle sert les gens qui sont déjà entrés chez vous. Son rôle est ailleurs, dans le débit au comptoir et dans le panier.</p>
+<p>Mais elle partage une propriété avec la vente directe, et c’est celle qui compte ici : elle ne prend aucun pourcentage. Une commande passée à l’écran vous laisse exactement ce qu’une commande passée au comptoir vous laisse, quel que soit son montant et quel que soit le volume.</p>
+<p>C’est la différence de fond entre un équipement qu’on achète et un canal qu’on loue.</p>
+""",
+ "faq": [
+  ("Quelle commission prennent les plateformes de livraison ?",
+   "Les taux pratiqués se situent couramment autour de 30 % du montant TTC pour la livraison, moins pour la commande à emporter. Le pourcentage s’applique au TTC, donc aussi sur la part de TVA que vous reversez ensuite à l’État."),
+  ("Combien rapporte réellement une commande livrée ?",
+   "Sur une commande à 20 € TTC avec 30 % de commission et 30 % de coût matière, il reste environ 7,73 € hors taxes avant charges de production, contre environ 12,73 € pour la même commande vendue en direct."),
+  ("Faut-il quitter les plateformes de livraison ?",
+   "Rarement. Une commande à faible marge reste préférable à une commande inexistante, et le volume remplit des créneaux creux. L’enjeu est plutôt de savoir qu’une commande directe en vaut environ une et demie, et d’investir en conséquence."),
+  ("Une borne de commande réduit-elle la dépendance aux plateformes ?",
+   "Indirectement. Elle sert les clients déjà présents dans votre salle et ne prélève aucun pourcentage, quel que soit le volume. Elle améliore la marge sur le flux direct sans rien changer au flux de livraison."),
+ ],
+ "offre": """
+<p>C’est exactement le raisonnement qui nous a poussés à acheter du matériel plutôt qu’à louer un service. Un équipement payé une fois ne prend rien sur votre croissance.</p>
+<p>Notre borne coûte <strong>499 € HT, zéro euro par mois et zéro pourcentage sur vos ventes</strong>. Le jour où votre volume double, elle coûte toujours 499 €.</p>
+""",
+ "voisins": ["borne-de-commande-sans-abonnement", "borne-tactile-commande-prix", "augmentation-ticket-moyen-borne-chiffres"],
+},
+# =========================================================================
+{
+ "slug": "mode-kiosque-android-restaurant",
+ "accroche": "Verrouiller une tablette sur une seule application, sans abonnement de supervision. La méthode, et ce qu’elle ne protège pas.",
+ "cle": "mode kiosque android tablette",
+ "titre": "Mode kiosque Android : verrouiller une tablette sur une seule app",
+ "h1": "Verrouiller une tablette Android en mode kiosque pour un usage client",
+ "description": "Comment bloquer une tablette Android sur une seule application de commande, sans outil de supervision payant, et les trois limites de cette méthode.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 6,
+ "resume": "Un écran que le client peut quitter n’est pas une borne, c’est une tablette. Voici comment la verrouiller sans payer d’abonnement de supervision, et ce que ce verrouillage ne couvre pas.",
+ "corps": """
+<p>C’est la première chose à faire après avoir branché l’écran, et c’est aussi celle dont personne ne parle, parce qu’elle ne se vend pas. Une tablette laissée telle quelle finira avec un client sur un navigateur, un autre dans les réglages Wi-Fi, et un troisième qui aura installé quelque chose.</p>
+
+<h2>Ce que fait réellement le mode kiosque</h2>
+<p>Il fixe une application unique à l’écran, retire les boutons de navigation, empêche l’accès aux notifications et au panneau de réglages, et relance l’application si elle se ferme. L’appareil redémarre directement dessus après une coupure de courant.</p>
+<p>Android propose cette fonction nativement, sous le nom d’épinglage d’écran dans les réglages de sécurité. C’est le niveau le plus simple, suffisant pour beaucoup de situations, et il ne coûte rien.</p>
+
+<h2>Les trois niveaux, du plus simple au plus solide</h2>
+
+<h3>1. L’épinglage d’écran</h3>
+<p>Réglages, Sécurité, Épinglage d’écran. Vous l’activez, vous ouvrez votre application, vous l’épinglez. Pour en sortir, il faut une combinaison de touches et le code de déverrouillage.</p>
+<p>Avantage : gratuit, immédiat, aucune installation. Limite : un client qui connaît la manipulation peut tenter d’en sortir, et il reste coincé devant le code. Cela suffit dans une salle où quelqu’un est toujours présent.</p>
+
+<h3>2. Une application de kiosque</h3>
+<p>Des applications dédiées remplacent l’écran d’accueil et contrôlent ce qui est accessible. Beaucoup sont gratuites dans leur version de base.</p>
+<p>Elles ajoutent ce qui manque à l’épinglage : redémarrage automatique sur l’application, blocage de la barre de statut, plage horaire d’extinction, et parfois le redémarrage programmé de nuit, qui règle à lui seul la majorité des ralentissements.</p>
+
+<h3>3. Le propriétaire d’appareil</h3>
+<p>Le niveau professionnel. L’appareil est enrôlé dès sa première mise en route et devient impossible à sortir de son cadre sans réinitialisation complète. C’est ce qu’utilisent les chaînes.</p>
+<p>Il demande une configuration sur ordinateur et, selon l’outil, un abonnement de supervision. Il se justifie à partir de plusieurs dizaines d’appareils, rarement en dessous.</p>
+
+<h2>Les réglages à ne pas oublier</h2>
+<ul>
+<li><strong>Désactiver la mise en veille.</strong> Un écran noir ressemble à un écran en panne et les clients ne le touchent pas.</li>
+<li><strong>Désactiver les mises à jour automatiques du système.</strong> Une mise à jour lancée à 12 h 15 immobilise la borne pendant le service.</li>
+<li><strong>Figer l’heure et la langue</strong>, et retirer le compte Google s’il n’est pas nécessaire.</li>
+<li><strong>Programmer un redémarrage de nuit.</strong> C’est le réglage le plus rentable : il efface les petites fuites de mémoire qui font ramer l’appareil au bout de quelques jours.</li>
+</ul>
+
+<h2>Ce que le mode kiosque ne protège pas</h2>
+<p>Il ne protège pas du vol de l’appareil, qui relève de la fixation mécanique. Il ne protège pas du réseau : une borne verrouillée reste sur votre Wi-Fi, et doit être sur un réseau séparé de votre caisse si vous tenez à cloisonner.</p>
+<p>Il ne protège pas non plus de vous-même : notez le code de déverrouillage ailleurs que sur l’appareil. Nous avons passé une soirée à réinitialiser une tablette pour avoir oublié ce détail.</p>
+""",
+ "faq": [
+  ("Comment verrouiller une tablette Android sur une seule application ?",
+   "Par l’épinglage d’écran, dans Réglages puis Sécurité. Vous ouvrez votre application et vous l’épinglez : en sortir exige une combinaison de touches et le code de déverrouillage. C’est gratuit et suffisant quand du personnel est toujours présent."),
+  ("Faut-il payer un abonnement pour le mode kiosque ?",
+   "Non dans la plupart des cas. L’épinglage natif ne coûte rien et plusieurs applications de kiosque sont gratuites en version de base. Les outils de supervision payants ne se justifient qu’à partir de plusieurs dizaines d’appareils à gérer à distance."),
+  ("La borne redémarre-t-elle seule après une coupure de courant ?",
+   "Avec une application de kiosque configurée pour se lancer au démarrage, oui. L’épinglage natif seul ne le garantit pas toujours. Testez-le en débranchant l’appareil avant d’ouvrir, c’est le genre de détail qu’on découvre un samedi soir."),
+  ("Peut-on empêcher les mises à jour pendant le service ?",
+   "Oui, en désactivant les mises à jour automatiques du système et des applications dans les réglages. Une mise à jour déclenchée en plein coup de feu immobilise la borne plusieurs minutes, et c’est entièrement évitable."),
+ ],
+ "offre": """
+<p>Notre écran arrive sous Android ouvert, donc les trois niveaux décrits ici sont à votre disposition. Rien n’est verrouillé par nous, et rien ne vous oblige à passer par un outil payant.</p>
+<p>À <strong>499 € HT sans abonnement</strong>, vous achetez un appareil dont vous êtes réellement propriétaire, verrouillage compris.</p>
+""",
+ "voisins": ["logiciel-borne-de-commande-ia", "tablette-de-commande-restaurant-fonctionnement", "borne-de-commande-sans-abonnement"],
+},
+
+# =========================================================================
+{
+ "slug": "borne-de-commande-occasion",
+ "accroche": "Le matériel se revend mal pour une raison précise : il est souvent inséparable du logiciel qui l’animait. Les six vérifications.",
+ "cle": "borne de commande occasion",
+ "titre": "Acheter une borne de commande d’occasion : les pièges",
+ "h1": "Borne de commande d’occasion : six vérifications avant de payer",
+ "description": "Le marché de l’occasion est plein de bornes qui ne fonctionneront jamais chez vous. Les six points à vérifier avant d’acheter, et le calcul qui tranche.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 6,
+ "resume": "On trouve des bornes à 300 € en petites annonces. La plupart sont invendables pour une raison que le vendeur ignore parfois lui-même : elles ne fonctionnent qu’avec le logiciel qui les animait.",
+ "corps": """
+<p>Des bornes de seconde main circulent, souvent issues de fermetures d’établissements ou de fins de contrat. Les prix affichés sont tentants, entre 200 et 800 €. Le taux d’échec, lui, est élevé.</p>
+
+<h2>Pourquoi tant de bornes d’occasion ne servent à rien</h2>
+<p>La plupart ont été vendues dans un ensemble fermé : matériel plus logiciel plus abonnement. Le jour où l’abonnement s’arrête, l’application cesse de fonctionner et l’écran devient inerte.</p>
+<p>Le vendeur, de bonne foi, vous dit qu’elle marchait très bien le mois dernier. C’est vrai. Elle marchait tant que quelqu’un payait.</p>
+<p>Première question à poser, avant même le prix : sur quel système tourne-t-elle, et peut-on y installer une autre application. Si la réponse est floue, passez.</p>
+
+<h2>Les six vérifications</h2>
+
+<h3>1. Le système est-il ouvert</h3>
+<p>Un Android standard sur lequel on peut installer ce qu’on veut, oui. Un système propriétaire verrouillé par l’éditeur, non. Demandez une photo de l’écran des réglages.</p>
+
+<h3>2. L’appareil est-il encore enrôlé</h3>
+<p>Un appareil enrôlé dans un outil de supervision reste sous le contrôle de son ancien propriétaire, et une réinitialisation ne suffit pas toujours à l’en sortir. Exigez qu’il soit désenrôlé avant la vente, et vérifiez-le à la réception.</p>
+
+<h3>3. L’état du tactile</h3>
+<p>C’est la pièce qui s’use. Faites glisser un doigt lentement sur toute la surface, y compris les bords et les coins, et cherchez les zones mortes. Une dalle tactile à remplacer coûte souvent plus cher que la borne.</p>
+
+<h3>4. Les heures d’allumage</h3>
+<p>Une borne de chaîne a tourné douze heures par jour pendant trois ans. Le rétroéclairage faiblit, et un écran terni devient illisible en salle lumineuse. Comparez sa luminosité à celle d’un écran neuf avant de conclure.</p>
+
+<h3>5. L’alimentation et les câbles</h3>
+<p>Les blocs d’alimentation spécifiques sont introuvables une fois le modèle sorti du catalogue. S’il manque le bloc d’origine, considérez que la borne est hors service.</p>
+
+<h3>6. La garantie, qui n’existe plus</h3>
+<p>Entre professionnels, un achat d’occasion de particulier à particulier ou de pro à pro ne vous laisse en pratique que la garantie des vices cachés, difficile à mobiliser. Vous achetez le risque avec l’appareil.</p>
+
+<h2>Le calcul qui tranche</h2>
+<p>Une borne d’occasion à 400 €, avec un tactile incertain, sans garantie et sans bloc d’alimentation de rechange, se compare à un matériel neuf à 499 € garanti deux ans.</p>
+<p>L’écart est de 99 €. Il faut vraiment que l’occasion soit exceptionnelle pour que ce calcul penche de son côté, et c’est la raison pour laquelle ce marché reste étroit.</p>
+<p>Le seul cas où elle se défend : un modèle récent, sous Android ouvert, vendu avec son bloc et testé devant vous. Si les trois conditions sont réunies, foncez.</p>
+""",
+ "faq": [
+  ("Peut-on réutiliser une borne de commande d’un autre fournisseur ?",
+   "Seulement si son système est ouvert et qu’elle n’est plus enrôlée dans un outil de supervision. Beaucoup de bornes vendues en ensemble fermé cessent de fonctionner à l’arrêt de l’abonnement et ne peuvent pas recevoir une autre application."),
+  ("Comment tester une borne d’occasion avant d’acheter ?",
+   "Faites glisser un doigt lentement sur toute la dalle, bords et coins compris, pour repérer les zones mortes. Vérifiez la luminosité en pleine lumière, l’accès aux réglages du système, et la présence du bloc d’alimentation d’origine."),
+  ("Une borne d’occasion est-elle garantie ?",
+   "En pratique non. Entre professionnels, il vous reste la garantie des vices cachés, difficile à mobiliser et limitée dans le temps. Le risque de panne est intégralement pour vous à partir du jour de la livraison."),
+  ("À partir de quel prix une borne d’occasion vaut-elle le coup ?",
+   "Comparez au prix d’un matériel neuf garanti. Si l’écart se compte en dizaines d’euros, l’occasion ne compense pas l’absence de garantie et l’incertitude sur l’usure du tactile. Elle se défend en dessous de la moitié du prix du neuf, et à conditions réunies."),
+ ],
+ "offre": """
+<p>Nous ne vendons pas d’occasion, et cette page vous conduira peut-être à en acheter une ailleurs. C’est assumé : une borne d’occasion saine est une bonne affaire.</p>
+<p>Simplement, vérifiez les six points ci-dessus avant de payer. Si l’écart avec du neuf se réduit à quelques dizaines d’euros, notre matériel est à <strong>499 € HT, garanti deux ans, sans abonnement</strong>.</p>
+""",
+ "voisins": ["borne-tactile-commande-prix", "mode-kiosque-android-restaurant", "tablette-tactile-pour-restaurant"],
+},
+
+# =========================================================================
+{
+ "slug": "ecran-cuisine-restaurant",
+ "accroche": "Plus de rouleau, plus de ticket illisible près de la friteuse. Ce qu’un écran de cuisine change, et pourquoi garder l’imprimante.",
+ "cle": "écran de cuisine restaurant",
+ "titre": "Écran de cuisine en restaurant : remplacer les tickets papier",
+ "h1": "Écran de cuisine : ce qui change quand les commandes arrêtent de s’imprimer",
+ "description": "Ce qu’un écran de cuisine apporte par rapport aux tickets papier, ce qu’il coûte réellement, et la raison de garder une imprimante en secours.",
+ "date": "2026-11-05", "maj": "2026-11-05", "lecture": 6,
+ "resume": "L’imprimante de cuisine tombe en panne au pire moment, le papier devient illisible près des sources de chaleur, et personne ne sait quelle commande est en cours. Un écran règle les trois, et en crée un nouveau.",
+ "corps": """
+<p>Le ticket papier en cuisine est une habitude, pas une nécessité. Il a trois défauts que tout le monde connaît et que personne ne compte vraiment.</p>
+
+<h2>Les trois défauts du papier</h2>
+<p><strong>Le rouleau se termine toujours à 12 h 30.</strong> Jamais à 15 h. Et il faut quelqu’un pour le changer pendant que les commandes s’accumulent.</p>
+<p><strong>Le papier thermique vieillit mal près de la chaleur.</strong> Un ticket posé près d’une friteuse brunit en deux heures et devient illisible. On refait alors le plat de mémoire, ou on redemande.</p>
+<p><strong>Personne ne sait où en est une commande.</strong> Un ticket est soit sur la barre, soit fait. Il n’existe pas d’état intermédiaire, donc aucune visibilité sur ce qui attend depuis huit minutes.</p>
+
+<h2>Ce qu’un écran apporte</h2>
+<p>Les commandes arrivent, s’affichent, et changent de couleur en vieillissant. Un coup d’œil suffit pour voir laquelle attend depuis trop longtemps, ce qui est exactement l’information qui manque sur une barre à tickets.</p>
+<p>On marque un plat comme prêt d’un appui, la commande disparaît, et le client est appelé. En fin de service, vous savez combien de temps chaque plat a réellement pris : c’est la donnée qui permet de retravailler une carte, et elle n’existe pas sur papier.</p>
+<p>Et plus de consommable. Sur trois ans, les rouleaux représentent une somme modeste mais réelle, et surtout du temps de manipulation en plein rush.</p>
+
+<h2>Ce que ça coûte vraiment</h2>
+<p>Un écran de cuisine est un écran tactile résistant, protégé de la vapeur et des projections, plus une application qui reçoit les commandes. Les deux postes sont souvent vendus séparément.</p>
+<p>Le matériel ressemble beaucoup à celui d’une borne de commande : même type de dalle, même carte Android. La différence tient à l’emplacement et à la fixation, rarement à l’électronique.</p>
+<p>Beaucoup d’applications de caisse incluent déjà un écran de cuisine dans leur offre. Avant d’acheter quoi que ce soit, posez la question à votre éditeur : la fonction est peut-être déjà payée.</p>
+
+<h2>Le nouveau problème qu’il crée</h2>
+<p>Un écran éteint arrête la cuisine, là où une imprimante en panne laisse au moins la possibilité de crier les commandes. C’est le seul vrai argument contre, et il est sérieux.</p>
+<p>La parade tient en une phrase : gardez une imprimante branchée en secours, même si vous ne vous en servez jamais. Un rouleau tous les six mois est une assurance bon marché.</p>
+
+<h2>Où le placer</h2>
+<p>Hors de la zone de projection directe, à hauteur de regard depuis le poste de travail, et jamais face à une sortie de hotte. La vapeur chaude condense sur une dalle froide et finit par s’infiltrer.</p>
+<p>Prévoyez aussi que quelqu’un le touchera avec des mains grasses toute la journée : la même exigence de tactile capacitif correct s’applique qu’en salle.</p>
+""",
+ "faq": [
+  ("Un écran de cuisine remplace-t-il l’imprimante à tickets ?",
+   "Fonctionnellement oui, mais gardez une imprimante branchée en secours. Un écran éteint arrête la production, là où une panne d’imprimante laisse la possibilité d’annoncer les commandes à la voix le temps de la réparation."),
+  ("Quelle différence entre un écran de cuisine et une borne de commande ?",
+   "L’électronique est très proche : même type de dalle tactile, même carte Android. Ce qui change est l’emplacement, la fixation et la protection contre la vapeur, ainsi que l’application qui tourne dessus."),
+  ("Faut-il un écran résistant à l’eau en cuisine ?",
+   "Au minimum protégé des projections et placé hors de la zone de vapeur directe. Une dalle froide face à une sortie de hotte accumule la condensation et finit par laisser passer l’humidité dans la connectique."),
+  ("L’écran de cuisine est-il inclus dans les logiciels de caisse ?",
+   "Souvent, dans les offres de restauration. Avant d’acheter une solution séparée, posez la question à votre éditeur : la fonction est peut-être déjà comprise dans ce que vous payez chaque mois."),
+ ],
+ "offre": """
+<p>Notre écran pivote en paysage, ce qui en fait un affichage de cuisine utilisable, à condition de le placer à l’abri de la vapeur.</p>
+<p>Même matériel, même prix : <strong>499 € HT sans abonnement</strong>. Certains clients en prennent deux, un en salle et un en cuisine, et profitent du tarif dégressif à partir du deuxième.</p>
+""",
+ "voisins": ["tablette-de-commande-restaurant-fonctionnement", "installer-borne-de-commande-restaurant", "tablette-tactile-pour-restaurant"],
+},
 
 ]
