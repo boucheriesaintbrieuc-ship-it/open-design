@@ -125,6 +125,28 @@
         dessinerScene();
       };
 
+      /* ---- Adaptation au mode boutique ------------------------------
+         Le panier WooCommerce ne porte qu'un article à un prix fixe. Tant
+         qu'il encaisse, le formulaire ne doit donc afficher ni palier
+         dégressif ni option payante : ce qui est à l'écran est ce qui sera
+         débité, sans exception à expliquer après coup. */
+      if (C.modePaiement === "woocommerce") {
+        C.paliers = [{ aPartirDe: 1, prixHT: (C.paliers && C.paliers[0] ? C.paliers[0].prixHT : 600) }];
+        C.options = {};
+        const champsOpt = $("#opt-mise-en-service")?.closest("fieldset");
+        if (champsOpt) champsOpt.hidden = true;
+        const noteB = $("#note-boutique");
+        const bq = C.boutique || {};
+        if (noteB && bq.nomAffiche && bq.hote) {
+          noteB.innerHTML = "Le paiement est encaiss\u00e9 par notre boutique <strong>" + bq.nomAffiche +
+            "</strong>\u00a0: en validant, vous passez sur <strong>" + bq.hote +
+            "</strong>, qui porte la passerelle bancaire du groupe et \u00e9met la facture. M\u00eame vendeur, page de paiement d\u00e9j\u00e0 rod\u00e9e.";
+          noteB.removeAttribute("hidden");
+        }
+        const noteQte = $("#qte-valeur")?.closest("fieldset")?.querySelector(".note");
+        if (noteQte) noteQte.textContent = "600 \u20ac HT l\u2019unit\u00e9, livraison offerte. \u00c0 partir de deux bornes, appelez-nous : la remise se fait sur devis.";
+      }
+
       $$("[data-qte]", form).forEach(b => b.addEventListener("click", () => {
         quantite = Math.min(20, Math.max(1, quantite + (+b.dataset.qte)));
         rendre();
@@ -145,6 +167,29 @@
           const cfg = typeof window.CONFIG_BORNE === "function" ? window.CONFIG_BORNE() : null;
           if (cfg) localStorage.setItem("borne-commande-en-cours", JSON.stringify({ quand: Date.now(), etab: ref, email, config: cfg }));
         } catch (err) { /* mode privé : la configuration sera redemandée par e-mail */ }
+
+        /* Mode boutique : la commande rejoint le panier d'une boutique
+           WooCommerce qui porte déjà sa passerelle bancaire. On ne transmet
+           que la référence du produit et la quantité ; le reste, adresse et
+           coordonnées, est demandé là-bas. */
+        if (C.modePaiement === "woocommerce") {
+          const b = C.boutique || {};
+          if (!b.base || !b.idProduit) {
+            const zone = $("#erreur-paiement");
+            if (zone) {
+              zone.hidden = false;
+              zone.textContent = "La boutique de paiement n\u2019est pas configur\u00e9e. Renseignez boutique dans assets/config.js, ou passez commande au " + (C.telAffiche || "") + ".";
+            }
+            return;
+          }
+          const u = new URL(b.pageCommande || "/panier/", b.base);
+          u.searchParams.set("add-to-cart", String(b.idProduit));
+          u.searchParams.set("quantity", String(e.quantite));
+          bouton.disabled = true;
+          bouton.textContent = "Ouverture du paiement\u2026";
+          location.href = u.toString();
+          return;
+        }
 
         if (C.modePaiement === "php") {
           bouton.disabled = true;

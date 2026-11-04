@@ -307,6 +307,102 @@ Elles doivent y être avant la première vente.
 
 ---
 
+## Le paiement passe par votre boutique WooCommerce
+
+C'est le choix retenu, et c'est le mode actif dans `assets/config.js`
+(`modePaiement: "woocommerce"`). Plutôt que de créer des liens Stripe pour ce
+site, la commande rejoint le panier d'une boutique que vous possédez déjà.
+
+### Pourquoi
+
+La boutique `epicerie-saintbrieuc.fr` tourne sous WooCommerce avec l'extension
+Stripe active, et elle a encaissé plus de quarante mille commandes. Sa
+passerelle, son certificat, ses e-mails de confirmation et ses factures sont
+rodés. Monter un deuxième tunnel de paiement à côté, c'est se créer une
+deuxième surface à surveiller pour vendre le même produit.
+
+Aucune clé secrète n'est donc nécessaire sur `borne-restaurants.fr`, et aucun
+PHP n'a besoin d'y tourner pour le paiement.
+
+### Ce qui a été fait sur la boutique
+
+Une fiche produit a été créée, identifiant **7910**, intitulée « Borne de
+commande tactile pour restaurant - écran Android sur pied ».
+
+| | |
+|---|---|
+| Prix | 720 € (c'est le montant débité, voir plus bas) |
+| Référence | `BORNE-CMD-01` |
+| Visibilité | **masquée du catalogue** : la fiche n'apparaît ni dans la boutique, ni dans la recherche interne. On y arrive seulement par le lien depuis ce site |
+| Photos | les deux visuels produit, importés dans la médiathèque |
+| État | **brouillon** |
+
+La fiche est encore en brouillon : la mise en ligne a été refusée par la
+protection d'écriture sur site externe. **C'est la seule action qui vous
+reste** : ouvrez la fiche dans l'administration WooCommerce et cliquez sur
+Publier. Tout le reste est câblé et testé.
+
+### Pourquoi 720 et pas 600
+
+Aucun taux de TVA n'est enregistré dans cette boutique : WooCommerce débite
+donc exactement le prix saisi. Le prix de la fiche est pour cette raison le
+montant TTC, 720 €, et pas le 600 € hors taxes. La ventilation 600 € + 20 %
+reste affichée partout côté client, et c'est votre comptabilité qui la porte.
+
+Si vous activez un jour la TVA dans cette boutique, **repassez le prix de la
+fiche à 600** le même jour, sinon vous facturerez 864 €.
+
+### Ce que le bouton fait exactement
+
+Vérifié au navigateur sur la page construite :
+
+```
+1 borne  →  https://epicerie-saintbrieuc.fr/commander/?add-to-cart=7910&quantity=1
+2 bornes →  https://epicerie-saintbrieuc.fr/commander/?add-to-cart=7910&quantity=2
+```
+
+L'identifiant du produit est utilisé plutôt que l'adresse de la fiche, parce
+qu'il ne change pas si vous renommez le produit ou modifiez son permalien.
+
+### Les paliers et les options sont retirés dans ce mode
+
+Le panier WooCommerce ne connaît qu'un article à un prix. Il ne peut donc pas
+appliquer les 570 € et 540 € des paliers, ni ajouter la mise en service et
+l'extension de garantie.
+
+Le formulaire les retire donc tout seul quand ce mode est actif : les deux
+cases d'options sont masquées, et la mention de remise dégressive est
+remplacée par une invitation à appeler. Deux bornes affichent 1 440 € TTC, et
+c'est bien 1 440 € qui seront débités.
+
+C'est délibéré. Une remise promise à l'écran et absente au moment de débiter
+produit un litige ; une remise accordée au téléphone produit un client.
+
+### Le client est prévenu de la redirection
+
+Une mention apparaît au-dessus du bouton de paiement, remplie depuis
+`config.js` : elle nomme la boutique et le nom de domaine sur lequel il va
+atterrir. Les conditions de vente le disent aussi.
+
+Ne retirez pas cette mention. Un acheteur professionnel qui sort sa carte et
+voit soudain le nom d'une épicerie referme l'onglet, et vous ne saurez jamais
+pourquoi la commande n'est pas arrivée.
+
+### Le point à surveiller
+
+Si le visiteur a déjà des articles de l'épicerie dans son panier, ils
+partiront dans la même commande que la borne. C'est rare, puisqu'il arrive par
+`borne-restaurants.fr`, mais c'est possible. Si cela vous gêne, la parade est
+une boutique WooCommerce dédiée, ou un plugin qui vide le panier à l'arrivée.
+
+### Pour revenir à Stripe
+
+Repassez `modePaiement` à `"lien"` et renseignez les trois liens de
+`liensStripe`, ou à `"php"` si vous installez `paiement/creer-session.php` et
+sa clé secrète. Les deux modes sont restés en place et fonctionnels.
+
+---
+
 ## Le configurateur de borne
 
 `commander.html` porte un configurateur complet, placé avant le paiement. Le

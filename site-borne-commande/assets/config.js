@@ -29,20 +29,51 @@ window.CONFIG = {
   livraisonHT: 0,                              /* 0 = offerte en France métropolitaine */
 
   /* ---- Paiement ------------------------------------------------------
-     Deux modes possibles, au choix.
+     Trois modes possibles. Le mode actif est celui de modePaiement.
+
+     "woocommerce" : la commande part sur une boutique WooCommerce que vous
+               possédez déjà, et c'est elle qui encaisse. Rien à créer chez
+               Stripe, aucune clé à manipuler, aucun PHP à installer ici :
+               la passerelle bancaire, le certificat, les e-mails de
+               confirmation et les factures existent déjà là-bas et ont
+               tourné sur des dizaines de milliers de commandes.
+               C'est le mode actif.
+
+               En contrepartie, le panier de la boutique ne connaît qu'un
+               seul article à un seul prix. Les paliers dégressifs et les
+               deux options sont donc retirés du formulaire dans ce mode,
+               et traités par devis. C'est volontaire : il vaut mieux une
+               ligne de panier exacte qu'une remise promise à l'écran et
+               absente au moment de débiter.
 
      "lien"  : Stripe Payment Links. Aucun serveur, aucune clé. Vous créez
                trois liens dans le tableau de bord Stripe (un par palier de
-               quantité) et vous collez les URL ci-dessous. Les options sont
-               ajoutées par le client sur la page Stripe, en articles
-               facultatifs. C'est le mode par défaut, il marche partout.
+               quantité) et vous collez les URL ci-dessous.
 
      "php"   : le fichier paiement/creer-session.php crée une session Stripe
                Checkout avec le total exact calculé par le configurateur.
                Demande un hébergement qui exécute PHP (o2switch le fait) et
                une clé secrète placée dans paiement/config.php, jamais ici.
      ------------------------------------------------------------------- */
-  modePaiement: "lien",
+  modePaiement: "woocommerce",
+
+  /* ---- La boutique qui encaisse (mode "woocommerce") ------------------
+     idProduit est l'identifiant WooCommerce de la fiche borne. Il ne change
+     jamais, même si vous renommez le produit ou son adresse : c'est pour ça
+     qu'on s'appuie dessus plutôt que sur l'URL de la fiche.
+
+     nomAffiche et hote servent à prévenir le client de la redirection, sur
+     la page de commande et dans les conditions de vente. Ne les retirez
+     pas : un acheteur qui atterrit sans prévenir sur un autre nom de
+     domaine au moment de sortir sa carte referme l'onglet.
+     ------------------------------------------------------------------- */
+  boutique: {
+    base:         "https://epicerie-saintbrieuc.fr",
+    pageCommande: "/commander/",
+    idProduit:    7910,
+    nomAffiche:   "Épicerie Saint-Brieuc",
+    hote:         "epicerie-saintbrieuc.fr"
+  },
 
   liensStripe: {
     "1": "https://buy.stripe.com/REMPLACER_LIEN_1_BORNE",

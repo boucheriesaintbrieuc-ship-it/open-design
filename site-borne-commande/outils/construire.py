@@ -790,7 +790,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
           <label class="champ"><span>Adresse e-mail</span>
             <input type="email" id="client-email" name="email" autocomplete="email" placeholder="vous@votre-restaurant.fr">
           </label>
-          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison et l’éventuel numéro de TVA se saisissent sur la page Stripe.</p>
+          <p class="note">Ces deux champs nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison, la raison sociale et l’éventuel numéro de TVA se saisissent à l’étape suivante, sur la page de commande de la boutique.</p>
         </div>
       </section>
     </div>
@@ -816,6 +816,8 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
           <span class="desc-opt">J’ai lu et j’accepte les <a href="cgv.html">conditions générales de vente</a>, y compris les modalités de livraison et de retour.</span>
         </label>
 
+        <p class="note mt-1" id="note-boutique" hidden></p>
+
         <button class="btn btn--large mt-1" id="aller-au-paiement" type="button" disabled>Payer par carte</button>
         <p class="erreur mt-1" id="erreur-paiement" hidden></p>
 
@@ -823,7 +825,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Livraison offerte</strong>, aucun frais d’installation</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>0 € par mois</strong>, aucun engagement</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>TVA 20 % comprise dans le prix affiché</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement traité par Stripe, aucune donnée bancaire sur ce site</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement par carte sur la boutique du groupe, aucune donnée bancaire sur ce site</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le paiement</span></li>
         </ul>
 
@@ -851,7 +853,7 @@ CORPS_MERCI = """
 <main id="contenu" class="env-etroite confirme">
   <p class="pastille"><svg aria-hidden="true"><use href="#i-check"/></svg></p>
   <h1>Commande enregistrée</h1>
-  <p>Le paiement est passé. Vous recevez le reçu Stripe dans les minutes qui viennent, puis la facture par e-mail dans la journée ouvrée.</p>
+  <p>Le paiement est passé. La confirmation de commande arrive par e-mail dans les minutes qui viennent, puis la facture dans la journée ouvrée.</p>
   <p id="ref-commande" hidden class="note">Référence de paiement : <code class="prix" id="ref-valeur"></code></p>
 
   <div class="carte mt-2" style="text-align:left">
@@ -1069,6 +1071,7 @@ CORPS_CGV = fil([("Accueil", "index.html"), ("Conditions générales de vente", 
     <div class="prose mt-2">
       <h2>1. Objet et champ d’application</h2>
       <p>Les présentes conditions régissent les ventes conclues sur ce site par RAISON SOCIALE À COMPLÉTER auprès d’acheteurs agissant à des fins professionnelles. Toute commande vaut acceptation sans réserve des présentes conditions, dans leur version en vigueur au jour de la commande.</p>
+      <p>Le paiement est encaissé sur la boutique en ligne du vendeur, à l’adresse epicerie-saintbrieuc.fr, qui porte la passerelle bancaire du groupe. La facture est émise au nom de la société indiquée aux mentions légales. L’acheteur est averti de ce changement d’adresse avant de valider sa commande, sur la page de commande elle-même.</p>
 
       <h2>2. Produits</h2>
       <p>Les caractéristiques essentielles des produits figurent sur les pages produits. Les photographies et illustrations n’ont pas de valeur contractuelle. Le produit vendu est un écran tactile sur pied. Il ne comprend ni logiciel de prise de commande, ni logiciel d’encaissement, ni imprimante, ni terminal de paiement.</p>
@@ -1151,7 +1154,8 @@ CORPS_CONFID = fil([("Accueil", "index.html"), ("Données personnelles", None)])
 
       <h2>Les données que nous recevons</h2>
       <p>Quand vous utilisez le formulaire de contact, votre messagerie nous envoie ce que vous avez saisi : le nom de votre établissement, vos coordonnées et votre question. Ces informations servent à vous répondre. Elles sont conservées douze mois, puis effacées.</p>
-      <p>Quand vous passez commande, le nom de l’établissement et l’adresse e-mail que vous indiquez sont transmis à Stripe pour pré-remplir la page de paiement. La commande elle-même, l’adresse de livraison, la facturation et le règlement sont traités par Stripe Payments Europe Limited, dont la politique de confidentialité est consultable sur stripe.com. Nous recevons de Stripe le détail de la commande et l’identité de l’acheteur, que nous conservons dix ans au titre des obligations comptables.</p>
+      <p>Quand vous passez commande, vous êtes dirigé vers notre boutique en ligne, à l’adresse epicerie-saintbrieuc.fr, qui appartient au même vendeur. C’est là que vous saisissez vos coordonnées, votre adresse de livraison et votre règlement. Le nom de l’établissement et l’adresse e-mail saisis sur ce site ne quittent pas votre navigateur : ils servent à rattacher votre configuration de borne à votre commande, et nous sont transmis par e-mail.</p>
+      <p>Le paiement par carte sur cette boutique est traité par Stripe Payments Europe Limited, dont la politique de confidentialité est consultable sur stripe.com. Aucun numéro de carte ne passe par nos serveurs. Nous conservons le détail de la commande et l’identité de l’acheteur dix ans, au titre des obligations comptables.</p>
 
       <h2>Vos droits</h2>
       <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement ou la limitation de leur traitement en écrivant à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>. Une réponse vous est adressée dans un délai d’un mois. En cas de désaccord, vous pouvez saisir la Commission nationale de l’informatique et des libertés, 3 place de Fontenoy, 75007 Paris.</p>

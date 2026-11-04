@@ -881,7 +881,7 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
           <label class="champ"><span>Adresse e-mail</span>
             <input type="email" id="client-email" name="email" autocomplete="email" placeholder="vous@votre-restaurant.fr">
           </label>
-          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison et l’éventuel numéro de TVA se saisissent sur la page Stripe.</p>
+          <p class="note">Ces deux champs nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison, la raison sociale et l’éventuel numéro de TVA se saisissent à l’étape suivante, sur la page de commande de la boutique.</p>
         </div>
       </section>
     </div>
@@ -907,6 +907,8 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
           <span class="desc-opt">J’ai lu et j’accepte les <a href="cgv.html">conditions générales de vente</a>, y compris les modalités de livraison et de retour.</span>
         </label>
 
+        <p class="note mt-1" id="note-boutique" hidden></p>
+
         <button class="btn btn--large mt-1" id="aller-au-paiement" type="button" disabled>Payer par carte</button>
         <p class="erreur mt-1" id="erreur-paiement" hidden></p>
 
@@ -914,7 +916,7 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Livraison offerte</strong>, aucun frais d’installation</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>0 € par mois</strong>, aucun engagement</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>TVA 20 % comprise dans le prix affiché</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement traité par Stripe, aucune donnée bancaire sur ce site</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement par carte sur la boutique du groupe, aucune donnée bancaire sur ce site</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le paiement</span></li>
         </ul>
 
@@ -1004,20 +1006,51 @@ window.CONFIG = {
   livraisonHT: 0,                              /* 0 = offerte en France métropolitaine */
 
   /* ---- Paiement ------------------------------------------------------
-     Deux modes possibles, au choix.
+     Trois modes possibles. Le mode actif est celui de modePaiement.
+
+     "woocommerce" : la commande part sur une boutique WooCommerce que vous
+               possédez déjà, et c'est elle qui encaisse. Rien à créer chez
+               Stripe, aucune clé à manipuler, aucun PHP à installer ici :
+               la passerelle bancaire, le certificat, les e-mails de
+               confirmation et les factures existent déjà là-bas et ont
+               tourné sur des dizaines de milliers de commandes.
+               C'est le mode actif.
+
+               En contrepartie, le panier de la boutique ne connaît qu'un
+               seul article à un seul prix. Les paliers dégressifs et les
+               deux options sont donc retirés du formulaire dans ce mode,
+               et traités par devis. C'est volontaire : il vaut mieux une
+               ligne de panier exacte qu'une remise promise à l'écran et
+               absente au moment de débiter.
 
      "lien"  : Stripe Payment Links. Aucun serveur, aucune clé. Vous créez
                trois liens dans le tableau de bord Stripe (un par palier de
-               quantité) et vous collez les URL ci-dessous. Les options sont
-               ajoutées par le client sur la page Stripe, en articles
-               facultatifs. C'est le mode par défaut, il marche partout.
+               quantité) et vous collez les URL ci-dessous.
 
      "php"   : le fichier paiement/creer-session.php crée une session Stripe
                Checkout avec le total exact calculé par le configurateur.
                Demande un hébergement qui exécute PHP (o2switch le fait) et
                une clé secrète placée dans paiement/config.php, jamais ici.
      ------------------------------------------------------------------- */
-  modePaiement: "lien",
+  modePaiement: "woocommerce",
+
+  /* ---- La boutique qui encaisse (mode "woocommerce") ------------------
+     idProduit est l'identifiant WooCommerce de la fiche borne. Il ne change
+     jamais, même si vous renommez le produit ou son adresse : c'est pour ça
+     qu'on s'appuie dessus plutôt que sur l'URL de la fiche.
+
+     nomAffiche et hote servent à prévenir le client de la redirection, sur
+     la page de commande et dans les conditions de vente. Ne les retirez
+     pas : un acheteur qui atterrit sans prévenir sur un autre nom de
+     domaine au moment de sortir sa carte referme l'onglet.
+     ------------------------------------------------------------------- */
+  boutique: {
+    base:         "https://epicerie-saintbrieuc.fr",
+    pageCommande: "/commander/",
+    idProduit:    7910,
+    nomAffiche:   "Épicerie Saint-Brieuc",
+    hote:         "epicerie-saintbrieuc.fr"
+  },
 
   liensStripe: {
     "1": "https://buy.stripe.com/REMPLACER_LIEN_1_BORNE",
@@ -1179,6 +1212,28 @@ window.CONFIG = {
         dessinerScene();
       };
 
+      /* ---- Adaptation au mode boutique ------------------------------
+         Le panier WooCommerce ne porte qu'un article à un prix fixe. Tant
+         qu'il encaisse, le formulaire ne doit donc afficher ni palier
+         dégressif ni option payante : ce qui est à l'écran est ce qui sera
+         débité, sans exception à expliquer après coup. */
+      if (C.modePaiement === "woocommerce") {
+        C.paliers = [{ aPartirDe: 1, prixHT: (C.paliers && C.paliers[0] ? C.paliers[0].prixHT : 600) }];
+        C.options = {};
+        const champsOpt = $("#opt-mise-en-service")?.closest("fieldset");
+        if (champsOpt) champsOpt.hidden = true;
+        const noteB = $("#note-boutique");
+        const bq = C.boutique || {};
+        if (noteB && bq.nomAffiche && bq.hote) {
+          noteB.innerHTML = "Le paiement est encaiss\u00e9 par notre boutique <strong>" + bq.nomAffiche +
+            "</strong>\u00a0: en validant, vous passez sur <strong>" + bq.hote +
+            "</strong>, qui porte la passerelle bancaire du groupe et \u00e9met la facture. M\u00eame vendeur, page de paiement d\u00e9j\u00e0 rod\u00e9e.";
+          noteB.removeAttribute("hidden");
+        }
+        const noteQte = $("#qte-valeur")?.closest("fieldset")?.querySelector(".note");
+        if (noteQte) noteQte.textContent = "600 \u20ac HT l\u2019unit\u00e9, livraison offerte. \u00c0 partir de deux bornes, appelez-nous : la remise se fait sur devis.";
+      }
+
       $$("[data-qte]", form).forEach(b => b.addEventListener("click", () => {
         quantite = Math.min(20, Math.max(1, quantite + (+b.dataset.qte)));
         rendre();
@@ -1199,6 +1254,29 @@ window.CONFIG = {
           const cfg = typeof window.CONFIG_BORNE === "function" ? window.CONFIG_BORNE() : null;
           if (cfg) localStorage.setItem("borne-commande-en-cours", JSON.stringify({ quand: Date.now(), etab: ref, email, config: cfg }));
         } catch (err) { /* mode privé : la configuration sera redemandée par e-mail */ }
+
+        /* Mode boutique : la commande rejoint le panier d'une boutique
+           WooCommerce qui porte déjà sa passerelle bancaire. On ne transmet
+           que la référence du produit et la quantité ; le reste, adresse et
+           coordonnées, est demandé là-bas. */
+        if (C.modePaiement === "woocommerce") {
+          const b = C.boutique || {};
+          if (!b.base || !b.idProduit) {
+            const zone = $("#erreur-paiement");
+            if (zone) {
+              zone.hidden = false;
+              zone.textContent = "La boutique de paiement n\u2019est pas configur\u00e9e. Renseignez boutique dans assets/config.js, ou passez commande au " + (C.telAffiche || "") + ".";
+            }
+            return;
+          }
+          const u = new URL(b.pageCommande || "/panier/", b.base);
+          u.searchParams.set("add-to-cart", String(b.idProduit));
+          u.searchParams.set("quantity", String(e.quantite));
+          bouton.disabled = true;
+          bouton.textContent = "Ouverture du paiement\u2026";
+          location.href = u.toString();
+          return;
+        }
 
         if (C.modePaiement === "php") {
           bouton.disabled = true;
