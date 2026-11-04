@@ -11,6 +11,9 @@ Les fichiers .html sont écrits à la racine du site.
 """
 import json, pathlib, re, sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from articles import ARTICLES
+
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 DOMAINE = "https://borne-restaurants.fr"
 MARQUE = "Bornéa"
@@ -115,6 +118,7 @@ def borne(symbole="borne-veille", classe="borne", label=None, attrs=""):
 # --------------------------------------------------------------------------
 NAV = [
     ("index.html", "La borne", True),
+    ("blog.html", "Blog", True),
     ("guide-borne-de-commande-restaurant.html", "Guide d’achat", False),
     ("livraison-et-retours.html", "Livraison", False),
     ("contact.html", "Contact", False),
@@ -149,6 +153,7 @@ def pied():
         <li><a href="index.html">La borne à 499 € HT</a></li>
         <li><a href="commander.html">Commander</a></li>
         <li><a href="guide-borne-de-commande-restaurant.html">Guide d’achat</a></li>
+        <li><a href="blog.html">Blog</a></li>
       </ul>
     </div>
     <div>
@@ -231,6 +236,7 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body=""):
 <meta property="og:image" content="{DOMAINE}/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
 <meta name="theme-color" content="#F1F2F4">
+<script>document.documentElement.className+=" js"</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 {{CSS_ICI}}
@@ -261,18 +267,23 @@ CORPS_INDEX = """
 
 <section class="env vitrine">
   <div class="vitrine__objet">
-    <div class="scene">
-      <div class="scene__sol">""" + borne("borne-veille", "borne", "Borne de commande tactile sur pied, écran vertical allumé") + """</div>
-    </div>
+    <figure class="photo">
+      <img src="img/borne-de-commande-restaurant-ecran-paysage-1000.webp"
+           srcset="img/borne-de-commande-restaurant-ecran-paysage-600.webp 600w, img/borne-de-commande-restaurant-ecran-paysage-1000.webp 1000w"
+           sizes="(max-width: 62rem) 100vw, 27rem"
+           width="1000" height="1000" fetchpriority="high" decoding="async"
+           alt="Borne de commande pour restaurant : écran tactile blanc en position paysage sur son pied, affichant l’accueil Android">
+    </figure>
     <div class="achat carte">
-      <p class="surtitre">Borne tactile sur pied</p>
+      <p class="surtitre">Borne de commande sur pied</p>
       <p class="achat__prix">
         <span class="montant prix">499 €</span>
         <span class="ttc">HT, soit 598,80 € TTC</span>
       </p>
-      <p class="note">Livraison offerte en France métropolitaine. Expédiée sous 4 à 7 jours ouvrés.</p>
+      <p class="note">Payé une fois. Aucun abonnement, aucun engagement. Livraison offerte en France métropolitaine, expédiée sous 4 à 7 jours ouvrés.</p>
       <a class="btn btn--large" href="commander.html">Commander une borne</a>
       <ul class="garanties mt-1" role="list">
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>0 € par mois, à vie</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Garantie 2 ans, pièces et main-d’œuvre</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement par carte sécurisé par Stripe</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Assistance par téléphone au <a data-tel href="tel:+33296000000">02 96 00 00 00</a></span></li>
@@ -281,42 +292,83 @@ CORPS_INDEX = """
   </div>
 
   <div class="argument">
-    <p class="surtitre">Restauration rapide, brasserie, boulangerie</p>
+    <p class="surtitre">Restauration rapide · brasserie · kebab · boulangerie</p>
     <h1>Borne de commande pour restaurant</h1>
-    <p class="chapo">Un écran vertical sur pied, posé à l’entrée de votre salle, sur lequel vos clients composent leur commande pendant que votre équipe reste en cuisine.</p>
+    <p class="chapo">Un écran tactile sur pied, posé à l’entrée de votre salle, sur lequel vos clients composent leur commande pendant que votre équipe reste en cuisine. Vendu une fois, sans abonnement.</p>
 
-    <div class="encadre-cle mt-2">
+    <div class="encadre-cle mt-2" data-reveal>
       <h2 style="font-size:var(--t-lg)">L’essentiel en dix secondes</h2>
       <dl>
-        <div><dt>Prix</dt><dd>499 € HT l’unité, sans abonnement</dd></div>
-        <div><dt>Ce que c’est</dt><dd>un écran tactile vertical sur pied, sous Android</dd></div>
-        <div><dt>Ce qui est fourni</dt><dd>la borne montée, l’alimentation, la clé de verrouillage</dd></div>
-        <div><dt>Ce qui ne l’est pas</dt><dd>le logiciel de caisse, l’imprimante, le lecteur de carte</dd></div>
+        <div><dt>Prix</dt><dd>499 € HT, payés une fois</dd></div>
+        <div><dt>Abonnement</dt><dd>aucun, jamais</dd></div>
+        <div><dt>Ce que c’est</dt><dd>un écran tactile sur pied, sous Android ouvert</dd></div>
+        <div><dt>Particularité</dt><dd>l’écran pivote en paysage ou en portrait</dd></div>
+        <div><dt>Alimentation</dt><dd>batterie intégrée, donc sans rallonge au sol</dd></div>
+        <div><dt>Ce qui n’est pas fourni</dt><dd>le logiciel de caisse, l’imprimante, le lecteur de carte</dd></div>
         <div><dt>Livraison</dt><dd>offerte, 4 à 7 jours ouvrés</dd></div>
         <div><dt>Garantie</dt><dd>2 ans</dd></div>
       </dl>
     </div>
 
-    <div class="mt-2 prose">
-      <p>La borne ne remplace pas votre caisse et ne prétend pas la remplacer. Elle règle un problème plus étroit : à midi, la prise de commande devient le point le plus lent du service, et une file de six personnes fait repartir la septième. Un écran de plus à l’entrée absorbe une partie de ce flux.</p>
-      <p>Vos clients composent leur commande sur l’écran, puis règlent au comptoir ou directement en ligne si votre application le permet. Pendant ce temps, la personne qui tenait la caisse peut servir, débarrasser ou aider en cuisine.</p>
+    <div class="mt-2 prose" data-reveal>
+      <p>La borne ne remplace pas votre caisse et ne prétend pas la remplacer. Elle règle un problème plus étroit : à midi, la prise de commande devient le point le plus lent du service, et une file de six personnes fait repartir la septième.</p>
+      <p>Vos clients composent leur commande sur l’écran, puis règlent au comptoir ou en ligne si votre application le permet. Pendant ce temps, la personne qui tenait la caisse peut servir, débarrasser ou aider en cuisine.</p>
     </div>
 
     <h2 class="mt-2" style="font-size:var(--t-xl)">Ce que ça change à midi</h2>
     <div class="points mt-1">
-      <div>
+      <div data-reveal>
         <h3>Le client prend son temps</h3>
         <p>Devant un écran, personne ne souffle derrière lui. Il lit toute la carte au lieu de commander ce qu’il connaît déjà, et il ajoute plus volontiers un dessert ou une boisson.</p>
       </div>
-      <div>
+      <div data-reveal>
         <h3>Le supplément est proposé à chaque fois</h3>
         <p>À 12 h 40, une équipe en rush arrête de proposer la sauce et la boisson : il faut faire avancer la file. Un écran pose la question à la commande n° 1 comme à la commande n° 180.</p>
       </div>
-      <div>
+      <div data-reveal>
         <h3>Les commandes gênantes deviennent faciles</h3>
         <p>Une allergie, un plat mal prononcé, un français hésitant, un groupe qui change trois fois d’avis. Tout cela passe mieux sur un écran que devant six personnes qui attendent.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="recit">
+  <div class="env">
+    <p class="surtitre" style="color:#9BA0A8">Pourquoi nous vendons ça</p>
+    <h2 style="font-size:var(--t-xl)">Nous avons une usine. Et un restaurant.</h2>
+    <div class="prose mt-2" data-reveal>
+      <p>Les deux n’ont longtemps rien eu à voir. D’un côté une usine en Chine qui fabrique des écrans, de l’autre une salle à faire tourner, avec un service de midi qui bouchonnait au comptoir.</p>
+      <p>Quand nous avons demandé des devis pour équiper cette salle, les montants allaient de 2 400 à 4 100 € par borne, plus 59 à 149 € par mois. Pour deux écrans, l’addition dépassait 13 000 € sur trois ans. Le matériel, lui, nous le connaissions : nous en fabriquons.</p>
+      <p>Nous avons donc fait venir nos propres tablettes, et il est resté la vraie question, celle du logiciel. Nous avons écrit le nôtre nous-mêmes, en nous faisant assister par l’IA, et il tourne depuis dans notre salle : il prend les commandes, applique le bon taux de TVA et les envoie en cuisine. Ce n’est pas un produit, c’est un outil taillé pour notre carte, et il ne nous coûte aucune licence.</p>
+      <p>Une fois les deux bornes installées et rentables, la suite s’est imposée toute seule : vendre le même matériel, au prix du matériel, à des restaurateurs qui se posaient les mêmes questions que nous.</p>
+    </div>
+    <div class="chiffres" data-reveal>
+      <div><b>499 €</b><span>le prix du matériel, sans la couche de services qu’on vous facture ailleurs</span></div>
+      <div><b>0 €</b><span>par mois, parce que nous ne vendons pas de logiciel</span></div>
+      <div><b>2</b><span>bornes en service dans notre propre salle, tous les jours</span></div>
+    </div>
+    <p class="mt-2"><a href="logiciel-borne-de-commande-ia.html" style="color:#fff">Comment nous avons fabriqué notre logiciel avec l’IA</a></p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="env duo">
+    <div>
+      <p class="surtitre">Le détail qui sert tous les jours</p>
+      <h2 style="font-size:var(--t-xl)">L’écran pivote</h2>
+      <p class="prose mt-1">En portrait, la borne tient dans un couloir étroit et affiche une liste de produits plus longue. En paysage, elle met en valeur des photos larges et fait un bon écran de cuisine.</p>
+      <p class="prose mt-1">Vous ne saurez laquelle des deux vous convient qu’après deux semaines de service réel. Le pivot vous évite de trancher au moment de la commande, et de le regretter.</p>
+      <p class="mt-1"><a href="installer-borne-de-commande-restaurant.html">Où poser la borne et comment la brancher</a></p>
+    </div>
+    <figure class="photo" data-reveal>
+      <img src="img/borne-de-commande-restaurant-rotation-1000.webp"
+           srcset="img/borne-de-commande-restaurant-rotation-600.webp 600w, img/borne-de-commande-restaurant-rotation-1000.webp 1000w"
+           sizes="(max-width: 48rem) 100vw, 30rem"
+           width="1000" height="1000" loading="lazy" decoding="async"
+           alt="L’écran de la borne pivotant entre la position paysage et la position portrait sur son support">
+      <figcaption>Le pivot se manœuvre à la main, sans outil, pendant le service.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -325,11 +377,10 @@ CORPS_INDEX = """
     <div>
       <p class="surtitre">Le carton</p>
       <h2 style="font-size:var(--t-xl)">Ce que vous recevez</h2>
-      <p class="prose mt-1">La borne arrive montée. Vous sortez le socle du carton, vous vissez la colonne, vous branchez. Comptez un quart d’heure, sans outil particulier.</p>
+      <p class="prose mt-1">La borne arrive montée. Vous sortez le socle du carton, vous vissez la colonne, vous allumez. Comptez un quart d’heure, sans outil particulier.</p>
       <ul class="inclus mt-2" role="list">
         <li>La borne assemblée, écran monté sur sa colonne et son socle lesté</li>
         <li>Le bloc d’alimentation et le câble secteur en 220 V</li>
-        <li>La clé de verrouillage du caisson arrière</li>
         <li>La visserie de fixation au sol, si vous préférez la sceller</li>
         <li>Un guide de branchement en français, sur papier</li>
       </ul>
@@ -342,27 +393,34 @@ CORPS_INDEX = """
       <p class="note mt-1">Nous préférons l’écrire ici plutôt que vous le laisser découvrir à la livraison.</p>
     </div>
     <div>
-      <div class="scene" style="min-height:20rem">
-        <div class="scene__sol">""" + borne("borne-profil", "borne", "Vue de profil de la borne : platine de fixation, colonne et socle") + """</div>
-      </div>
+      <figure class="photo" data-reveal>
+        <img src="img/borne-de-commande-restaurant-ecran-portrait-1000.webp"
+             srcset="img/borne-de-commande-restaurant-ecran-portrait-600.webp 600w, img/borne-de-commande-restaurant-ecran-portrait-1000.webp 1000w"
+             sizes="(max-width: 48rem) 100vw, 30rem"
+             width="1000" height="1000" loading="lazy" decoding="async"
+             alt="La borne de commande en position portrait, écran vertical allumé sur l’accueil Android">
+      </figure>
       <div class="cadre-defil mt-1">
         <table class="tbl">
           <caption>Fiche technique</caption>
           <tbody>
-            <tr><th scope="row">Écran</th><td class="avf">21,5″ tactile, orientation verticale</td></tr>
-            <tr><th scope="row">Définition</th><td class="avf">1080 × 1920</td></tr>
-            <tr><th scope="row">Tactile</th><td class="avf">capacitif, 10 points</td></tr>
-            <tr><th scope="row">Système</th><td class="avf">Android, mode kiosque</td></tr>
-            <tr><th scope="row">Réseau</th><td class="avf">Wi-Fi et Ethernet RJ45</td></tr>
-            <tr><th scope="row">Hauteur totale</th><td class="avf">≈ 1 400 mm</td></tr>
-            <tr><th scope="row">Diamètre du socle</th><td class="avf">≈ 400 mm</td></tr>
-            <tr><th scope="row">Poids</th><td class="avf">≈ 20 kg</td></tr>
+            <tr><th scope="row">Écran</th><td class="avf">tactile capacitif, verre trempé</td></tr>
+            <tr><th scope="row">Diagonale</th><td class="avf">21,5″</td></tr>
+            <tr><th scope="row">Définition</th><td class="avf">1920 × 1080</td></tr>
+            <tr><th scope="row">Orientation</th><td class="txt">paysage ou portrait, pivot manuel</td></tr>
+            <tr><th scope="row">Système</th><td class="txt">Android ouvert, verrouillable en mode kiosque</td></tr>
+            <tr><th scope="row">Applications</th><td class="txt">Play Store accessible, navigateur inclus</td></tr>
+            <tr><th scope="row">Batterie</th><td class="avf">intégrée</td></tr>
+            <tr><th scope="row">Réseau</th><td class="avf">Wi-Fi, Ethernet par adaptateur</td></tr>
+            <tr><th scope="row">Caméra</th><td class="txt">frontale, désactivable</td></tr>
+            <tr><th scope="row">Hauteur totale</th><td class="avf">≈ 1 100 mm</td></tr>
+            <tr><th scope="row">Socle</th><td class="avf">rond lesté, ≈ 400 mm</td></tr>
+            <tr><th scope="row">Finition</th><td class="txt">blanc mat</td></tr>
             <tr><th scope="row">Alimentation</th><td>220 V, prise standard</td></tr>
-            <tr><th scope="row">Finition</th><td class="txt">acier et aluminium noir mat</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="note mt-1">Les valeurs marquées « à confirmer » sont celles de la fiche fournisseur, en attente de mesure sur un exemplaire reçu.</p>
+      <p class="note mt-1">Les valeurs marquées « à confirmer » viennent de la fiche fabricant et seront remplacées par nos mesures sur exemplaire.</p>
     </div>
   </div>
 </section>
@@ -372,12 +430,15 @@ CORPS_INDEX = """
     <p class="surtitre">Le point qui fâche</p>
     <h2 style="font-size:var(--t-xl)">Le logiciel n’est pas fourni, et c’est voulu</h2>
     <div class="prose mt-1">
-      <p>Un restaurateur qui achète une borne se retrouve souvent avec un abonnement mensuel dont il ne peut plus sortir, parce que le logiciel et le matériel sont vendus ensemble. Nous vendons l’écran seul. Vous y installez l’application de commande que vous voulez, y compris celle de votre éditeur de caisse s’il en propose une.</p>
-      <p>Concrètement, la borne arrive sous Android, verrouillée en mode kiosque : elle démarre directement sur l’application que vous désignez, et le client ne peut pas en sortir. Si vous ne savez pas laquelle choisir, dites-nous quel logiciel de caisse vous utilisez, nous vous dirons ce qui s’y branche.</p>
+      <p>Un restaurateur qui achète une borne se retrouve souvent avec un abonnement dont il ne peut plus sortir, parce que le logiciel et le matériel sont vendus ensemble. Le jour où il arrête de payer, l’écran qu’il croyait avoir acheté s’éteint.</p>
+      <p>Nous vendons l’écran seul. Il arrive sous Android ouvert : vous y installez l’application de commande que vous voulez, y compris celle de votre éditeur de caisse s’il en propose une, et vous la verrouillez en mode kiosque pour que le client ne puisse pas en sortir.</p>
       <h3>Et la conformité à la loi anti-fraude à la TVA ?</h3>
       <p>Elle dépend de votre logiciel d’encaissement, pas de l’écran sur lequel il tourne. L’attestation prévue à l’article 286-I-3° bis du code général des impôts vous est délivrée par l’éditeur de votre caisse. Un vendeur de matériel qui vous promet cette conformité avec un simple écran vous raconte une histoire.</p>
     </div>
-    <p class="mt-2"><a href="guide-borne-de-commande-restaurant.html">Lire le guide d’achat complet</a>, qui détaille les formats, les logiciels et le calcul de rentabilité.</p>
+    <p class="mt-2">
+      <a href="borne-de-commande-ou-caisse-enregistreuse.html">Borne ou caisse : ce que chacune fait</a> ·
+      <a href="guide-borne-de-commande-restaurant.html">Le guide d’achat complet</a>
+    </p>
   </div>
 </section>
 
@@ -399,14 +460,14 @@ CORPS_INDEX = """
           <tr><th scope="row">Sert la vente à emporter</th><td class="oui">oui</td><td class="oui">oui</td><td class="non">non</td></tr>
           <tr><th scope="row">Sert le service à table</th><td class="non">non</td><td class="non">non</td><td class="oui">oui</td></tr>
           <tr><th scope="row">Coût de départ</th><td>499 € HT</td><td class="txt">200 à 600 €</td><td class="txt">quasi nul</td></tr>
-          <tr><th scope="row">Abonnement</th><td class="txt">celui de votre logiciel</td><td class="txt">celui de votre logiciel</td><td class="txt">souvent mensuel</td></tr>
+          <tr><th scope="row">Abonnement</th><td class="oui">aucun</td><td class="txt">celui de votre logiciel</td><td class="txt">souvent mensuel</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </section>
 
-<section class="sec">
+<section class="sec" id="prix">
   <div class="env">
     <p class="surtitre">Tarifs</p>
     <h2 style="font-size:var(--t-xl)">Le prix baisse à partir de deux bornes</h2>
@@ -428,14 +489,24 @@ CORPS_INDEX = """
 
 <section class="sec sec--alt">
   <div class="env">
+    <p class="surtitre">Le blog</p>
+    <h2 style="font-size:var(--t-xl)">Ce qu’on a appris en équipant notre propre salle</h2>
+    <p class="prose mt-1">Prix réels du marché, choix du matériel, logiciel, implantation. Écrit depuis un restaurant, pas depuis un service commercial.</p>
+    <div class="blog-grille mt-2">{DERNIERS_ARTICLES}</div>
+    <p class="mt-2"><a class="btn btn--secondaire" href="blog.html">Tous les articles</a></p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="env">
     <p class="surtitre">Questions</p>
     <h2 style="font-size:var(--t-xl)">Ce qu’on nous demande avant d’acheter</h2>
     <div class="mt-2" style="max-width:var(--mesure)">
-      <details><summary>Le logiciel de commande est-il fourni avec la borne&nbsp;?</summary><p class="rep">Non. La borne est un écran tactile sous Android, verrouillé en mode kiosque. Vous y installez l’application de commande de votre choix, y compris celle de votre éditeur de caisse. Si vous préférez qu’on s’en occupe, la mise en service à distance coûte 149 € HT et se fait en visio.</p></details>
-      <details><summary>Y a-t-il un abonnement&nbsp;?</summary><p class="rep">Pas chez nous. Vous payez la borne une fois. Si votre logiciel de commande est facturé au mois, cet abonnement reste entre votre éditeur et vous.</p></details>
+      <details><summary>Le logiciel de commande est-il fourni avec la borne&nbsp;?</summary><p class="rep">Non. La borne est un écran tactile sous Android ouvert, verrouillable en mode kiosque. Vous y installez l’application de commande de votre choix, y compris celle de votre éditeur de caisse. Si vous préférez qu’on s’en occupe, la mise en service à distance coûte 149 € HT et se fait en visio.</p></details>
+      <details><summary>Y a-t-il un abonnement&nbsp;?</summary><p class="rep">Aucun. Vous payez la borne une fois et elle vous appartient. Si votre logiciel de commande est facturé au mois, cet abonnement reste entre votre éditeur et vous. Le jour où vous cessez de nous parler, la borne continue de fonctionner.</p></details>
       <details><summary>Sous combien de temps suis-je livré&nbsp;?</summary><p class="rep">Quatre à sept jours ouvrés en France métropolitaine, transport compris dans le prix. Vous recevez le numéro de suivi dès le départ du colis. Pour la Corse et l’outre-mer, écrivez-nous avant de commander, le transport est chiffré au cas par cas.</p></details>
       <details><summary>Est-ce que ça marche avec ma caisse&nbsp;?</summary><p class="rep">La question porte sur votre logiciel, pas sur l’écran. Dites-nous lequel vous utilisez, nous vous dirons s’il existe une application Android compatible et ce qu’elle sait remonter. Nous préférons vous répondre non avant la vente plutôt qu’après.</p></details>
-      <details><summary>Puis-je la poser sur un comptoir plutôt que sur son pied&nbsp;?</summary><p class="rep">L’écran est monté sur une platine standard, donc il se démonte de sa colonne. Un support de comptoir compatible se trouve facilement, mais nous ne le fournissons pas et nous ne garantissons pas la stabilité d’un montage que nous n’avons pas vu.</p></details>
+      <details><summary>La batterie tient-elle un service complet&nbsp;?</summary><p class="rep">Elle est prévue pour, mais l’autonomie dépend de la luminosité et de l’usage. En pratique, la plupart des établissements laissent la borne branchée en permanence et se servent de la batterie pour la déplacer sans couper le service, ou pour éviter une rallonge dans un passage.</p></details>
       <details><summary>Et si elle tombe en panne&nbsp;?</summary><p class="rep">La garantie couvre deux ans, pièces et main-d’œuvre. Vous appelez, on diagnostique par téléphone, et si le matériel doit revenir, l’étiquette de retour vous est envoyée. Comme votre caisse continue de fonctionner, une borne en panne ralentit le service sans l’arrêter.</p></details>
     </div>
   </div>
@@ -443,12 +514,13 @@ CORPS_INDEX = """
 
 <section class="sec">
   <div class="env rappel carte">
-    <div class="scene">
-      <div class="scene__sol">""" + borne("borne-commande", "borne") + """</div>
-    </div>
+    <figure class="photo">
+      <img src="img/borne-de-commande-restaurant-ecran-portrait-600.webp" width="600" height="600" loading="lazy" decoding="async"
+           alt="Borne de commande pour restaurant, vue d’ensemble">
+    </figure>
     <div>
       <h2 style="font-size:var(--t-lg)">Borne de commande sur pied</h2>
-      <p class="note mt-1">499 € HT, livraison offerte, garantie 2 ans. Paiement par carte, virement possible sur demande.</p>
+      <p class="note mt-1">499 € HT, sans abonnement, livraison offerte, garantie 2 ans. Paiement par carte, virement possible sur demande.</p>
     </div>
     <a class="btn" href="commander.html">Commander</a>
   </div>
@@ -461,6 +533,15 @@ CORPS_INDEX = """
   <a class="btn btn--petit" href="commander.html">Commander</a>
 </div>
 """
+
+
+_derniers = sorted(ARTICLES, key=lambda x: x["date"], reverse=True)[:3]
+CORPS_INDEX = CORPS_INDEX.replace("{DERNIERS_ARTICLES}", "".join(
+    f'''<article class="blog-carte" data-reveal>
+      <h2><a href="{a["slug"]}.html">{a["h1"]}</a></h2>
+      <p>{a["accroche"]}</p>
+      <p class="meta">{a["lecture"]} min de lecture</p>
+    </article>''' for a in _derniers))
 
 # ==========================================================================
 # 2. Commander : le configurateur, dernier écran avant Stripe.
@@ -917,12 +998,14 @@ PRODUIT = {
     "@context": "https://schema.org", "@type": "Product",
     "@id": f"{DOMAINE}/#borne",
     "name": "Borne de commande tactile sur pied pour restaurant",
-    "description": ("Écran tactile vertical sur pied, sous Android en mode kiosque, pour la prise de "
-                    "commande en restauration rapide. Livrée montée, sans logiciel imposé et sans abonnement."),
+    "description": ("Écran tactile sur pied pour la prise de commande en restauration. L'écran pivote "
+                    "entre paysage et portrait, la batterie est intégrée et Android reste ouvert, "
+                    "verrouillable en mode kiosque. Livrée montée, sans logiciel imposé et sans abonnement."),
     "category": "Borne de commande restaurant",
     "brand": {"@type": "Brand", "name": MARQUE},
-    "image": [f"{DOMAINE}/img/borne-commande-restaurant-face.jpg",
-              f"{DOMAINE}/img/borne-commande-restaurant-profil.jpg"],
+    "image": [f"{DOMAINE}/img/borne-de-commande-restaurant-ecran-paysage-1000.webp",
+              f"{DOMAINE}/img/borne-de-commande-restaurant-ecran-portrait-1000.webp",
+              f"{DOMAINE}/img/borne-de-commande-restaurant-rotation-1000.webp"],
     "offers": {
         "@type": "Offer",
         "price": "499.00", "priceCurrency": "EUR",
@@ -1062,14 +1145,155 @@ FICHIERS.append(page(
     "Cette adresse ne correspond à aucune page du site. Retrouvez la borne de commande, le guide d’achat ou les informations de livraison depuis cette page.",
     CORPS_404, robots="noindex, nofollow"))
 
+# ==========================================================================
+# 8. Le blog
+# ==========================================================================
+PAR_SLUG = {a["slug"]: a for a in ARTICLES}
+
+def _date_fr(iso):
+    mois = ["janvier","février","mars","avril","mai","juin","juillet",
+            "août","septembre","octobre","novembre","décembre"]
+    a, m, j = iso.split("-")
+    return f"{int(j)} {mois[int(m)-1]} {a}"
+
+def corps_article(a):
+    """Met en page un article : en-tête, corps, FAQ, offre, articles voisins."""
+    faq_html = "".join(
+        f'<details><summary>{q}</summary><p class="rep">{r}</p></details>'
+        for q, r in a["faq"])
+
+    voisins = ""
+    for sl in a.get("voisins", []):
+        v = PAR_SLUG.get(sl)
+        if not v:
+            continue
+        voisins += (f'<li><a href="{v["slug"]}.html">{v["h1"]}'
+                    f'<span>{v["accroche"]}</span></a></li>')
+
+    return (fil([("Accueil", "index.html"), ("Blog", "blog.html"), (a["titre"], None)]) + f"""
+<main id="contenu" class="article">
+  <p class="art-meta" data-reveal>Publié le {_date_fr(a["date"])} · mis à jour le {_date_fr(a["maj"])} · {a["lecture"]} min de lecture</p>
+  <h1 data-reveal>{a["h1"]}</h1>
+  <p class="art-resume" data-reveal>{a["resume"]}</p>
+
+  <div class="art-corps">{a["corps"]}</div>
+
+  <h2 style="font-size:var(--t-xl);margin-top:var(--section)">Questions fréquentes</h2>
+  <div class="mt-1">{faq_html}</div>
+
+  <aside class="art-offre" data-reveal>
+    <h2>La borne dont nous nous servons</h2>
+    {a["offre"]}
+    <p class="liens">
+      <a class="btn" href="index.html">Voir la borne à 499 € HT</a>
+      <a class="btn btn--secondaire" href="commander.html">Commander</a>
+    </p>
+  </aside>
+
+  <nav class="art-voisins" aria-label="Articles liés">
+    <h2 style="font-size:var(--t-lg)">À lire ensuite</h2>
+    <ul role="list">{voisins}</ul>
+    <p class="mt-1"><a href="blog.html">Tous les articles</a></p>
+  </nav>
+</main>
+""")
+
+def corps_blog():
+    cartes = ""
+    for a in sorted(ARTICLES, key=lambda x: x["date"], reverse=True):
+        cartes += f"""<article class="blog-carte" data-reveal>
+          <h2><a href="{a["slug"]}.html">{a["h1"]}</a></h2>
+          <p>{a["accroche"]}</p>
+          <p class="meta">{_date_fr(a["date"])} · {a["lecture"]} min</p>
+        </article>"""
+    return fil([("Accueil", "index.html"), ("Blog", None)]) + f"""
+<main id="contenu" class="env" style="padding-bottom:var(--section)">
+  <div class="blog-tete">
+    <p class="surtitre">Le blog</p>
+    <h1 style="font-size:var(--t-2xl)">Tout ce qu’on aurait aimé lire avant d’équiper notre salle</h1>
+    <p class="prose mt-1" style="max-width:40rem">Nous tenons un restaurant et nous fabriquons du matériel. Ces articles sortent de ce que nous avons appris en équipant notre propre comptoir, pas d’une documentation commerciale.</p>
+  </div>
+  <div class="blog-grille">{cartes}</div>
+  <div class="prose mt-2" style="max-width:42rem">
+    <h2 style="font-size:var(--t-lg)">Par où commencer</h2>
+    <p>Si vous hésitez encore sur le principe, lisez d’abord ce que coûte réellement une borne sur trois ans : c’est le calcul qui nous a décidés, et il contient la seule donnée qui compte, le poids du logiciel dans la facture.</p>
+    <p>Si vous êtes déjà décidé et que vous cherchez du matériel, allez voir les critères techniques. Les trois seuils chiffrés qui y figurent éliminent à eux seuls la moitié des modèles vendus en ligne.</p>
+    <p>Et si vous avez déjà une borne qui ne sert à personne, le problème est presque toujours son emplacement. Trois semaines de comptage au pic de midi suffisent à le prouver.</p>
+    <p>Une question qui n’est traitée nulle part ici ? Écrivez-nous, nous répondons et nous en faisons parfois un article.</p>
+  </div>
+</main>
+"""
+
+ARTICLE_LD = lambda a: {
+    "@context": "https://schema.org", "@type": "Article",
+    "headline": a["h1"][:110],
+    "description": a["description"],
+    "inLanguage": "fr-FR",
+    "author": {"@id": f"{DOMAINE}/#organisation"},
+    "publisher": {"@id": f"{DOMAINE}/#organisation"},
+    "mainEntityOfPage": f"{DOMAINE}/{a['slug']}.html",
+    "datePublished": a["date"], "dateModified": a["maj"],
+    "about": {"@type": "Thing", "name": a["cle"]},
+    "image": f"{DOMAINE}/img/og-borne-commande-restaurant.jpg",
+}
+
+for a in ARTICLES:
+    FICHIERS.append(page(
+        a["slug"] + ".html", a["titre"], a["description"],
+        corps_article(a),
+        ld=[ARTICLE_LD(a), faq(a["faq"])]))
+
+FICHIERS.append(page(
+    "blog.html", "Blog : bornes et tablettes de commande | " + MARQUE,
+    "Prix réels, choix du matériel, logiciel et implantation en salle : nos articles sur les bornes et tablettes de commande, écrits depuis notre restaurant.",
+    corps_blog(),
+    ld=[{"@context": "https://schema.org", "@type": "Blog",
+         "name": "Le blog de " + MARQUE,
+         "url": f"{DOMAINE}/blog.html",
+         "inLanguage": "fr-FR",
+         "publisher": {"@id": f"{DOMAINE}/#organisation"},
+         "blogPost": [{"@type": "BlogPosting", "headline": a["h1"][:110],
+                       "url": f"{DOMAINE}/{a['slug']}.html",
+                       "datePublished": a["date"]} for a in ARTICLES]}]))
+
+# ==========================================================================
+# 9. Flux produits Google Merchant Center (fiches gratuites)
+# ==========================================================================
+FLUX = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0"><channel>
+<title>{MARQUE}</title><link>{DOMAINE}/</link><description>Bornes de commande pour la restauration</description>
+<item>
+<g:id>BORNE-K1</g:id>
+<g:title>{MARQUE} borne de commande tactile sur pied pour restaurant, écran pivotant</g:title>
+<g:description>Borne de commande tactile sur pied pour restaurant. Écran qui pivote entre paysage et portrait, batterie intégrée, Android ouvert en mode kiosque. Livrée montée, sans logiciel imposé et sans abonnement mensuel. Vous installez l application de prise de commande de votre choix, y compris celle de votre éditeur de caisse. Garantie 2 ans pièces et main d oeuvre, livraison offerte en France métropolitaine sous 4 à 7 jours ouvrés, assistance par téléphone en français.</g:description>
+<g:link>{DOMAINE}/</g:link>
+<g:image_link>{DOMAINE}/img/borne-de-commande-restaurant-ecran-paysage-1000.webp</g:image_link>
+<g:additional_image_link>{DOMAINE}/img/borne-de-commande-restaurant-ecran-portrait-1000.webp</g:additional_image_link>
+<g:additional_image_link>{DOMAINE}/img/borne-de-commande-restaurant-rotation-1000.webp</g:additional_image_link>
+<g:availability>in_stock</g:availability>
+<g:price>598.80 EUR</g:price>
+<g:brand>{MARQUE}</g:brand>
+<g:mpn>BORNE-K1</g:mpn><g:identifier_exists>no</g:identifier_exists>
+<g:condition>new</g:condition>
+<g:google_product_category>Entreprise et industrie &gt; Vente au détail &gt; Terminaux de point de vente</g:google_product_category>
+<g:product_type>bornes de commande</g:product_type>
+<g:shipping><g:country>FR</g:country><g:service>Standard</g:service><g:price>0.00 EUR</g:price></g:shipping>
+</item>
+</channel></rss>
+"""
+(RACINE / "flux-google.xml").write_text(FLUX, encoding="utf-8")
+
 # --- robots.txt et sitemap ------------------------------------------------
 (RACINE / "robots.txt").write_text(
     "User-agent: *\nAllow: /\nDisallow: /merci.html\nDisallow: /paiement-annule.html\n"
-    "Disallow: /paiement/\n\nSitemap: " + DOMAINE + "/sitemap.xml\n", encoding="utf-8")
+    "Disallow: /paiement/\nDisallow: /flux-google.xml\n\nSitemap: " + DOMAINE + "/sitemap.xml\n", encoding="utf-8")
 
 PRIORITES = {"index.html": ("1.0", "weekly"),
              "guide-borne-de-commande-restaurant.html": ("0.9", "monthly"),
+             "blog.html": ("0.8", "weekly"),
              "commander.html": ("0.8", "monthly")}
+for _a in ARTICLES:
+    PRIORITES[_a["slug"] + ".html"] = ("0.7", "monthly")
 urls = []
 for f in FICHIERS:
     if f in ("merci.html", "paiement-annule.html", "404.html"):

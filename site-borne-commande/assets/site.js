@@ -203,6 +203,28 @@
       });
     });
 
+    /* ---- Révélation au défilement --------------------------------------
+       Un seul effet sur tout le site. Sans IntersectionObserver ou avec
+       prefers-reduced-motion, tout s'affiche immédiatement : la classe js
+       est retirée et le CSS reprend son état neutre. */
+    const aReveler = $$("[data-reveal]");
+    if (aReveler.length) {
+      const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduit || !("IntersectionObserver" in window)) {
+        document.documentElement.classList.remove("js");
+      } else {
+        const io = new IntersectionObserver((entrees) => {
+          entrees.forEach(e => {
+            if (e.isIntersecting) { e.target.dataset.vu = "1"; io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+        aReveler.forEach(el => io.observe(el));
+        /* Filet : si quelque chose empeche l'observateur de se declencher,
+           tout redevient visible au bout de deux secondes. */
+        setTimeout(function () { aReveler.forEach(function (el) { el.dataset.vu = "1"; }); }, 2000);
+      }
+    }
+
     /* ---- Récitation du Coran ------------------------------------------
        Les navigateurs refusent de lancer un son tant que le visiteur n'a
        pas interagi avec la page : play() renvoie une promesse rejetée.

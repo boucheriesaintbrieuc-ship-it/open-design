@@ -1,6 +1,7 @@
 # Site « Borne de commande restaurant »
 
-Site marchand mono-produit, onze pages, tunnel complet jusqu’au paiement Stripe.
+Site marchand mono-produit, vingt pages dont un blog de huit articles, tunnel
+complet jusqu’au paiement Stripe.
 Aucune dépendance externe : pas de CDN, pas de police tierce, pas de bibliothèque
 JavaScript, aucune requête réseau au chargement.
 
@@ -12,9 +13,14 @@ pèse entre 40 et 58 ko, ce qui reste largement sous le seuil où le poids se vo
 
 ## Ce qui n’a pas pu être fait, à lire en premier
 
-**Les images du fournisseur n’ont pas pu être récupérées.** AliExpress bloque les
-accès automatisés : la page renvoie une erreur 503 et une boucle de redirection
-anti-robot. Ni la fiche technique ni les photos n’ont donc pu être lues.
+**Les photos sont maintenant les vraies.** Celles que vous avez envoyées ont été
+converties en WebP et intégrées : entre 5 et 18 ko chacune, affichées en deux
+tailles selon la largeur d’écran.
+
+**La fiche technique du fabricant reste inaccessible.** Le site du fournisseur
+bloque les accès automatisés et refuse la page pour notre région. Les valeurs
+numériques portent donc encore la mention « à confirmer » : cherchez `avf` dans
+les fichiers pour les retrouver toutes et les remplacer par vos mesures.
 
 Deux conséquences :
 
@@ -160,6 +166,96 @@ surtout ceux qui naviguent au bureau ou dans les transports. Le bouton de
 coupure limite la casse. Si vous voulez mesurer l'effet, gardez le son sur
 `commander.html` seulement, comme c'est le cas aujourd'hui, et regardez le taux
 d'abandon avant et après dans Stripe.
+
+## Le blog : huit articles, huit requêtes
+
+Le blog vise les requêtes d'information autour de la borne de commande. La page
+de vente garde la requête transactionnelle ; aucun article ne la vise, pour que
+vos propres pages ne se fassent pas concurrence.
+
+| Article | Requête principale | Intention |
+|---|---|---|
+| `tablette-tactile-pour-restaurant.html` | tablette tactile pour restaurant | choix du matériel |
+| `borne-tactile-commande-prix.html` | borne tactile commande prix | budget |
+| `tablette-de-commande-restaurant-fonctionnement.html` | tablette de commande restaurant | comprendre |
+| `borne-de-commande-sans-abonnement.html` | borne de commande sans abonnement | modèle économique |
+| `logiciel-borne-de-commande-ia.html` | logiciel borne de commande | votre récit |
+| `borne-de-commande-kebab-pizzeria-snack.html` | borne de commande kebab | longue traîne |
+| `borne-de-commande-ou-caisse-enregistreuse.html` | borne de commande ou caisse | comparaison |
+| `installer-borne-de-commande-restaurant.html` | installer borne de commande restaurant | pratique |
+
+Chaque article se termine par un bloc qui renvoie vers la page de vente et vers
+la commande, rédigé différemment à chaque fois. C'est le passage le plus exposé
+au copier-coller, donc celui qui ferait tomber le site en contenu dupliqué.
+
+### Contrôle de duplication
+
+`python3 outils/doublons.py` compare le texte de toutes les pages par séquences
+de huit mots et refuse tout recouvrement au-dessus de 15 %. Les grilles de
+cartes et les blocs « à lire ensuite » sont exclus de la comparaison : ils
+répètent des titres par construction, c'est de la navigation, pas du contenu.
+
+Dernier passage : **3,7 % au pire**, titres, descriptions et H1 tous uniques.
+
+### Ajouter un article
+
+Tout se passe dans `outils/articles.py`. Copiez une entrée, remplissez `slug`,
+`cle`, `titre`, `h1`, `description`, `accroche`, `resume`, `corps`, `faq`,
+`offre` et `voisins`, puis relancez `python3 outils/construire.py`. Le menu, le
+sitemap, l'index du blog, les données structurées et le maillage se mettent à
+jour seuls.
+
+---
+
+## Google Shopping
+
+`flux-google.xml` est un flux Merchant Center prêt à déclarer. Pour l'activer :
+compte sur merchants.google.com, revendication du site, puis Produits, Sources
+de produits, Ajouter, fichier récupéré depuis
+`https://borne-restaurants.fr/flux-google.xml`, récupération quotidienne, et
+activation des fiches gratuites.
+
+Le flux est régénéré par `construire.py` ; si vous changez le prix, changez-le
+dans `assets/config.js` et relancez, sinon Merchant Center rejettera la fiche
+pour écart entre le flux et la page.
+
+---
+
+## Deux points à trancher de votre côté
+
+**« La moins chère du marché ».** Vous me l'avez demandé et je ne l'ai pas écrit
+tel quel sur le site. Un superlatif de prix doit pouvoir être prouvé à la
+DGCCRF le jour où un concurrent se plaint. À la place, les pages donnent le prix
+et la comparaison chiffrée, ce qui dit la même chose et se défend. Si vous voulez
+la formule, gardez un relevé daté des prix de cinq concurrents, refait tous les
+trimestres, et dites-le moi : je l'ajoute.
+
+**motion-lab.agency.** Vous avez donné ce lien dans la phrase sur votre logiciel.
+C'est une agence de motion design pour SaaS et startups, pas un éditeur de
+logiciel de caisse. Je n'ai donc écrit aucun lien entre elle et votre outil sur
+le site, pour ne pas affirmer quelque chose de faux. Dites-moi ce que vous
+vouliez : une mention de partenaire, un lien en pied de page, ou simplement une
+référence visuelle pour le motion, et je l'ajoute correctement.
+
+---
+
+## Obligations liées à la vente sous votre marque
+
+Vendre ce matériel sous votre nom fait de vous le fabricant au sens du règlement
+européen sur la sécurité générale des produits. Cela ajoute aux points déjà
+listés plus haut :
+
+- nom, raison sociale et adresse postale **et électronique** du fabricant visibles
+  sur la fiche produit ;
+- un identifiant du produit, type ou référence de lot ;
+- les avertissements et consignes de sécurité en français ;
+- la déclaration UE de conformité, à réclamer au fabricant avant la première
+  commande et à conserver dix ans.
+
+Ces informations ne figurent pas encore sur le site parce que je ne les ai pas.
+Elles doivent y être avant la première vente.
+
+---
 
 ## Ce qui doit être fait avant la mise en ligne
 

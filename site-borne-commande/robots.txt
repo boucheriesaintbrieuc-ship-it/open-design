@@ -3,5 +3,6 @@ Allow: /
 Disallow: /merci.html
 Disallow: /paiement-annule.html
 Disallow: /paiement/
+Disallow: /flux-google.xml
 
 Sitemap: https://borne-restaurants.fr/sitemap.xml

@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borne de commande ou caisse enregistreuse : lequel d’abord ?</title>
+<meta name="description" content="La borne prend la commande, la caisse enregistre le règlement. Comprendre cette séparation évite d’acheter deux fois la même chose, ou d’en oublier une.">
+<link rel="canonical" href="https://borne-restaurants.fr/borne-de-commande-ou-caisse-enregistreuse.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bornéa">
+<meta property="og:title" content="Borne de commande ou caisse enregistreuse : lequel d’abord ?">
+<meta property="og:description" content="La borne prend la commande, la caisse enregistre le règlement. Comprendre cette séparation évite d’acheter deux fois la même chose, ou d’en oublier une.">
+<meta property="og:url" content="https://borne-restaurants.fr/borne-de-commande-ou-caisse-enregistreuse.html">
+<meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#F1F2F4">
+<script>document.documentElement.className+=" js"</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
+<style>
+/* =========================================================================
+   Bornéa — feuille de style unique du site
+   Règle de couleur qui gouverne tout : le gris est la page, le noir est le
+   produit, l'indigo est l'action. Aucune autre couleur n'apparaît en dehors
+   de l'écran de la borne. Si vous ajoutez une teinte, elle doit tenir dans
+   cette phrase, sinon elle n'a rien à faire ici.
+   ========================================================================= */
+
+@layer reset, tokens, base, layout, composants, pages, utilitaires;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol, fieldset, legend { margin: 0; padding: 0; }
+  fieldset { border: 0; min-width: 0; }
+  ul[role="list"], ol[role="list"] { list-style: none; }
+  img, svg, video { display: block; max-width: 100%; height: auto; }
+  input, button, select, textarea { font: inherit; color: inherit; }
+  a { color: inherit; }
+  table { border-collapse: collapse; width: 100%; }
+}
+
+@layer tokens {
+  :root {
+    --studio:    #F1F2F4;   /* fond : gris de fond de studio photo */
+    --studio-2:  #E4E6EA;   /* bandes alternées, panneau produit */
+    --carte:     #FFFFFF;
+    --noir:      #101114;   /* le produit, les titres */
+    --gris:      #585C64;   /* texte secondaire */
+    --trait:     #D3D6DC;
+    --indigo:    #3B2BD9;   /* action : liens, boutons, focus */
+    --indigo-f:  #2F22B0;   /* survol */
+    --valide:    #0B6E43;   /* uniquement : paiement confirmé, réassurance */
+
+    /* Écran allumé : les seules couleurs vives du site vivent ici. */
+    --e-violet:  #6B4FE0;
+    --e-bleu:    #3AA6E8;
+    --e-rose:    #E86A9A;
+    --e-clair:   #F6E3E8;
+
+    --f-titre: "Helvetica Neue", "Segoe UI Variable Display", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-ui:    "Helvetica Neue", "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-prose: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --f-data:  ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+
+    --t-xs:  .75rem;
+    --t-sm:  clamp(.8125rem, .79rem + .12vw, .875rem);
+    --t-md:  clamp(1rem, .96rem + .2vw, 1.0625rem);
+    --t-lg:  clamp(1.125rem, 1.02rem + .5vw, 1.375rem);
+    --t-xl:  clamp(1.5rem, 1.15rem + 1.6vw, 2.375rem);
+    --t-2xl: clamp(2.25rem, 1.5rem + 3.4vw, 4rem);
+
+    --pas:     clamp(.9rem, .65rem + 1.1vw, 1.35rem);
+    --gout:    clamp(1.25rem, .9rem + 1.7vw, 2.25rem);
+    --section: clamp(3rem, 2rem + 4.5vw, 5.5rem);
+    --max:     1200px;
+    --mesure:  64ch;
+    --r:       5px;
+    --duree:   190ms;
+    --courbe:  cubic-bezier(.2,.7,.3,1);
+  }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body {
+    background: var(--studio); color: var(--noir);
+    font-family: var(--f-ui); font-size: var(--t-md); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.06; letter-spacing: -.035em; text-wrap: balance; }
+  h4 { letter-spacing: -.02em; }
+  p { text-wrap: pretty; }
+  strong, b { font-weight: 600; }
+  a { color: var(--indigo); text-underline-offset: .18em; }
+  a:hover { color: var(--indigo-f); }
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 3px solid var(--indigo); outline-offset: 2px; border-radius: 2px;
+  }
+  ::selection { background: var(--indigo); color: #fff; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+}
+
+@layer layout {
+  .env { width: min(100% - var(--gout) * 2, var(--max)); margin-inline: auto; }
+  .env-etroite { width: min(100% - var(--gout) * 2, 44rem); margin-inline: auto; }
+  .sec { padding-block: var(--section); }
+  .sec--alt { background: var(--studio-2); }
+  /* Un enfant de grille se dimensionne par défaut sur son contenu le plus large :
+     sans min-width, un tableau à défilement élargit la page entière. */
+  .grille > *, .duo > *, .trio > * { min-width: 0; }
+  .duo  { display: grid; gap: var(--gout); }
+  .trio { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  @media (min-width: 48rem) { .duo { grid-template-columns: 1fr 1fr; } }
+  .saut { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .saut:focus { width: auto; height: auto; clip-path: none; left: 1rem; top: 1rem; z-index: 99; background: var(--noir); color: #fff; padding: .7rem 1rem; }
+}
+
+@layer composants {
+
+  /* ---------- En-tête ---------- */
+  .tete {
+    position: sticky; top: 0; z-index: 40;
+    background: var(--studio);   /* repli si color-mix n’est pas connu */
+    background: color-mix(in srgb, var(--studio) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--trait);
+  }
+  .tete__int { display: flex; align-items: center; gap: 1rem; min-height: 60px; }
+  .marque { display: inline-flex; align-items: center; gap: .55rem; font-family: var(--f-titre); font-weight: 700; letter-spacing: -.03em; font-size: 1.1rem; color: var(--noir); text-decoration: none; }
+  .marque svg { width: 20px; height: 20px; }
+  .nav { margin-left: auto; display: flex; align-items: center; gap: clamp(.6rem, .3rem + 1vw, 1.4rem); }
+  /* :not(.btn) est indispensable : sans lui cette règle repeint le bouton
+     « Commander » en gris sur fond indigo, illisible. */
+  .nav a:not(.btn) { font-size: var(--t-sm); color: var(--gris); text-decoration: none;
+                     display: inline-flex; align-items: center; min-height: 32px; }
+  .nav a:not(.btn):hover, .nav a:not(.btn)[aria-current="page"] { color: var(--noir); }
+  .nav a:not(.btn)[aria-current="page"] { font-weight: 600; }
+  /* Doit rester au moins aussi spécifique que .nav a:not(.btn) ci-dessus,
+     sinon les liens secondaires réapparaissent sur mobile et débordent. */
+  @media (max-width: 40rem) { .nav a:not(.btn).nav__secondaire { display: none; } }
+
+  /* ---------- Boutons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    min-height: 50px; padding: .75rem 1.5rem;
+    background: var(--indigo); color: #fff; border: 1px solid var(--indigo);
+    border-radius: var(--r); font-weight: 600; font-size: var(--t-md);
+    text-decoration: none; cursor: pointer;
+    transition: background var(--duree) var(--courbe), border-color var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+  }
+  .btn:hover { background: var(--indigo-f); border-color: var(--indigo-f); color: #fff; }
+  .btn:active { transform: translateY(1px); }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; }
+  .btn--secondaire { background: transparent; color: var(--noir); border-color: var(--noir); }
+  .btn--secondaire:hover { background: var(--noir); color: #fff; border-color: var(--noir); }
+  .btn--large { width: 100%; min-height: 56px; font-size: var(--t-lg); }
+  .btn--petit { min-height: 42px; padding: .5rem 1rem; font-size: var(--t-sm); }
+
+  /* ---------- Micro-typographie ---------- */
+  .surtitre { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .16em; color: var(--gris); }
+  .prose { font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .3vw, 1.1875rem); line-height: 1.7; max-width: var(--mesure); }
+  .prose p + p { margin-top: 1.1em; }
+  .prose h2 { font-size: var(--t-xl); margin-top: 2.4em; margin-bottom: .5em; }
+  .prose h3 { font-size: var(--t-lg); margin-top: 1.8em; margin-bottom: .4em; }
+  .prose ul, .prose ol { margin: 1.1em 0; padding-left: 1.3em; }
+  .prose li + li { margin-top: .45em; }
+  .prose figure { margin: 2em 0; }
+  .prix { font-family: var(--f-data); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .note { font-size: var(--t-sm); color: var(--gris); }
+
+  /* ---------- Le produit dessiné ---------- */
+  .borne { display: block; }
+  .borne__cadre { fill: var(--noir); }
+  .borne__dalle--veille { fill: url(#ecranVeille); }
+  .borne__dalle--ui     { fill: #16171B; }
+
+  .scene {
+    background:
+      radial-gradient(120% 80% at 50% 15%, #FAFBFC 0%, var(--studio-2) 55%, #D7DAE0 100%);
+    border: 1px solid var(--trait); border-radius: var(--r);
+    display: grid; place-items: end center;
+    padding: clamp(1.5rem, 1rem + 3vw, 3rem) var(--pas) 0;
+    min-height: 22rem;
+  }
+  .scene__sol { display: flex; align-items: flex-end; justify-content: center; gap: clamp(.5rem, 2vw, 2rem); width: 100%; }
+  .scene__sol .borne {
+    width: clamp(5rem, 22vw, 8.5rem);
+    transition: opacity var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+  }
+  .scene__sol .borne[hidden] { display: none; }
+  .scene__sol .borne[data-entrant] { animation: pose 260ms var(--courbe) both; }
+  @keyframes pose { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Cartes et blocs ---------- */
+  .carte { background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r); padding: var(--pas); }
+  .carte h3 { font-size: var(--t-lg); }
+
+  .encadre-cle {
+    background: var(--carte); border: 1px solid var(--trait); border-left: 4px solid var(--indigo);
+    border-radius: var(--r); padding: var(--pas);
+  }
+  .encadre-cle dl { display: grid; gap: .45rem; margin-top: .7rem; }
+  .encadre-cle div { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--trait); padding-top: .45rem; font-size: var(--t-sm); }
+  .encadre-cle div:first-child { border-top: 0; padding-top: 0; }
+  .encadre-cle dt { color: var(--gris); }
+  .encadre-cle dd { font-family: var(--f-data); font-variant-numeric: tabular-nums; text-align: right; }
+
+  /* ---------- Tableaux ---------- */
+  .cadre-defil { overflow-x: auto; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); }
+  .tbl { font-size: var(--t-sm); }
+  .tbl caption { text-align: left; font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .13em; color: var(--gris); padding: .8rem var(--pas) .4rem; }
+  .tbl th, .tbl td { text-align: left; padding: .6rem var(--pas); border-top: 1px solid var(--trait); vertical-align: top; }
+  .tbl thead th { border-top: 0; background: var(--studio-2); font-weight: 600; }
+  .tbl tbody th { font-weight: 400; color: var(--gris); width: 42%; }
+  .tbl td { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+  .tbl td.txt { font-family: var(--f-ui); }
+
+  /* ---------- Listes de garanties ---------- */
+  .garanties { list-style: none; display: grid; gap: .6rem; }
+  .garanties li { display: grid; grid-template-columns: 1.4rem 1fr; gap: .7rem; align-items: start; font-size: var(--t-sm); }
+  .garanties svg { width: 1.15rem; height: 1.15rem; margin-top: .2rem; color: var(--valide); }
+
+  /* ---------- Accordéon ---------- */
+  details { border-top: 1px solid var(--trait); }
+  details:last-of-type { border-bottom: 1px solid var(--trait); }
+  summary { cursor: pointer; list-style: none; padding: 1.05rem 2.4rem 1.05rem 0; position: relative; font-weight: 600; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: ""; position: absolute; right: .5rem; top: 50%; width: .7rem; height: .7rem;
+    border-right: 2px solid var(--indigo); border-bottom: 2px solid var(--indigo);
+    translate: 0 -70%; rotate: 45deg; transition: rotate var(--duree) var(--courbe);
+  }
+  details[open] summary::after { rotate: -135deg; translate: 0 -30%; }
+  details .rep { padding-bottom: 1.1rem; color: var(--gris); max-width: var(--mesure); }
+
+  /* ---------- Formulaires ---------- */
+  .champ { display: grid; gap: .3rem; }
+  .champ > span { font-size: var(--t-sm); font-weight: 600; }
+  .champ input, .champ textarea, .champ select {
+    min-height: 50px; padding: .65rem .8rem; background: var(--carte); color: var(--noir);
+    border: 1px solid var(--trait); border-radius: var(--r); width: 100%;
+  }
+  .champ textarea { min-height: 8rem; resize: vertical; }
+  .champ input::placeholder, .champ textarea::placeholder { color: #969AA2; }
+  .champ input:focus, .champ textarea:focus, .champ select:focus { border-color: var(--indigo); }
+
+  /* ---------- Barre collante mobile ---------- */
+  .barre-mobile {
+    position: sticky; bottom: 0; z-index: 30;
+    background: var(--carte); border-top: 1px solid var(--trait);
+    padding: .6rem var(--gout); display: flex; align-items: center; gap: 1rem;
+  }
+  .barre-mobile .prix { font-weight: 700; }
+  .barre-mobile .btn { margin-left: auto; }
+  @media (min-width: 62rem) { .barre-mobile { display: none; } }
+
+  /* ---------- Fil d'Ariane ---------- */
+  .fil { font-size: var(--t-sm); color: var(--gris); padding-block: .9rem; }
+  .fil ol { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .fil li + li::before { content: "/"; margin-right: .4rem; color: var(--trait); }
+  .fil a { color: var(--gris); display: inline-block; padding-block: .25rem; }
+
+  /* ---------- Pied ---------- */
+  .pied { background: var(--noir); color: #A5A9B1; font-size: var(--t-sm); margin-top: var(--section); }
+  .pied a { color: #fff; }
+  .pied .cols { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); padding-block: var(--gout); }
+  .pied h2 { font-size: var(--t-sm); color: #fff; letter-spacing: 0; font-weight: 600; margin-bottom: .5rem; }
+  .pied ul { list-style: none; display: grid; gap: .1rem; }
+  /* Cible pointeur d’au moins 24 px de haut (WCAG 2.5.8) sur des liens
+     empilés, qui ne bénéficient pas de l’exception des liens en ligne. */
+  .pied ul a { display: inline-block; padding-block: .3rem; }
+  .pied__bas { border-top: 1px solid #2A2C31; padding-block: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+}
+
+@layer pages {
+
+  /* ---------- Accueil : le produit tient, l'argument défile ---------- */
+  .vitrine { display: grid; gap: var(--gout); padding-block: var(--gout) var(--section); }
+  @media (min-width: 62rem) {
+    .vitrine { grid-template-columns: minmax(0, 27rem) minmax(0, 1fr); gap: clamp(2rem, 4vw, 4rem); align-items: start; }
+    .vitrine__objet { position: sticky; top: 5rem; }
+  }
+  .vitrine__objet .scene { min-height: 26rem; }
+  .achat { margin-top: var(--pas); }
+  .achat__prix { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+  .achat__prix .montant { font-family: var(--f-data); font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem); font-weight: 700; letter-spacing: -.04em; }
+  .achat__prix .ttc { color: var(--gris); font-size: var(--t-sm); font-family: var(--f-data); }
+  .achat .btn { margin-top: .9rem; }
+
+  .argument h1 { font-size: var(--t-2xl); }
+  /* Trois arguments dans une colonne étroite : une liste à filets se lit
+     mieux que trois cartes qui se coupent en 2 + 1. */
+  .points { display: grid; gap: 0; }
+  .points > div { border-top: 1px solid var(--trait); padding-block: var(--pas); }
+  .points h3 { font-size: var(--t-lg); }
+  .points p { color: var(--gris); font-size: var(--t-sm); margin-top: .35rem; max-width: var(--mesure); }
+  .argument .chapo { font-family: var(--f-prose); font-size: clamp(1.125rem, 1rem + .6vw, 1.4375rem); line-height: 1.5; color: var(--noir); margin-top: 1rem; max-width: 38ch; }
+
+  /* ---------- Configurateur ---------- */
+  .config { display: grid; gap: var(--gout); }
+  @media (min-width: 62rem) { .config { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); align-items: start; } }
+  .config__recap { position: sticky; top: 5rem; }
+  .option {
+    display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: start;
+    border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte);
+    padding: var(--pas); cursor: pointer;
+    transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe);
+  }
+  .option:hover { border-color: var(--indigo); }
+  .option:has(input:checked) { border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
+  .option input { width: 24px; height: 24px; margin-top: .1rem; accent-color: var(--indigo); }
+  .option .titre-opt { display: block; font-weight: 600; }
+  .option .desc-opt { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+  .option .prix { font-weight: 600; white-space: nowrap; }
+
+  .compteur { display: inline-flex; align-items: stretch; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); overflow: hidden; }
+  .compteur button { width: 48px; min-height: 48px; background: transparent; border: 0; font-size: 1.3rem; cursor: pointer; color: var(--noir); }
+  .compteur button:hover { background: var(--studio-2); }
+  .compteur output { min-width: 3.2rem; display: grid; place-items: center; font-family: var(--f-data); font-variant-numeric: tabular-nums; font-weight: 700; border-inline: 1px solid var(--trait); }
+
+  .recap__lignes { display: grid; gap: .5rem; margin-block: var(--pas); }
+  .recap__lignes > div { display: flex; justify-content: space-between; gap: 1rem; font-size: var(--t-sm); border-top: 1px solid var(--trait); padding-top: .5rem; }
+  .recap__lignes > div:first-child { border-top: 0; padding-top: 0; }
+  .recap__lignes .prix { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .recap__lignes .note { display: block; }
+  .recap__total { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; border-top: 2px solid var(--noir); padding-top: .7rem; }
+  .recap__total .prix { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; }
+
+  /* ---------- Confirmation ---------- */
+  .confirme { text-align: center; padding-block: var(--section); }
+  .confirme .pastille {
+    width: 4.5rem; height: 4.5rem; margin: 0 auto var(--pas); border-radius: 50%;
+    background: var(--valide); color: #fff; display: grid; place-items: center;
+  }
+  .confirme .pastille svg { width: 2.2rem; height: 2.2rem; }
+  .confirme h1 { font-size: var(--t-xl); }
+  .confirme p { margin-inline: auto; max-width: 46ch; color: var(--gris); margin-top: .8rem; }
+
+  /* ---------- Rappel produit en bas de page ---------- */
+  .rappel { display: grid; gap: var(--gout); align-items: center; }
+  @media (min-width: 48rem) { .rappel { grid-template-columns: 12rem 1fr auto; } }
+  .rappel .scene { min-height: 0; padding: var(--pas); }
+  .rappel .scene .borne { width: 5rem; }
+}
+
+@layer utilitaires {
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .centre { text-align: center; }
+  .mt-0 { margin-top: 0; }
+  .mt-1 { margin-top: var(--pas); }
+  .mt-2 { margin-top: var(--gout); }
+  .mesure { max-width: var(--mesure); }
+}
+
+@layer composants {
+  /* Marqueur des valeurs qui viennent de la fiche fournisseur et n'ont pas
+     encore été vérifiées sur un exemplaire réel. Cherchez "avf" dans les
+     fichiers pour toutes les retrouver, puis supprimez la classe. */
+  .avf { position: relative; }
+  .avf::after {
+    content: "à confirmer";
+    font-family: var(--f-ui); font-size: .625rem; text-transform: uppercase; letter-spacing: .08em;
+    background: #FCE9C9; color: #6B4A05; border-radius: 3px; padding: .1rem .3rem; margin-left: .4rem;
+    vertical-align: middle; white-space: nowrap;
+  }
+  .compare { font-size: var(--t-sm); }
+  .compare td.oui { color: var(--valide); font-weight: 700; }
+  .compare td.non { color: #A03007; font-weight: 700; }
+  .inclus { list-style: none; display: grid; gap: .55rem; }
+  .inclus li { display: grid; grid-template-columns: 1.3rem 1fr; gap: .7rem; align-items: start; }
+  .inclus li::before { content: "•"; color: var(--indigo); font-weight: 700; }
+  .exclus li::before { content: "×"; color: #A03007; }
+  .erreur { background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412; border-radius: var(--r); padding: .8rem 1rem; font-size: var(--t-sm); }
+}
+
+@layer composants {
+  /* ---------- Lecteur de récitation ----------
+     Pastille discrète, toujours atteignable au clavier. La couleur reste
+     celle de l'action : aucune teinte nouvelle n'entre dans la page. */
+  .ecoute {
+    position: fixed; left: var(--gout); bottom: var(--gout); z-index: 35;
+    display: flex; align-items: center; gap: .55rem;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: 999px;
+    padding: .35rem .35rem .35rem .85rem;
+    box-shadow: 0 2px 10px rgba(16, 17, 20, .10);
+    max-width: calc(100% - var(--gout) * 2);
+  }
+  .ecoute[hidden] { display: none; }
+  .ecoute__titre { font-size: var(--t-sm); color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ecoute__btn {
+    flex: none; width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer;
+    background: var(--indigo); color: #fff; border: 1px solid var(--indigo);
+    transition: background var(--duree) var(--courbe);
+  }
+  .ecoute__btn:hover { background: var(--indigo-f); border-color: var(--indigo-f); }
+  .ecoute__btn svg { width: 20px; height: 20px; }
+  /* Le trait d'onde pulse doucement quand ça joue, pour qu'on voie d'où vient le son. */
+  .ecoute[data-actif="1"] .ecoute__onde { animation: onde 1.6s ease-in-out infinite; transform-origin: left center; }
+  @keyframes onde { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  @media (max-width: 30rem) {
+    .ecoute__titre { display: none; }
+    .ecoute { padding: .3rem; }
+  }
+}
+
+@layer pages {
+  /* ---------- Blog ----------
+     La colonne de lecture est volontairement étroite et le corps passe en
+     serif : un article se lit, une fiche produit se parcourt. Le changement
+     de famille signale ce changement de régime sans décor supplémentaire. */
+  .blog-tete { padding-block: var(--gout) var(--pas); }
+  .blog-grille { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .blog-carte {
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: var(--pas); display: flex; flex-direction: column; gap: .5rem;
+    transition: border-color var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+  }
+  .blog-carte:hover { border-color: var(--indigo); transform: translateY(-2px); }
+  .blog-carte h2 { font-size: var(--t-lg); }
+  .blog-carte h2 a { color: var(--noir); text-decoration: none; }
+  .blog-carte h2 a:hover { color: var(--indigo); }
+  .blog-carte p { font-size: var(--t-sm); color: var(--gris); }
+  .blog-carte .meta { margin-top: auto; font-family: var(--f-data); font-size: var(--t-xs); color: var(--gris); text-transform: uppercase; letter-spacing: .1em; }
+
+  .article { width: min(100% - var(--gout) * 2, 44rem); margin-inline: auto; padding-bottom: var(--section); }
+  .article h1 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); margin-top: .5rem; }
+  .art-meta { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .12em; color: var(--gris); }
+  .art-resume {
+    font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .4vw, 1.25rem); line-height: 1.55;
+    border-left: 4px solid var(--indigo); padding: .3rem 0 .3rem var(--pas); margin-block: var(--gout);
+  }
+  .art-corps { font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .3vw, 1.1875rem); line-height: 1.75; }
+  .art-corps > * + * { margin-top: 1.1em; }
+  .art-corps h2 { font-family: var(--f-titre); font-size: var(--t-xl); margin-top: 2em; margin-bottom: .1em; }
+  .art-corps h3 { font-family: var(--f-titre); font-size: var(--t-lg); margin-top: 1.6em; margin-bottom: .1em; }
+  .art-corps ul, .art-corps ol { padding-left: 1.3em; }
+  .art-corps li + li { margin-top: .4em; }
+  .art-corps a { text-underline-offset: .2em; }
+
+  .art-offre {
+    background: var(--noir); color: #E8E9EC; border-radius: var(--r);
+    padding: var(--gout); margin-top: var(--section);
+  }
+  .art-offre h2 { color: #fff; font-size: var(--t-lg); }
+  .art-offre p { font-family: var(--f-prose); margin-top: .8rem; }
+  .art-offre strong { color: #fff; }
+  .art-offre .liens { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: var(--pas); }
+  .art-offre .btn--secondaire { color: #fff; border-color: #4A4D55; }
+  .art-offre .btn--secondaire:hover { background: #fff; color: var(--noir); border-color: #fff; }
+
+  .art-voisins { margin-top: var(--section); border-top: 1px solid var(--trait); padding-top: var(--gout); }
+  .art-voisins ul { list-style: none; display: grid; gap: .1rem; margin-top: .8rem; }
+  .art-voisins li { border-top: 1px solid var(--trait); }
+  .art-voisins li:first-child { border-top: 0; }
+  .art-voisins a { display: block; padding: .8rem 0; text-decoration: none; font-weight: 600; }
+  .art-voisins a span { display: block; font-weight: 400; font-size: var(--t-sm); color: var(--gris); margin-top: .15rem; }
+
+  /* ---------- Photos produit ---------- */
+  .photo { background: var(--studio-2); border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden; }
+  .photo img { width: 100%; height: auto; display: block; }
+  .photo figcaption { font-size: var(--t-sm); color: var(--gris); padding: .7rem var(--pas); border-top: 1px solid var(--trait); background: var(--carte); }
+  .galerie { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+
+  /* ---------- Révélation au défilement ----------
+     Le seul mouvement de la page. Désactivé si le visiteur a demandé
+     moins d'animations, et neutre si le script ne tourne pas. */
+  [data-reveal] { opacity: 1; }
+  html.js [data-reveal] { opacity: 0; transform: translateY(14px); }
+  html.js [data-reveal][data-vu] { opacity: 1; transform: none; transition: opacity 520ms var(--courbe), transform 520ms var(--courbe); }
+  @media (prefers-reduced-motion: reduce) {
+    html.js [data-reveal] { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Récit ---------- */
+  .recit { background: var(--noir); color: #D6D8DC; }
+  .recit h2, .recit h3 { color: #fff; }
+  .recit .env { padding-block: var(--section); }
+  .recit .prose { font-family: var(--f-prose); max-width: 42rem; }
+  .recit .prose p + p { margin-top: 1.1em; }
+  .recit .chiffres { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); margin-top: var(--gout); }
+  .recit .chiffres div { border-top: 2px solid var(--indigo); padding-top: .8rem; }
+  .recit .chiffres b { display: block; font-family: var(--f-data); font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem); font-weight: 700; color: #fff; letter-spacing: -.03em; }
+  .recit .chiffres span { font-size: var(--t-sm); color: #9BA0A8; }
+}
+</style>
+<script type="application/ld+json">{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Borne de commande et caisse enregistreuse ne font pas le même travail",
+ "description": "La borne prend la commande, la caisse enregistre le règlement. Comprendre cette séparation évite d’acheter deux fois la même chose, ou d’en oublier une.",
+ "inLanguage": "fr-FR",
+ "author": {
+  "@id": "https://borne-restaurants.fr/#organisation"
+ },
+ "publisher": {
+  "@id": "https://borne-restaurants.fr/#organisation"
+ },
+ "mainEntityOfPage": "https://borne-restaurants.fr/borne-de-commande-ou-caisse-enregistreuse.html",
+ "datePublished": "2026-10-30",
+ "dateModified": "2026-11-04",
+ "about": {
+  "@type": "Thing",
+  "name": "borne de commande ou caisse enregistreuse"
+ },
+ "image": "https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg"
+}</script>
+<script type="application/ld+json">{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Une borne de commande remplace-t-elle une caisse enregistreuse ?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Non. La caisse enregistre les règlements et porte l’obligation de conformité fiscale ; la borne prend la commande et la transmet. Une borne qui enregistrerait elle-même les paiements deviendrait un logiciel de caisse soumis aux mêmes règles."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Faut-il une attestation de conformité pour une borne ?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Pour le matériel, non. L’attestation prévue à l’article 286-I-3° bis du code général des impôts porte sur le logiciel qui enregistre les règlements, et c’est son éditeur qui la délivre. Réclamez-la à votre éditeur de caisse."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Peut-on installer une borne sans caisse du tout ?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Techniquement oui, la borne imprimera en cuisine. Mais vous resterez tenu d’enregistrer vos encaissements avec un système conforme, donc le problème est seulement déplacé. Ce montage ne tient que pour un établissement qui n’encaisse pas de particuliers."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Quel budget prévoir pour les deux ?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Une caisse conforme démarre autour de 30 à 80 € par mois selon l’éditeur, matériel compris ou non. Pour la borne, seul l’écran s’ajoute si votre caisse propose déjà une application, soit 499 € hors taxes chez nous, une fois."
+   }
+  }
+ ]
+}</script>
+</head>
+<body>
+<a class="saut" href="#contenu">Aller au contenu</a>
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ecranVeille" x1="0" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#6B4FE0"/>
+      <stop offset=".34" stop-color="#3AA6E8"/>
+      <stop offset=".62" stop-color="#F6E3E8"/>
+      <stop offset=".84" stop-color="#E86A9A"/>
+      <stop offset="1" stop-color="#5B3FC4"/>
+    </linearGradient>
+  </defs>
+
+  <symbol id="borne-veille" viewBox="0 0 200 660">
+    <rect x="14" y="6" width="172" height="302" rx="8" fill="#101114"/>
+    <rect x="22" y="14" width="156" height="286" rx="3" fill="url(#ecranVeille)"/>
+    <rect x="92" y="304" width="16" height="322" rx="5" fill="#101114"/>
+    <rect x="34" y="624" width="132" height="14" fill="#101114"/>
+    <ellipse cx="100" cy="624" rx="66" ry="15" fill="#22242A"/>
+    <ellipse cx="100" cy="638" rx="66" ry="15" fill="#101114"/>
+  </symbol>
+
+  <symbol id="borne-commande" viewBox="0 0 200 660">
+    <rect x="14" y="6" width="172" height="302" rx="8" fill="#101114"/>
+    <rect x="22" y="14" width="156" height="286" rx="3" fill="#1B1D23"/>
+    <rect x="32" y="26" width="74" height="9" rx="4" fill="#6E727C"/>
+    <rect x="32" y="46" width="136" height="58" rx="4" fill="#2A2D35"/>
+    <rect x="40" y="56" width="38" height="38" rx="3" fill="#6B4FE0"/>
+    <rect x="86" y="60" width="62" height="8" rx="4" fill="#9AA0AB"/>
+    <rect x="86" y="76" width="34" height="8" rx="4" fill="#5D626D"/>
+    <rect x="32" y="112" width="136" height="58" rx="4" fill="#2A2D35"/>
+    <rect x="40" y="122" width="38" height="38" rx="3" fill="#3AA6E8"/>
+    <rect x="86" y="126" width="52" height="8" rx="4" fill="#9AA0AB"/>
+    <rect x="86" y="142" width="34" height="8" rx="4" fill="#5D626D"/>
+    <rect x="32" y="178" width="136" height="58" rx="4" fill="#2A2D35"/>
+    <rect x="40" y="188" width="38" height="38" rx="3" fill="#E86A9A"/>
+    <rect x="86" y="192" width="58" height="8" rx="4" fill="#9AA0AB"/>
+    <rect x="86" y="208" width="34" height="8" rx="4" fill="#5D626D"/>
+    <rect x="32" y="252" width="136" height="34" rx="5" fill="#3B2BD9"/>
+    <rect x="66" y="264" width="68" height="10" rx="5" fill="#FFFFFF"/>
+    <rect x="92" y="304" width="16" height="322" rx="5" fill="#101114"/>
+    <rect x="34" y="624" width="132" height="14" fill="#101114"/>
+    <ellipse cx="100" cy="624" rx="66" ry="15" fill="#22242A"/>
+    <ellipse cx="100" cy="638" rx="66" ry="15" fill="#101114"/>
+  </symbol>
+
+  <symbol id="borne-profil" viewBox="0 0 200 660">
+    <rect x="86" y="6" width="20" height="302" rx="4" fill="#101114"/>
+    <rect x="80" y="14" width="6" height="286" rx="2" fill="#2A2D35"/>
+    <rect x="104" y="150" width="26" height="34" rx="3" fill="#1B1D23"/>
+    <rect x="112" y="158" width="4" height="4" fill="#4A4E58"/>
+    <rect x="120" y="158" width="4" height="4" fill="#4A4E58"/>
+    <rect x="112" y="170" width="4" height="4" fill="#4A4E58"/>
+    <rect x="120" y="170" width="4" height="4" fill="#4A4E58"/>
+    <rect x="126" y="160" width="16" height="14" rx="3" fill="#101114"/>
+    <rect x="128" y="170" width="16" height="456" rx="5" fill="#101114"/>
+    <rect x="70" y="624" width="132" height="14" fill="#101114"/>
+    <ellipse cx="136" cy="624" rx="66" ry="15" fill="#22242A"/>
+    <ellipse cx="136" cy="638" rx="66" ry="15" fill="#101114"/>
+  </symbol>
+
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/>
+  </symbol>
+  <symbol id="i-son" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g class="ecoute__onde" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M15.6 9.2a4 4 0 0 1 0 5.6"/>
+      <path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/>
+    </g>
+  </symbol>
+  <symbol id="i-son-coupe" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M16 9.5l5 5M21 9.5l-5 5"/>
+    </g>
+  </symbol>
+  <symbol id="i-logo" viewBox="0 0 24 24">
+    <rect x="6" y="2" width="12" height="15" rx="2" fill="currentColor"/>
+    <rect x="11" y="17" width="2" height="4" fill="currentColor"/>
+    <rect x="5" y="20" width="14" height="2.4" rx="1.2" fill="currentColor"/>
+  </symbol>
+</svg>
+<header class="tete">
+  <div class="env tete__int">
+    <a class="marque" href="index.html"><svg aria-hidden="true"><use href="#i-logo"/></svg>Bornéa</a>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="index.html">La borne</a><a href="blog.html">Blog</a><a href="guide-borne-de-commande-restaurant.html" class="nav__secondaire">Guide d’achat</a><a href="livraison-et-retours.html" class="nav__secondaire">Livraison</a><a href="contact.html" class="nav__secondaire">Contact</a>
+      <a class="btn btn--petit" href="commander.html">Commander</a>
+    </nav>
+  </div>
+</header>
+<nav class="env fil" aria-label="Fil d’Ariane"><ol><li><a href="index.html">Accueil</a></li><li><a href="blog.html">Blog</a></li><li><span aria-current="page">Borne de commande ou caisse enregistreuse : lequel d’abord ?</span></li></ol></nav><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://borne-restaurants.fr/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://borne-restaurants.fr/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Borne de commande ou caisse enregistreuse : lequel d’abord ?"}]}</script>
+<main id="contenu" class="article">
+  <p class="art-meta" data-reveal>Publié le 30 octobre 2026 · mis à jour le 4 novembre 2026 · 6 min de lecture</p>
+  <h1 data-reveal>Borne de commande et caisse enregistreuse ne font pas le même travail</h1>
+  <p class="art-resume" data-reveal>Beaucoup de restaurateurs croient devoir choisir. Les deux appareils ne remplissent pas la même fonction, et seule la caisse a une obligation légale derrière elle.</p>
+
+  <div class="art-corps">
+<p>La confusion est fréquente, et elle coûte cher dans les deux sens : certains achètent une borne en pensant remplacer leur caisse, d’autres refusent la borne parce qu’ils ont déjà une caisse. Les deux se trompent de question.</p>
+
+<h2>Deux fonctions distinctes</h2>
+<p>La caisse enregistre les règlements. C’est elle qui tient votre chiffre d’affaires, édite le Z, ventile la TVA et vous sert en cas de contrôle. Elle est soumise à une obligation précise : l’article 286-I-3° bis du code général des impôts impose un logiciel d’encaissement inaltérable, avec une attestation délivrée par son éditeur.</p>
+<p>La borne prend la commande. Elle affiche la carte, enregistre les choix du client et transmet. Elle n’a aucune obligation légale propre, parce qu’elle n’enregistre pas de règlement.</p>
+<p>Une borne qui encaisserait vraiment, c’est-à-dire qui enregistrerait le paiement dans ses propres registres, deviendrait un logiciel de caisse et tomberait sous la même obligation. C’est pour cette raison que les bornes sérieuses renvoient toujours vers une caisse certifiée.</p>
+
+<h2>Ce que vous devez avoir, dans l’ordre</h2>
+<p>Une caisse conforme d’abord. Elle n’est pas optionnelle dès que vous encaissez des particuliers. Une borne ensuite, si et seulement si vous avez un problème de débit à régler.</p>
+<p>Prendre les deux dans le mauvais ordre revient à acheter un deuxième four avant d’avoir une hotte.</p>
+
+<h2>Le point qui décide : est-ce que les deux se parlent ?</h2>
+<p>C’est la seule question technique qui compte avant d’acheter du matériel. Trois cas se présentent.</p>
+<p><strong>Votre éditeur de caisse propose une application de borne.</strong> Le meilleur cas. Vous n’avez besoin que de l’écran, les commandes remontent toutes seules, votre Z est juste sans rien faire.</p>
+<p><strong>Votre caisse ouvre une interface.</strong> Une application tierce peut lui envoyer les commandes. Cela marche, mais il faut vérifier ce qui remonte exactement : le détail des lignes, ou seulement un total.</p>
+<p><strong>Votre caisse est fermée.</strong> La borne imprime alors en cuisine mais n’alimente pas votre chiffre d’affaires, et quelqu’un doit ressaisir. C’est une vraie limite, et elle doit être connue avant l’achat, pas découverte après.</p>
+
+<h2>Et si je n’ai pas encore de caisse ?</h2>
+<p>Commencez par là, en choisissant un éditeur qui propose déjà une application de borne. Vous réglez les deux sujets d’un coup et vous évitez de vous retrouver avec un écran orphelin.</p>
+<p>Demandez l’attestation de conformité avant de signer, pas après. Un éditeur sérieux la fournit sans discuter ; les autres se font prier, ce qui est déjà une réponse.</p>
+
+<h2>Le piège du « tout-en-un »</h2>
+<p>Des offres proposent la caisse, la borne, le logiciel et le terminal de paiement dans un seul contrat mensuel. C’est confortable et parfois pertinent, surtout si vous partez de zéro.</p>
+<p>Regardez simplement deux lignes avant de signer : ce qui se passe si vous arrêtez l’abonnement, et si le matériel vous reste. Dans beaucoup de contrats, tout s’éteint le même jour, y compris ce que vous pensiez avoir acheté.</p>
+</div>
+
+  <h2 style="font-size:var(--t-xl);margin-top:var(--section)">Questions fréquentes</h2>
+  <div class="mt-1"><details><summary>Une borne de commande remplace-t-elle une caisse enregistreuse ?</summary><p class="rep">Non. La caisse enregistre les règlements et porte l’obligation de conformité fiscale ; la borne prend la commande et la transmet. Une borne qui enregistrerait elle-même les paiements deviendrait un logiciel de caisse soumis aux mêmes règles.</p></details><details><summary>Faut-il une attestation de conformité pour une borne ?</summary><p class="rep">Pour le matériel, non. L’attestation prévue à l’article 286-I-3° bis du code général des impôts porte sur le logiciel qui enregistre les règlements, et c’est son éditeur qui la délivre. Réclamez-la à votre éditeur de caisse.</p></details><details><summary>Peut-on installer une borne sans caisse du tout ?</summary><p class="rep">Techniquement oui, la borne imprimera en cuisine. Mais vous resterez tenu d’enregistrer vos encaissements avec un système conforme, donc le problème est seulement déplacé. Ce montage ne tient que pour un établissement qui n’encaisse pas de particuliers.</p></details><details><summary>Quel budget prévoir pour les deux ?</summary><p class="rep">Une caisse conforme démarre autour de 30 à 80 € par mois selon l’éditeur, matériel compris ou non. Pour la borne, seul l’écran s’ajoute si votre caisse propose déjà une application, soit 499 € hors taxes chez nous, une fois.</p></details></div>
+
+  <aside class="art-offre" data-reveal>
+    <h2>La borne dont nous nous servons</h2>
+    
+<p>Nous vendons l’écran, pas la caisse, et c’est volontaire : votre caisse est déjà là et c’est elle qui doit rester le point de vérité de votre chiffre d’affaires.</p>
+<p>La tablette sur pied est à <strong>499 € HT sans abonnement</strong>. Dites-nous quel logiciel de caisse vous utilisez : si rien ne s’y branche correctement, nous vous le dirons avant la vente plutôt qu’après.</p>
+
+    <p class="liens">
+      <a class="btn" href="index.html">Voir la borne à 499 € HT</a>
+      <a class="btn btn--secondaire" href="commander.html">Commander</a>
+    </p>
+  </aside>
+
+  <nav class="art-voisins" aria-label="Articles liés">
+    <h2 style="font-size:var(--t-lg)">À lire ensuite</h2>
+    <ul role="list"><li><a href="tablette-de-commande-restaurant-fonctionnement.html">Du doigt du client au ticket en cuisine : ce qui se passe dans une tablette de commande<span>Le trajet complet d’une commande, de l’écran au ticket cuisine. Et les trois maillons qui lâchent en service.</span></a></li><li><a href="borne-de-commande-sans-abonnement.html">Borne de commande sans abonnement : ce que le mensuel paie réellement<span>Le mensuel paie trois choses précises. Deux se reprennent facilement, la troisième demande un vrai arbitrage.</span></a></li><li><a href="borne-tactile-commande-prix.html">Pourquoi une borne tactile de commande coûte 3 000 € (et ce que vous payez vraiment)<span>Décomposition d’un devis à 3 000 €, poste par poste, jusqu’au total réel sur trois ans. Le matériel y pèse moins d’un dixième.</span></a></li></ul>
+    <p class="mt-1"><a href="blog.html">Tous les articles</a></p>
+  </nav>
+</main>
+
+<footer class="pied">
+  <div class="env cols">
+    <div>
+      <h2>Bornéa</h2>
+      <p>Bornes de commande tactiles pour la restauration. Vente et assistance depuis Saint-Brieuc.</p>
+    </div>
+    <div>
+      <h2>Le produit</h2>
+      <ul role="list">
+        <li><a href="index.html">La borne à 499 € HT</a></li>
+        <li><a href="commander.html">Commander</a></li>
+        <li><a href="guide-borne-de-commande-restaurant.html">Guide d’achat</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Commande</h2>
+      <ul role="list">
+        <li><a href="livraison-et-retours.html">Livraison et retours</a></li>
+        <li><a href="cgv.html">Conditions générales de vente</a></li>
+        <li><a href="contact.html">Nous écrire</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Le site</h2>
+      <ul role="list">
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+        <li><a href="confidentialite.html">Données personnelles</a></li>
+        <li><a data-tel href="tel:+33296000000">02 96 00 00 00</a></li>
+        <li><a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="env pied__bas">
+    <p>© <span data-annee>2026</span> Bornéa. Prix hors taxes, destinés aux professionnels.</p>
+    <p>Paiement par carte sécurisé par Stripe.</p>
+  </div>
+</footer>
+<script>
+/* =========================================================================
+   LE SEUL FICHIER À MODIFIER POUR METTRE LE SITE EN PRODUCTION.
+   Tout le reste du site lit ces valeurs. Ne mettez jamais de clé secrète
+   Stripe ici : ce fichier est téléchargé par le navigateur du visiteur.
+   Une clé secrète commence par sk_ ou rk_. Si vous en voyez une, retirez-la.
+   ========================================================================= */
+
+window.CONFIG = {
+
+  /* ---- Identité ------------------------------------------------------ */
+  marque:    "Bornéa",
+  domaine:   "https://borne-restaurants.fr",         /* sans barre oblique finale */
+  telephone: "+33296000000",
+  telAffiche:"02 96 00 00 00",
+  email:     "contact@bornea.fr",
+  ville:     "Saint-Brieuc",
+
+  /* ---- Tarifs, en euros hors taxes ----------------------------------- */
+  tva: 0.20,
+  paliers: [                                   /* à partir de N unités, prix unitaire HT */
+    { aPartirDe: 1, prixHT: 499 },
+    { aPartirDe: 2, prixHT: 469 },
+    { aPartirDe: 3, prixHT: 449 }
+  ],
+  options: {
+    miseEnService: { libelle: "Mise en service à distance",  prixHT: 149, parUnite: false },
+    garantie:      { libelle: "Extension de garantie 3 ans", prixHT: 79,  parUnite: true  }
+  },
+  livraisonHT: 0,                              /* 0 = offerte en France métropolitaine */
+
+  /* ---- Paiement ------------------------------------------------------
+     Deux modes possibles, au choix.
+
+     "lien"  : Stripe Payment Links. Aucun serveur, aucune clé. Vous créez
+               trois liens dans le tableau de bord Stripe (un par palier de
+               quantité) et vous collez les URL ci-dessous. Les options sont
+               ajoutées par le client sur la page Stripe, en articles
+               facultatifs. C'est le mode par défaut, il marche partout.
+
+     "php"   : le fichier paiement/creer-session.php crée une session Stripe
+               Checkout avec le total exact calculé par le configurateur.
+               Demande un hébergement qui exécute PHP (o2switch le fait) et
+               une clé secrète placée dans paiement/config.php, jamais ici.
+     ------------------------------------------------------------------- */
+  modePaiement: "lien",
+
+  liensStripe: {
+    "1": "https://buy.stripe.com/REMPLACER_LIEN_1_BORNE",
+    "2": "https://buy.stripe.com/REMPLACER_LIEN_2_BORNES",
+    "3": "https://buy.stripe.com/REMPLACER_LIEN_3_BORNES_ET_PLUS"
+  },
+
+  cheminPhp: "paiement/creer-session.php",
+
+  /* ---- Récitation du Coran sur la page de commande --------------------
+     Déposez votre fichier dans audio/ et indiquez son nom ci-dessous.
+     Format : MP3 ou M4A. Visez moins de 8 Mo, sinon la page met trop
+     longtemps à se charger sur un téléphone en 4G.
+
+     Le son ne peut pas démarrer tout seul : Chrome, Safari et Firefox
+     l'interdisent tant que le visiteur n'a pas cliqué sur la page. La
+     lecture démarre donc au premier clic, quel qu'il soit.
+
+     Mettez fichier à "" pour retirer complètement le lecteur.
+     ------------------------------------------------------------------- */
+  audio: {
+    fichier: "audio/coran.mp3",
+    titre:   "Récitation du Coran",
+    volume:  0.35,          /* entre 0 et 1 */
+    demarrerSeul: true      /* false : le visiteur doit cliquer sur le bouton */
+  },
+
+  /* ---- Délais annoncés ----------------------------------------------- */
+  delaiExpedition: "4 à 7 jours ouvrés",
+  garantieMois: 24
+};
+
+/* ---------------------------------------------------------------- */
+
+/* =========================================================================
+   Bornéa — comportements du site.
+   Vanilla, sans dépendance. Chaque bloc se désactive tout seul si son
+   markup est absent de la page, ce qui permet de charger ce fichier partout.
+   ========================================================================= */
+(() => {
+  "use strict";
+  const C = window.CONFIG || {};
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const euros = n => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const ttc   = ht => ht * (1 + (C.tva ?? 0.2));
+
+  /** Prix unitaire hors taxes applicable à une quantité, selon les paliers. */
+  const prixUnitaire = (q) => {
+    const p = (C.paliers || []).filter(p => q >= p.aPartirDe).pop();
+    return p ? p.prixHT : 0;
+  };
+
+  const init = () => {
+
+    /* ---- Valeurs de config injectées dans le HTML ---------------------
+       Tout élément portant data-config="chemin.dans.CONFIG" reçoit la
+       valeur correspondante. Évite d'avoir le téléphone en dur dans dix
+       fichiers. */
+    $$("[data-config]").forEach(el => {
+      const v = el.dataset.config.split(".").reduce((o, k) => (o || {})[k], C);
+      if (v === undefined || v === null) return;
+      if (el.tagName === "A" && el.dataset.configHref) el.setAttribute("href", el.dataset.configHref.replace("{v}", v));
+      else el.textContent = v;
+    });
+    $$("[data-tel]").forEach(a => { a.href = "tel:" + (C.telephone || ""); if (!a.textContent.trim()) a.textContent = C.telAffiche || ""; });
+    $$("[data-mail]").forEach(a => { a.href = "mailto:" + (C.email || ""); if (!a.textContent.trim()) a.textContent = C.email || ""; });
+    $$("[data-annee]").forEach(el => { el.textContent = new Date().getFullYear(); });
+
+    /* ---- Prix affichés un peu partout --------------------------------- */
+    $$("[data-prix-ht]").forEach(el => { el.textContent = euros(prixUnitaire(+el.dataset.prixHt || 1)) + " HT"; });
+    $$("[data-prix-ttc]").forEach(el => { el.textContent = euros(ttc(prixUnitaire(+el.dataset.prixTtc || 1))) + " TTC"; });
+
+    /* ---- Lien courant dans la navigation ------------------------------ */
+    const ici = location.pathname.split("/").pop() || "index.html";
+    $$(".nav a, .pied a").forEach(a => {
+      const href = a.getAttribute("href");
+      if (href && href.split("/").pop() === ici && !href.startsWith("#")) a.setAttribute("aria-current", "page");
+    });
+
+    /* ---- Configurateur ------------------------------------------------ */
+    const form = $("#configurateur");
+    if (form) {
+      const sortieQte = $("#qte-valeur", form);
+      const lignes    = $("#recap-lignes");
+      const totalHT   = $("#recap-total-ht");
+      const totalTTC  = $("#recap-total-ttc");
+      const bouton    = $("#aller-au-paiement");
+      const barrePrix = $("#barre-prix");
+      const scene     = $("#scene-bornes");
+      let quantite = 1;
+
+      const etat = () => ({
+        quantite,
+        miseEnService: $("#opt-mise-en-service")?.checked || false,
+        garantie:      $("#opt-garantie")?.checked || false
+      });
+
+      const detail = () => {
+        const e = etat();
+        const pu = prixUnitaire(e.quantite);
+        const l = [{ libelle: `Borne tactile sur pied × ${e.quantite}`, montant: pu * e.quantite, detail: euros(pu) + " l’unité" }];
+        if (e.miseEnService) l.push({ libelle: C.options.miseEnService.libelle, montant: C.options.miseEnService.prixHT });
+        if (e.garantie)      l.push({ libelle: C.options.garantie.libelle + ` × ${e.quantite}`, montant: C.options.garantie.prixHT * e.quantite });
+        l.push({ libelle: "Livraison en France métropolitaine", montant: C.livraisonHT || 0, gratuit: !C.livraisonHT });
+        return l;
+      };
+
+      const dessinerScene = () => {
+        if (!scene) return;
+        const bornes = $$(".borne", scene);
+        const visibles = Math.min(quantite, bornes.length);
+        bornes.forEach((b, i) => {
+          /* hidden est une propriété de HTMLElement, pas de SVGElement :
+             sur un <svg> il faut passer par l'attribut, sinon on ne fait
+             qu'ajouter une propriété inerte à l'objet. */
+          const cache = b.hasAttribute("hidden");
+          const doitVoir = i < visibles;
+          if (doitVoir && cache) {
+            b.removeAttribute("hidden");
+            b.dataset.entrant = "1";
+            setTimeout(() => delete b.dataset.entrant, 320);
+          } else if (!doitVoir && !cache) {
+            b.setAttribute("hidden", "");
+          }
+        });
+        const surplus = $("#scene-surplus");
+        if (surplus) {
+          const reste = quantite - bornes.length;
+          surplus.hidden = reste <= 0;
+          if (reste > 0) surplus.textContent = "+ " + reste + " autre" + (reste > 1 ? "s" : "");
+        }
+      };
+
+      const rendre = () => {
+        const l = detail();
+        const ht = l.reduce((s, x) => s + x.montant, 0);
+        if (sortieQte) sortieQte.textContent = quantite;
+        if (lignes) {
+          lignes.innerHTML = "";
+          l.forEach(x => {
+            const d = document.createElement("div");
+            const g = document.createElement("span");
+            g.textContent = x.libelle;
+            if (x.detail) { const s = document.createElement("span"); s.className = "note"; s.textContent = " " + x.detail; g.append(s); }
+            const p = document.createElement("span");
+            p.className = "prix";
+            p.textContent = x.gratuit ? "Offerte" : euros(x.montant);
+            d.append(g, p);
+            lignes.append(d);
+          });
+        }
+        const cgv = $("#accepte-cgv");
+        if (bouton) bouton.disabled = cgv ? !cgv.checked : false;
+        if (totalHT)  totalHT.textContent  = euros(ht);
+        if (totalTTC) totalTTC.textContent = euros(ttc(ht)) + " TTC";
+        if (barrePrix) barrePrix.textContent = euros(ttc(ht)) + " TTC";
+        dessinerScene();
+      };
+
+      $$("[data-qte]", form).forEach(b => b.addEventListener("click", () => {
+        quantite = Math.min(20, Math.max(1, quantite + (+b.dataset.qte)));
+        rendre();
+      }));
+      $$("input[type=checkbox]", form).forEach(i => i.addEventListener("change", rendre));
+      $("#accepte-cgv")?.addEventListener("change", rendre);
+
+      /* ---- Départ vers Stripe ---------------------------------------- */
+      if (bouton) bouton.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const e = etat();
+        const email = $("#client-email")?.value.trim() || "";
+        const ref   = $("#client-etablissement")?.value.trim() || "";
+
+        if (C.modePaiement === "php") {
+          bouton.disabled = true;
+          bouton.textContent = "Ouverture du paiement…";
+          try {
+            const r = await fetch(C.cheminPhp, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...e, email, reference: ref })
+            });
+            const data = await r.json();
+            if (!r.ok || !data.url) throw new Error(data.erreur || "réponse inattendue du serveur");
+            location.href = data.url;
+            return;
+          } catch (err) {
+            bouton.disabled = false;
+            bouton.textContent = "Payer par carte";
+            const zone = $("#erreur-paiement");
+            if (zone) {
+              zone.hidden = false;
+              zone.textContent = "Le paiement n’a pas pu s’ouvrir (" + err.message + "). Appelez le " +
+                (C.telAffiche || "") + " ou écrivez à " + (C.email || "") + ", la commande sera prise à la main.";
+            }
+            return;
+          }
+        }
+
+        /* Mode Payment Links : un lien par palier de quantité. */
+        const cle = e.quantite >= 3 ? "3" : String(e.quantite);
+        const base = (C.liensStripe || {})[cle] || "";
+        if (!base || base.includes("REMPLACER")) {
+          const zone = $("#erreur-paiement");
+          if (zone) {
+            zone.hidden = false;
+            zone.textContent = "Le lien de paiement n’est pas encore configuré. Renseignez liensStripe dans assets/config.js, ou passez commande au " + (C.telAffiche || "") + ".";
+          }
+          return;
+        }
+        const u = new URL(base);
+        if (email) u.searchParams.set("prefilled_email", email);
+        if (ref)   u.searchParams.set("client_reference_id", ref.replace(/[^\w\-]+/g, "-").slice(0, 190));
+        location.href = u.toString();
+      });
+
+      rendre();
+    }
+
+    /* ---- Formulaires sans serveur : ouverture de la messagerie -------- */
+    $$("form[data-mailto]").forEach(f => {
+      f.addEventListener("submit", ev => {
+        ev.preventDefault();
+        const d = new FormData(f);
+        const corps = [...d.entries()].map(([k, v]) => k + " : " + v).join("\n");
+        location.href = "mailto:" + (C.email || "") +
+          "?subject=" + encodeURIComponent(f.dataset.mailto) +
+          "&body=" + encodeURIComponent(corps);
+        const secours = $(".secours", f);
+        if (secours) {
+          secours.hidden = false;
+          secours.innerHTML = "Si votre messagerie ne s’ouvre pas, appelez le <a href=\"tel:" + (C.telephone || "") +
+            "\">" + (C.telAffiche || "") + "</a> ou écrivez à <a href=\"mailto:" + (C.email || "") + "\">" + (C.email || "") + "</a>.";
+        }
+      });
+    });
+
+    /* ---- Révélation au défilement --------------------------------------
+       Un seul effet sur tout le site. Sans IntersectionObserver ou avec
+       prefers-reduced-motion, tout s'affiche immédiatement : la classe js
+       est retirée et le CSS reprend son état neutre. */
+    const aReveler = $$("[data-reveal]");
+    if (aReveler.length) {
+      const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduit || !("IntersectionObserver" in window)) {
+        document.documentElement.classList.remove("js");
+      } else {
+        const io = new IntersectionObserver((entrees) => {
+          entrees.forEach(e => {
+            if (e.isIntersecting) { e.target.dataset.vu = "1"; io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+        aReveler.forEach(el => io.observe(el));
+        /* Filet : si quelque chose empeche l'observateur de se declencher,
+           tout redevient visible au bout de deux secondes. */
+        setTimeout(function () { aReveler.forEach(function (el) { el.dataset.vu = "1"; }); }, 2000);
+      }
+    }
+
+    /* ---- Récitation du Coran ------------------------------------------
+       Les navigateurs refusent de lancer un son tant que le visiteur n'a
+       pas interagi avec la page : play() renvoie une promesse rejetée.
+       On tente quand même, et si c'est refusé on réessaie au premier clic
+       ou à la première touche. Le bouton reste là dans tous les cas, parce
+       qu'un son qui dure doit pouvoir être coupé (WCAG 1.4.2). */
+    const ecoute = $("#ecoute");
+    if (ecoute && C.audio && C.audio.fichier) {
+      const son    = $("#ecoute-audio");
+      const bouton = $("#ecoute-btn");
+      const CLE    = "coran-coupe";
+
+      let coupeParChoix = false;
+      try { coupeParChoix = localStorage.getItem(CLE) === "1"; } catch (e) { /* navigation privée */ }
+
+      son.src = C.audio.fichier;
+      son.loop = true;
+      son.volume = typeof C.audio.volume === "number" ? C.audio.volume : 0.35;
+
+      /* Fichier absent ou format refusé : on retire le lecteur au lieu
+         de laisser un bouton qui ne produit rien. */
+      son.addEventListener("error", () => { ecoute.hidden = true; }, { once: true });
+      ecoute.hidden = false;
+
+      const afficher = (joue) => {
+        ecoute.dataset.actif = joue ? "1" : "0";
+        bouton.setAttribute("aria-pressed", joue ? "true" : "false");
+        bouton.setAttribute("aria-label", joue ? "Couper la récitation" : "Écouter la récitation");
+        $("#ecoute-icone").setAttribute("href", joue ? "#i-son" : "#i-son-coupe");
+      };
+
+      let enAttenteDeClic = false;
+      const armerPremierGeste = () => {
+        if (enAttenteDeClic) return;
+        enAttenteDeClic = true;
+        const demarrer = () => {
+          enAttenteDeClic = false;
+          ["pointerdown", "keydown", "touchstart"].forEach(e => document.removeEventListener(e, demarrer));
+          son.play().then(() => afficher(true)).catch(() => afficher(false));
+        };
+        ["pointerdown", "keydown", "touchstart"].forEach(e =>
+          document.addEventListener(e, demarrer, { once: true, passive: true }));
+      };
+
+      son.addEventListener("play", () => afficher(true));
+      son.addEventListener("pause", () => afficher(false));
+      afficher(false);
+
+      if (C.audio.demarrerSeul !== false && !coupeParChoix) {
+        son.play().then(() => afficher(true)).catch(armerPremierGeste);
+      }
+
+      bouton.addEventListener("click", () => {
+        if (son.paused) {
+          son.play().catch(() => afficher(false));
+          try { localStorage.removeItem(CLE); } catch (e) { /* ignoré */ }
+        } else {
+          son.pause();
+          try { localStorage.setItem(CLE, "1"); } catch (e) { /* ignoré */ }
+        }
+      });
+    }
+
+    /* ---- Page de confirmation : rappel de la référence Stripe --------- */
+    const ref = $("#ref-commande");
+    if (ref) {
+      const id = new URLSearchParams(location.search).get("session_id");
+      if (id) { ref.hidden = false; $("#ref-valeur").textContent = id; }
+    }
+  };
+
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", init, { once: true })
+    : init();
+})();
+</script>
+</body>
+</html>

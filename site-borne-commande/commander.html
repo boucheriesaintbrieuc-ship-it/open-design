@@ -14,6 +14,7 @@
 <meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
 <meta name="theme-color" content="#F1F2F4">
+<script>document.documentElement.className+=" js"</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 /* =========================================================================
@@ -404,6 +405,86 @@
     .ecoute { padding: .3rem; }
   }
 }
+
+@layer pages {
+  /* ---------- Blog ----------
+     La colonne de lecture est volontairement étroite et le corps passe en
+     serif : un article se lit, une fiche produit se parcourt. Le changement
+     de famille signale ce changement de régime sans décor supplémentaire. */
+  .blog-tete { padding-block: var(--gout) var(--pas); }
+  .blog-grille { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .blog-carte {
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: var(--pas); display: flex; flex-direction: column; gap: .5rem;
+    transition: border-color var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+  }
+  .blog-carte:hover { border-color: var(--indigo); transform: translateY(-2px); }
+  .blog-carte h2 { font-size: var(--t-lg); }
+  .blog-carte h2 a { color: var(--noir); text-decoration: none; }
+  .blog-carte h2 a:hover { color: var(--indigo); }
+  .blog-carte p { font-size: var(--t-sm); color: var(--gris); }
+  .blog-carte .meta { margin-top: auto; font-family: var(--f-data); font-size: var(--t-xs); color: var(--gris); text-transform: uppercase; letter-spacing: .1em; }
+
+  .article { width: min(100% - var(--gout) * 2, 44rem); margin-inline: auto; padding-bottom: var(--section); }
+  .article h1 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); margin-top: .5rem; }
+  .art-meta { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .12em; color: var(--gris); }
+  .art-resume {
+    font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .4vw, 1.25rem); line-height: 1.55;
+    border-left: 4px solid var(--indigo); padding: .3rem 0 .3rem var(--pas); margin-block: var(--gout);
+  }
+  .art-corps { font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .3vw, 1.1875rem); line-height: 1.75; }
+  .art-corps > * + * { margin-top: 1.1em; }
+  .art-corps h2 { font-family: var(--f-titre); font-size: var(--t-xl); margin-top: 2em; margin-bottom: .1em; }
+  .art-corps h3 { font-family: var(--f-titre); font-size: var(--t-lg); margin-top: 1.6em; margin-bottom: .1em; }
+  .art-corps ul, .art-corps ol { padding-left: 1.3em; }
+  .art-corps li + li { margin-top: .4em; }
+  .art-corps a { text-underline-offset: .2em; }
+
+  .art-offre {
+    background: var(--noir); color: #E8E9EC; border-radius: var(--r);
+    padding: var(--gout); margin-top: var(--section);
+  }
+  .art-offre h2 { color: #fff; font-size: var(--t-lg); }
+  .art-offre p { font-family: var(--f-prose); margin-top: .8rem; }
+  .art-offre strong { color: #fff; }
+  .art-offre .liens { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: var(--pas); }
+  .art-offre .btn--secondaire { color: #fff; border-color: #4A4D55; }
+  .art-offre .btn--secondaire:hover { background: #fff; color: var(--noir); border-color: #fff; }
+
+  .art-voisins { margin-top: var(--section); border-top: 1px solid var(--trait); padding-top: var(--gout); }
+  .art-voisins ul { list-style: none; display: grid; gap: .1rem; margin-top: .8rem; }
+  .art-voisins li { border-top: 1px solid var(--trait); }
+  .art-voisins li:first-child { border-top: 0; }
+  .art-voisins a { display: block; padding: .8rem 0; text-decoration: none; font-weight: 600; }
+  .art-voisins a span { display: block; font-weight: 400; font-size: var(--t-sm); color: var(--gris); margin-top: .15rem; }
+
+  /* ---------- Photos produit ---------- */
+  .photo { background: var(--studio-2); border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden; }
+  .photo img { width: 100%; height: auto; display: block; }
+  .photo figcaption { font-size: var(--t-sm); color: var(--gris); padding: .7rem var(--pas); border-top: 1px solid var(--trait); background: var(--carte); }
+  .galerie { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+
+  /* ---------- Révélation au défilement ----------
+     Le seul mouvement de la page. Désactivé si le visiteur a demandé
+     moins d'animations, et neutre si le script ne tourne pas. */
+  [data-reveal] { opacity: 1; }
+  html.js [data-reveal] { opacity: 0; transform: translateY(14px); }
+  html.js [data-reveal][data-vu] { opacity: 1; transform: none; transition: opacity 520ms var(--courbe), transform 520ms var(--courbe); }
+  @media (prefers-reduced-motion: reduce) {
+    html.js [data-reveal] { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Récit ---------- */
+  .recit { background: var(--noir); color: #D6D8DC; }
+  .recit h2, .recit h3 { color: #fff; }
+  .recit .env { padding-block: var(--section); }
+  .recit .prose { font-family: var(--f-prose); max-width: 42rem; }
+  .recit .prose p + p { margin-top: 1.1em; }
+  .recit .chiffres { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); margin-top: var(--gout); }
+  .recit .chiffres div { border-top: 2px solid var(--indigo); padding-top: .8rem; }
+  .recit .chiffres b { display: block; font-family: var(--f-data); font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem); font-weight: 700; color: #fff; letter-spacing: -.03em; }
+  .recit .chiffres span { font-size: var(--t-sm); color: #9BA0A8; }
+}
 </style>
 </head>
 <body>
@@ -493,7 +574,7 @@
   <div class="env tete__int">
     <a class="marque" href="index.html"><svg aria-hidden="true"><use href="#i-logo"/></svg>Bornéa</a>
     <nav class="nav" aria-label="Navigation principale">
-      <a href="index.html">La borne</a><a href="guide-borne-de-commande-restaurant.html" class="nav__secondaire">Guide d’achat</a><a href="livraison-et-retours.html" class="nav__secondaire">Livraison</a><a href="contact.html" class="nav__secondaire">Contact</a>
+      <a href="index.html">La borne</a><a href="blog.html">Blog</a><a href="guide-borne-de-commande-restaurant.html" class="nav__secondaire">Guide d’achat</a><a href="livraison-et-retours.html" class="nav__secondaire">Livraison</a><a href="contact.html" class="nav__secondaire">Contact</a>
       <a class="btn btn--petit" href="commander.html">Commander</a>
     </nav>
   </div>
@@ -613,6 +694,7 @@
         <li><a href="index.html">La borne à 499 € HT</a></li>
         <li><a href="commander.html">Commander</a></li>
         <li><a href="guide-borne-de-commande-restaurant.html">Guide d’achat</a></li>
+        <li><a href="blog.html">Blog</a></li>
       </ul>
     </div>
     <div>
@@ -922,6 +1004,28 @@ window.CONFIG = {
         }
       });
     });
+
+    /* ---- Révélation au défilement --------------------------------------
+       Un seul effet sur tout le site. Sans IntersectionObserver ou avec
+       prefers-reduced-motion, tout s'affiche immédiatement : la classe js
+       est retirée et le CSS reprend son état neutre. */
+    const aReveler = $$("[data-reveal]");
+    if (aReveler.length) {
+      const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduit || !("IntersectionObserver" in window)) {
+        document.documentElement.classList.remove("js");
+      } else {
+        const io = new IntersectionObserver((entrees) => {
+          entrees.forEach(e => {
+            if (e.isIntersecting) { e.target.dataset.vu = "1"; io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+        aReveler.forEach(el => io.observe(el));
+        /* Filet : si quelque chose empeche l'observateur de se declencher,
+           tout redevient visible au bout de deux secondes. */
+        setTimeout(function () { aReveler.forEach(function (el) { el.dataset.vu = "1"; }); }, 2000);
+      }
+    }
 
     /* ---- Récitation du Coran ------------------------------------------
        Les navigateurs refusent de lancer un son tant que le visiteur n'a
