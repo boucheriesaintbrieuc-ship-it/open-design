@@ -790,7 +790,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
           <label class="champ"><span>Adresse e-mail</span>
             <input type="email" id="client-email" name="email" autocomplete="email" placeholder="vous@votre-restaurant.fr">
           </label>
-          <p class="note">Ces deux champs nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison, la raison sociale et l’éventuel numéro de TVA se saisissent à l’étape suivante, sur la page de commande de la boutique.</p>
+          <p class="note">Ces deux champs pré-remplissent la page de paiement et nous permettent de rattacher votre configuration de borne à votre commande. L’adresse de livraison, la raison sociale et l’éventuel numéro de TVA se saisissent à l’étape suivante, sur la page sécurisée de Stripe.</p>
         </div>
       </section>
     </div>
@@ -806,7 +806,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
         <p id="resume-borne" class="mt-1"></p>
         <div class="recap__lignes" id="recap-lignes"></div>
         <div class="recap__total">
-          <span>Total à payer</span>
+          <span>Montant autorisé</span>
           <span class="prix" id="recap-total-ttc">720,00 €</span>
         </div>
         <p class="note" style="text-align:right;margin-top:.3rem"><span id="recap-total-ht">600,00 €</span> HT · TVA 20 % · livraison offerte</p>
@@ -816,17 +816,18 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
           <span class="desc-opt">J’ai lu et j’accepte les <a href="cgv.html">conditions générales de vente</a>, y compris les modalités de livraison et de retour.</span>
         </label>
 
-        <p class="note mt-1" id="note-boutique" hidden></p>
+        <p class="note mt-1" id="note-paiement"><strong>Rien n’est débité aujourd’hui.</strong> Votre carte est autorisée : votre banque bloque le montant, et nous le prélevons à la confirmation de votre commande. Si nous ne confirmons pas, le blocage est levé et vous ne payez rien.</p>
 
-        <button class="btn btn--large mt-1" id="aller-au-paiement" type="button" disabled>Payer par carte</button>
+        <button class="btn btn--large mt-1" id="aller-au-paiement" type="button" disabled>Autoriser le paiement</button>
         <p class="erreur mt-1" id="erreur-paiement" hidden></p>
 
         <ul class="garanties mt-1" role="list">
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Livraison offerte</strong>, aucun frais d’installation</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>0 € par mois</strong>, aucun engagement</span></li>
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>TVA 20 % comprise dans le prix affiché</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement par carte sur la boutique du groupe, aucune donnée bancaire sur ce site</span></li>
-          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le paiement</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><strong>Carte autorisée, pas débitée</strong> : le prélèvement vient à la confirmation</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement traité par Stripe, aucune donnée bancaire sur ce site</span></li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le prélèvement</span></li>
         </ul>
 
         <p class="note mt-1">Vous préférez payer par virement, ou vous avez besoin d’un devis pour votre comptable&nbsp;? Écrivez à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a> ou appelez le <a data-tel href="tel:+33296000000">02 96 00 00 00</a>.</p>
@@ -853,7 +854,8 @@ CORPS_MERCI = """
 <main id="contenu" class="env-etroite confirme">
   <p class="pastille"><svg aria-hidden="true"><use href="#i-check"/></svg></p>
   <h1>Commande enregistrée</h1>
-  <p>Le paiement est passé. La confirmation de commande arrive par e-mail dans les minutes qui viennent, puis la facture dans la journée ouvrée.</p>
+  <p>Votre carte est autorisée : le montant est bloqué par votre banque, il n’est pas encore prélevé. Vous recevez la confirmation par e-mail dans les minutes qui viennent.</p>
+  <p>Nous contrôlons votre commande, puis nous déclenchons le prélèvement et nous vous envoyons la facture. Si nous ne pouvions pas honorer la commande, le blocage serait levé et vous n’auriez rien payé.</p>
   <p id="ref-commande" hidden class="note">Référence de paiement : <code class="prix" id="ref-valeur"></code></p>
 
   <div class="carte mt-2" style="text-align:left">
@@ -1071,7 +1073,7 @@ CORPS_CGV = fil([("Accueil", "index.html"), ("Conditions générales de vente", 
     <div class="prose mt-2">
       <h2>1. Objet et champ d’application</h2>
       <p>Les présentes conditions régissent les ventes conclues sur ce site par RAISON SOCIALE À COMPLÉTER auprès d’acheteurs agissant à des fins professionnelles. Toute commande vaut acceptation sans réserve des présentes conditions, dans leur version en vigueur au jour de la commande.</p>
-      <p>Le paiement est encaissé sur la boutique en ligne du vendeur, à l’adresse epicerie-saintbrieuc.fr, qui porte la passerelle bancaire du groupe. La facture est émise au nom de la société indiquée aux mentions légales. L’acheteur est averti de ce changement d’adresse avant de valider sa commande, sur la page de commande elle-même.</p>
+      <p>À la validation de la commande, la carte de l’acheteur fait l’objet d’une autorisation bancaire et non d’un débit : l’établissement émetteur bloque le montant sans le verser. Le vendeur déclenche le prélèvement effectif lors de la confirmation de la commande, et au plus tard dans les sept jours suivant l’autorisation. À défaut de prélèvement dans ce délai, l’autorisation devient caduque et le montant est restitué à l’acheteur sans que la vente soit formée. L’acheteur en est informé sur la page de commande et sur la page de paiement.</p>
 
       <h2>2. Produits</h2>
       <p>Les caractéristiques essentielles des produits figurent sur les pages produits. Les photographies et illustrations n’ont pas de valeur contractuelle. Le produit vendu est un écran tactile sur pied. Il ne comprend ni logiciel de prise de commande, ni logiciel d’encaissement, ni imprimante, ni terminal de paiement.</p>
@@ -1154,8 +1156,8 @@ CORPS_CONFID = fil([("Accueil", "index.html"), ("Données personnelles", None)])
 
       <h2>Les données que nous recevons</h2>
       <p>Quand vous utilisez le formulaire de contact, votre messagerie nous envoie ce que vous avez saisi : le nom de votre établissement, vos coordonnées et votre question. Ces informations servent à vous répondre. Elles sont conservées douze mois, puis effacées.</p>
-      <p>Quand vous passez commande, vous êtes dirigé vers notre boutique en ligne, à l’adresse epicerie-saintbrieuc.fr, qui appartient au même vendeur. C’est là que vous saisissez vos coordonnées, votre adresse de livraison et votre règlement. Le nom de l’établissement et l’adresse e-mail saisis sur ce site ne quittent pas votre navigateur : ils servent à rattacher votre configuration de borne à votre commande, et nous sont transmis par e-mail.</p>
-      <p>Le paiement par carte sur cette boutique est traité par Stripe Payments Europe Limited, dont la politique de confidentialité est consultable sur stripe.com. Aucun numéro de carte ne passe par nos serveurs. Nous conservons le détail de la commande et l’identité de l’acheteur dix ans, au titre des obligations comptables.</p>
+      <p>Quand vous passez commande, le nom de l’établissement et l’adresse e-mail que vous indiquez sont transmis à Stripe pour pré-remplir la page de paiement. La commande elle-même, l’adresse de livraison, la facturation et le règlement sont traités par Stripe Payments Europe Limited, dont la politique de confidentialité est consultable sur stripe.com. Aucun numéro de carte ne passe par nos serveurs.</p>
+      <p>Votre carte étant autorisée avant d’être débitée, Stripe conserve l’autorisation jusqu’au prélèvement ou jusqu’à sa caducité. Nous recevons de Stripe le détail de la commande et l’identité de l’acheteur, que nous conservons dix ans au titre des obligations comptables.</p>
 
       <h2>Vos droits</h2>
       <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement ou la limitation de leur traitement en écrivant à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>. Une réponse vous est adressée dans un délai d’un mois. En cas de désaccord, vous pouvez saisir la Commission nationale de l’informatique et des libertés, 3 place de Fontenoy, 75007 Paris.</p>

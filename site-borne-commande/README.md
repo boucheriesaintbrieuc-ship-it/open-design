@@ -307,11 +307,132 @@ Elles doivent y être avant la première vente.
 
 ---
 
+## Le paiement : Stripe, en autorisation seule
+
+C'est le mode actif. `modePaiement: "php"` dans `assets/config.js`, et
+`capture_manuelle => true` dans `paiement/config.php`.
+
+La carte du client est **autorisée** et non débitée : sa banque bloque le
+montant et ne le verse pas. C'est vous qui déclenchez le prélèvement, à la
+main, depuis le tableau de bord Stripe.
+
+### Les quatre choses à faire avant la première vente
+
+**1. Copier la configuration.** Sur le serveur, dupliquez
+`paiement/config.exemple.php` en `paiement/config.php`.
+
+**2. Coller votre clé secrète.** Tableau de bord Stripe, Développeurs, Clés
+API. Commencez par la clé `sk_test_` pour un essai, passez à `sk_live_`
+ensuite. Cette clé vaut votre compte marchand : elle ne doit jamais sortir de
+ce fichier. Un `.htaccess` interdit déjà de le servir, et un `.gitignore`
+empêche de le versionner.
+
+**3. Vérifier que le dossier exécute PHP.** Ouvrez
+`https://borne-restaurants.fr/paiement/verifier-domaine.php?d=google.com`
+dans un navigateur. Vous devez lire `{"domaine":"google.com","statut":"pris"}`.
+Si vous voyez du code PHP, l'hébergement ne l'exécute pas et le paiement ne
+marchera pas.
+
+**4. Faire un achat d'essai** avec la clé `sk_test_` et la carte
+`4242 4242 4242 4242`, date future, CVC au hasard. Vous devez retrouver dans
+Stripe un paiement **à capturer**, pas un paiement réussi.
+
+### Comment vous capturez
+
+Tableau de bord Stripe, Paiements. Les commandes apparaissent avec la mention
+**Non capturé** (*Uncaptured*). Vous ouvrez la ligne et vous cliquez sur
+**Capturer**. Vous pouvez capturer un montant **inférieur** à l'autorisation,
+ce qui est pratique pour une remise de dernière minute, mais jamais supérieur.
+
+Pour renoncer à une commande, cliquez sur **Annuler** : le blocage est levé et
+le client ne paie rien. C'est plus propre qu'un remboursement, qui lui laisse
+une ligne au débit puis au crédit sur son relevé.
+
+### Le piège, et il est sérieux
+
+**Une autorisation non capturée est annulée par Stripe au bout de sept
+jours.** L'argent retourne chez le client et il faut tout redemander.
+
+Vos bornes partent de Chine. Si vous attendez l'expédition pour capturer,
+vous perdrez le paiement à chaque commande. **Capturez à la confirmation de
+commande**, dans les deux ou trois jours, pas au départ du colis. Les
+conditions de vente et la page de paiement annoncent exactement cela au
+client, donc vous êtes couvert : elles disent « à la confirmation de votre
+commande, sous sept jours au plus tard ».
+
+Si vous voulez vraiment ne débiter qu'à l'expédition, il faut une autre
+mécanique que la capture différée : enregistrer le moyen de paiement à la
+commande et créer le paiement au départ du colis. C'est faisable, ça demande
+un webhook et un peu de code en plus, et le client doit l'accepter
+explicitement. Dites-le si vous voulez partir là-dessus.
+
+### Ce qui change pour le client
+
+| | Avant | Maintenant |
+|---|---|---|
+| Bouton | Payer par carte | **Autoriser le paiement** |
+| Libellé du total | Total à payer | **Montant autorisé** |
+| Au-dessus du bouton | — | « Rien n'est débité aujourd'hui… » |
+| Sur la page Stripe | — | le même message, via `custom_text` |
+| Page de remerciement | « Le paiement est passé » | « Votre carte est autorisée » |
+| Moyens de paiement | tous | **carte seule** |
+
+Ce dernier point n'est pas un choix : Link, le prélèvement SEPA et les
+paiements en plusieurs fois ne gèrent pas la capture différée. Les proposer
+ferait refuser la session par Stripe.
+
+Les trois mentions de l'écran, celle de la page Stripe, les CGV et la page de
+confidentialité disent tous la même chose. Si vous repassez un jour en débit
+immédiat (`capture_manuelle => false`), **repassez aussi `captureManuelle` à
+`false` dans `assets/config.js`** et régénérez les pages, sinon vous
+promettez à l'écran l'inverse de ce que fait la banque.
+
+### Les paliers et les options sont revenus
+
+Contrairement au mode boutique, le serveur calcule ici le total exact. Les
+570 € et 540 € des paliers fonctionnent, et les deux options aussi.
+
+Vérifié au navigateur contre un faux Stripe local, sur les pages construites :
+
+```
+1 borne                        720,00 € TTC   →  72 000 centimes
+3 bornes + les deux options   2 407,20 € TTC  → 240 720 centimes
+```
+
+L'affichage client et le calcul serveur tombent au centime. La charge envoyée
+porte bien `payment_intent_data[capture_method]=manual` et
+`payment_method_types[0]=card`.
+
+### Les prix sont recalculés côté serveur
+
+`paiement/creer-session.php` ne fait **aucune** confiance aux montants envoyés
+par le navigateur : il ne lit que la quantité et les deux cases d'options, puis
+recalcule tout à partir de ses propres constantes. Sans cela, n'importe qui
+achèterait la borne à un centime en modifiant la requête avec les outils de
+développement.
+
+Si vous changez un prix, changez-le **aux deux endroits** : les constantes
+`PALIERS`, `PRIX_MISE_EN_SERVICE` et `PRIX_GARANTIE` dans
+`paiement/creer-session.php`, et les `paliers` et `options` dans
+`assets/config.js`. Le serveur a le dernier mot, donc un oubli côté config.js
+se verra comme un total affiché qui ne correspond pas à la page Stripe.
+
+### La boutique WooCommerce reste en secours
+
+Le mode `"woocommerce"` et la fiche produit 7910 sur epicerie-saintbrieuc.fr
+sont toujours en place. Si Stripe pose un problème le jour du lancement,
+repassez `modePaiement` à `"woocommerce"` et régénérez : vous encaissez par la
+boutique en attendant. Attention, dans ce mode le débit est immédiat et les
+textes d'autorisation deviennent faux.
+
+---
+
 ## Le paiement passe par votre boutique WooCommerce
 
-C'est le choix retenu, et c'est le mode actif dans `assets/config.js`
-(`modePaiement: "woocommerce"`). Plutôt que de créer des liens Stripe pour ce
-site, la commande rejoint le panier d'une boutique que vous possédez déjà.
+**Ce mode n'est plus le mode actif** : le paiement se fait désormais par
+Stripe en autorisation seule, décrit juste au-dessus. Cette section reste
+parce que le mode fonctionne et sert de secours. Dans ce mode, la commande
+rejoint le panier d'une boutique WooCommerce que vous possédez déjà.
 
 ### Pourquoi
 

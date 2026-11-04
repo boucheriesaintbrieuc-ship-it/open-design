@@ -7,6 +7,24 @@
  * cela, n'importe qui pourrait acheter la borne à un centime en modifiant
  * la requête.
  *
+ * AUTORISATION PUIS CAPTURE MANUELLE
+ * ----------------------------------
+ * Par défaut (capture_manuelle à true dans config.php), la carte du client
+ * est seulement AUTORISÉE : la banque bloque le montant mais ne le verse
+ * pas. C'est vous qui déclenchez le débit, depuis le tableau de bord Stripe,
+ * quand vous décidez d'honorer la commande.
+ *
+ * Deux conséquences à connaître avant de vendre :
+ *
+ *   1. Une autorisation non capturée est ANNULÉE PAR STRIPE AU BOUT DE SEPT
+ *      JOURS, et l'argent retourne chez le client. Passé ce délai il faut
+ *      redemander un paiement. Capturez donc dans la semaine, pas au départ
+ *      du colis si vos colis mettent plus longtemps que ça.
+ *
+ *   2. La capture manuelle n'existe que pour les cartes. Link, le prélèvement
+ *      SEPA et les paiements en plusieurs fois ne la gèrent pas, et sont donc
+ *      retirés de la page de paiement dans ce mode.
+ *
  * Réponse : {"url": "https://checkout.stripe.com/..."} ou {"erreur": "..."}.
  */
 
@@ -87,7 +105,11 @@ if ($garantie) {
     ];
 }
 
+$totalCentimes = 0;
+foreach ($articles as $a) { $totalCentimes += $a['unitaire'] * $a['quantite']; }
+
 $domaine = rtrim((string) ($config['domaine'] ?? ''), '/');
+$captureManuelle = (bool) ($config['capture_manuelle'] ?? true);
 
 $parametres = [
     'mode'        => 'payment',
@@ -104,7 +126,39 @@ $parametres = [
         'optional' => 'true',
     ]],
     'line_items' => [],
+    'payment_intent_data' => [
+        'description' => 'Borne de commande tactile, ' . $quantite . ' unité' . ($quantite > 1 ? 's' : ''),
+        'metadata' => [
+            'quantite'       => (string) $quantite,
+            'mise_en_service' => $miseEnService ? 'oui' : 'non',
+            'garantie_3_ans'  => $garantie ? 'oui' : 'non',
+            'etablissement'   => $reference !== '' ? $reference : 'non renseigné',
+        ],
+    ],
 ];
+
+if ($captureManuelle) {
+    /* La banque bloque le montant sans le verser. Le débit est déclenché à la
+       main depuis le tableau de bord Stripe, et doit l'être dans les sept
+       jours, sinon Stripe relâche l'autorisation. */
+    $parametres['payment_intent_data']['capture_method'] = 'manual';
+
+    /* Seule la carte gère la capture différée. Sans cette ligne, Stripe
+       proposerait des moyens de paiement qui l'ignorent et la session
+       serait refusée. */
+    $parametres['payment_method_types'] = ['card'];
+
+    /* Dit au client, sur la page de paiement elle-même, que rien n'est
+       encore débité. C'est la phrase qui évite la réclamation « on m'a
+       prélevé avant d'avoir reçu ». */
+    $parametres['custom_text'] = [
+        'submit' => ['message' =>
+            'Votre carte est autorisée aujourd’hui, elle n’est pas débitée. '
+            . 'Le montant est bloqué par votre banque puis prélevé par nos soins '
+            . 'à la confirmation de votre commande, sous sept jours au plus tard. '
+            . 'Si nous ne confirmons pas, le blocage est levé et vous ne payez rien.'],
+    ];
+}
 
 foreach ($articles as $i => $a) {
     $ligne = [
@@ -124,7 +178,8 @@ foreach ($articles as $i => $a) {
 if ($email !== null)   { $parametres['customer_email'] = $email; }
 if ($reference !== '') { $parametres['client_reference_id'] = preg_replace('/[^\w\-]+/u', '-', $reference); }
 
-$curl = curl_init('https://api.stripe.com/v1/checkout/sessions');
+$base = rtrim((string) ($config['api_base'] ?? 'https://api.stripe.com'), '/');
+$curl = curl_init($base . '/v1/checkout/sessions');
 curl_setopt_array($curl, [
     CURLOPT_POST           => true,
     CURLOPT_POSTFIELDS     => http_build_query($parametres, '', '&', PHP_QUERY_RFC3986),
@@ -152,4 +207,8 @@ if ($statut >= 400 || empty($data['url'])) {
     repondre(502, ['erreur' => $data['error']['message'] ?? 'le paiement n’a pas pu être ouvert']);
 }
 
-repondre(200, ['url' => $data['url']]);
+repondre(200, [
+    'url'     => $data['url'],
+    'capture' => $captureManuelle ? 'manuelle' : 'immediate',
+    'total'   => $totalCentimes,
+]);

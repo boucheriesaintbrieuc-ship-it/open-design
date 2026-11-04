@@ -1,0 +1,9 @@
+# La clé secrète Stripe vit ici et nulle part ailleurs. Une clé sk_live_
+# poussée sur un dépôt distant est à considérer comme compromise : il faut
+# la révoquer dans le tableau de bord Stripe, pas seulement la retirer du
+# dernier commit.
+paiement/config.php
+
+# Récitation déposée par le client, pas du code.
+audio/*.mp3
+audio/*.m4a

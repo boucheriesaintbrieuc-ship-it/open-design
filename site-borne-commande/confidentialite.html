@@ -624,8 +624,8 @@
 
       <h2>Les données que nous recevons</h2>
       <p>Quand vous utilisez le formulaire de contact, votre messagerie nous envoie ce que vous avez saisi : le nom de votre établissement, vos coordonnées et votre question. Ces informations servent à vous répondre. Elles sont conservées douze mois, puis effacées.</p>
-      <p>Quand vous passez commande, vous êtes dirigé vers notre boutique en ligne, à l’adresse epicerie-saintbrieuc.fr, qui appartient au même vendeur. C’est là que vous saisissez vos coordonnées, votre adresse de livraison et votre règlement. Le nom de l’établissement et l’adresse e-mail saisis sur ce site ne quittent pas votre navigateur : ils servent à rattacher votre configuration de borne à votre commande, et nous sont transmis par e-mail.</p>
-      <p>Le paiement par carte sur cette boutique est traité par Stripe Payments Europe Limited, dont la politique de confidentialité est consultable sur stripe.com. Aucun numéro de carte ne passe par nos serveurs. Nous conservons le détail de la commande et l’identité de l’acheteur dix ans, au titre des obligations comptables.</p>
+      <p>Quand vous passez commande, le nom de l’établissement et l’adresse e-mail que vous indiquez sont transmis à Stripe pour pré-remplir la page de paiement. La commande elle-même, l’adresse de livraison, la facturation et le règlement sont traités par Stripe Payments Europe Limited, dont la politique de confidentialité est consultable sur stripe.com. Aucun numéro de carte ne passe par nos serveurs.</p>
+      <p>Votre carte étant autorisée avant d’être débitée, Stripe conserve l’autorisation jusqu’au prélèvement ou jusqu’à sa caducité. Nous recevons de Stripe le détail de la commande et l’identité de l’acheteur, que nous conservons dix ans au titre des obligations comptables.</p>
 
       <h2>Vos droits</h2>
       <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement ou la limitation de leur traitement en écrivant à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>. Une réponse vous est adressée dans un délai d’un mois. En cas de désaccord, vous pouvez saisir la Commission nationale de l’informatique et des libertés, 3 place de Fontenoy, 75007 Paris.</p>
@@ -713,8 +713,8 @@ window.CONFIG = {
                Stripe, aucune clé à manipuler, aucun PHP à installer ici :
                la passerelle bancaire, le certificat, les e-mails de
                confirmation et les factures existent déjà là-bas et ont
-               tourné sur des dizaines de milliers de commandes.
-               C'est le mode actif.
+               tourné sur des dizaines de milliers de commandes. Mode
+               fonctionnel, gardé en secours.
 
                En contrepartie, le panier de la boutique ne connaît qu'un
                seul article à un seul prix. Les paliers dégressifs et les
@@ -731,8 +731,12 @@ window.CONFIG = {
                Checkout avec le total exact calculé par le configurateur.
                Demande un hébergement qui exécute PHP (o2switch le fait) et
                une clé secrète placée dans paiement/config.php, jamais ici.
+               C'EST LE MODE ACTIF, et il est réglé en autorisation seule :
+               la carte du client est bloquée, et c'est vous qui déclenchez
+               le débit depuis le tableau de bord Stripe. Voyez
+               capture_manuelle dans paiement/config.php.
      ------------------------------------------------------------------- */
-  modePaiement: "woocommerce",
+  modePaiement: "php",
 
   /* ---- La boutique qui encaisse (mode "woocommerce") ------------------
      idProduit est l'identifiant WooCommerce de la fiche borne. Il ne change
@@ -759,6 +763,12 @@ window.CONFIG = {
   },
 
   cheminPhp: "paiement/creer-session.php",
+
+  /* true : le site annonce au client que sa carte est seulement autorisée et
+     qu'elle sera débitée à la confirmation de commande. Doit rester aligné
+     sur capture_manuelle dans paiement/config.php : si les deux divergent,
+     vous promettez à l'écran l'inverse de ce que fait la banque. */
+  captureManuelle: true,
 
   /* ---- Récitation du Coran sur la page de commande --------------------
      Déposez votre fichier dans audio/ et indiquez son nom ci-dessous.
@@ -922,13 +932,12 @@ window.CONFIG = {
         C.options = {};
         const champsOpt = $("#opt-mise-en-service")?.closest("fieldset");
         if (champsOpt) champsOpt.hidden = true;
-        const noteB = $("#note-boutique");
+        const noteB = $("#note-paiement");
         const bq = C.boutique || {};
         if (noteB && bq.nomAffiche && bq.hote) {
           noteB.innerHTML = "Le paiement est encaiss\u00e9 par notre boutique <strong>" + bq.nomAffiche +
             "</strong>\u00a0: en validant, vous passez sur <strong>" + bq.hote +
             "</strong>, qui porte la passerelle bancaire du groupe et \u00e9met la facture. M\u00eame vendeur, page de paiement d\u00e9j\u00e0 rod\u00e9e.";
-          noteB.removeAttribute("hidden");
         }
         const noteQte = $("#qte-valeur")?.closest("fieldset")?.querySelector(".note");
         if (noteQte) noteQte.textContent = "600 \u20ac HT l\u2019unit\u00e9, livraison offerte. \u00c0 partir de deux bornes, appelez-nous : la remise se fait sur devis.";
@@ -993,7 +1002,7 @@ window.CONFIG = {
             return;
           } catch (err) {
             bouton.disabled = false;
-            bouton.textContent = "Payer par carte";
+            bouton.textContent = C.captureManuelle === false ? "Payer par carte" : "Autoriser le paiement";
             const zone = $("#erreur-paiement");
             if (zone) {
               zone.hidden = false;

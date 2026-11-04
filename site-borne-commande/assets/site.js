@@ -135,13 +135,12 @@
         C.options = {};
         const champsOpt = $("#opt-mise-en-service")?.closest("fieldset");
         if (champsOpt) champsOpt.hidden = true;
-        const noteB = $("#note-boutique");
+        const noteB = $("#note-paiement");
         const bq = C.boutique || {};
         if (noteB && bq.nomAffiche && bq.hote) {
           noteB.innerHTML = "Le paiement est encaiss\u00e9 par notre boutique <strong>" + bq.nomAffiche +
             "</strong>\u00a0: en validant, vous passez sur <strong>" + bq.hote +
             "</strong>, qui porte la passerelle bancaire du groupe et \u00e9met la facture. M\u00eame vendeur, page de paiement d\u00e9j\u00e0 rod\u00e9e.";
-          noteB.removeAttribute("hidden");
         }
         const noteQte = $("#qte-valeur")?.closest("fieldset")?.querySelector(".note");
         if (noteQte) noteQte.textContent = "600 \u20ac HT l\u2019unit\u00e9, livraison offerte. \u00c0 partir de deux bornes, appelez-nous : la remise se fait sur devis.";
@@ -206,7 +205,7 @@
             return;
           } catch (err) {
             bouton.disabled = false;
-            bouton.textContent = "Payer par carte";
+            bouton.textContent = C.captureManuelle === false ? "Payer par carte" : "Autoriser le paiement";
             const zone = $("#erreur-paiement");
             if (zone) {
               zone.hidden = false;

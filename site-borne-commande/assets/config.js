@@ -36,8 +36,8 @@ window.CONFIG = {
                Stripe, aucune clé à manipuler, aucun PHP à installer ici :
                la passerelle bancaire, le certificat, les e-mails de
                confirmation et les factures existent déjà là-bas et ont
-               tourné sur des dizaines de milliers de commandes.
-               C'est le mode actif.
+               tourné sur des dizaines de milliers de commandes. Mode
+               fonctionnel, gardé en secours.
 
                En contrepartie, le panier de la boutique ne connaît qu'un
                seul article à un seul prix. Les paliers dégressifs et les
@@ -54,8 +54,12 @@ window.CONFIG = {
                Checkout avec le total exact calculé par le configurateur.
                Demande un hébergement qui exécute PHP (o2switch le fait) et
                une clé secrète placée dans paiement/config.php, jamais ici.
+               C'EST LE MODE ACTIF, et il est réglé en autorisation seule :
+               la carte du client est bloquée, et c'est vous qui déclenchez
+               le débit depuis le tableau de bord Stripe. Voyez
+               capture_manuelle dans paiement/config.php.
      ------------------------------------------------------------------- */
-  modePaiement: "woocommerce",
+  modePaiement: "php",
 
   /* ---- La boutique qui encaisse (mode "woocommerce") ------------------
      idProduit est l'identifiant WooCommerce de la fiche borne. Il ne change
@@ -82,6 +86,12 @@ window.CONFIG = {
   },
 
   cheminPhp: "paiement/creer-session.php",
+
+  /* true : le site annonce au client que sa carte est seulement autorisée et
+     qu'elle sera débitée à la confirmation de commande. Doit rester aligné
+     sur capture_manuelle dans paiement/config.php : si les deux divergent,
+     vous promettez à l'écran l'inverse de ce que fait la banque. */
+  captureManuelle: true,
 
   /* ---- Récitation du Coran sur la page de commande --------------------
      Déposez votre fichier dans audio/ et indiquez son nom ci-dessous.
