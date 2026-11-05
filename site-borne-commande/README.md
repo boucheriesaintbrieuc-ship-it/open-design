@@ -307,6 +307,110 @@ Elles doivent y être avant la première vente.
 
 ---
 
+## Le système visuel
+
+Le site est passé en design de type SaaS. La direction n'est pas une tendance
+appliquée au produit, elle est déduite du produit : ce que vous vendez est un
+écran, donc le site est construit comme la console du logiciel qui tourne
+dessus. Coque claire et dense, et le produit posé sur des surfaces sombres,
+parce qu'un écran ne se montre pas sur du gris clair.
+
+### La règle de couleur
+
+Une seule phrase gouverne la palette :
+
+> **l'encre est le produit, la console est la page, le bleu est l'action,
+> l'ambre est le ticket.**
+
+Une teinte qui ne tient pas dans cette phrase n'a rien à faire sur le site.
+C'est la règle qui empêche un site de dériver vers l'arc-en-ciel au fil des
+modifications.
+
+| Jeton | Valeur | Ce qu'il a le droit de colorer |
+|---|---|---|
+| `--encre` | `#0B0E14` | toute surface qui montre le produit : panneau du hero, récit, pied de page, aperçu de borne |
+| `--console` | `#F6F7F9` | la page |
+| `--action` | `#1B4DF5` | ce sur quoi on clique, et rien d'autre : boutons, liens, focus |
+| `--lampe` | `#9A4A06` | le motif ticket et les données à surveiller. Jamais un bouton |
+| `--valide` | `#0A6B41` | confirmation et réassurance |
+
+### La typographie
+
+Aucune police n'est chargée depuis un serveur tiers : une webfont en CDN
+transfère l'adresse IP de vos visiteurs hors de l'Union européenne, ce qui est
+exactement le reproche fait à Google Fonts. Le caractère vient donc du
+traitement et pas de la fonte :
+
+- titres en grotesque à chasse très serrée (−0,04 em), jusqu'à 4,75 rem ;
+- **étiquettes en condensée, capitales, espacées à 0,14 em** — la voix des
+  tableaux de menu, utilisée pour les surtitres, les en-têtes de tableau, les
+  onglets et les libellés de formulaire ;
+- chiffres tabulaires partout, pour que les prix ne dansent pas d'une ligne à
+  l'autre ;
+- corps des articles en serif, parce qu'il y a dix-huit textes longs à lire.
+
+Une règle de chasse a été apprise en cours de route et vaut d'être retenue :
+**la mono tient les données, pas les grands nombres.** En monospace l'espace
+avant le symbole euro occupe une chasse pleine, et « 720 € » à 3,4 rem affiche
+un trou au milieu. La mono est donc réservée sous 1,25 rem.
+
+### La signature : le ticket
+
+L'élément dont on se souvient est le **ticket** : un reçu détaché d'un
+rouleau, avec son bord inférieur réellement perforé, découpé au masque CSS.
+
+Il porte les chiffres qui engagent — le prix dans le hero, le récapitulatif de
+commande. C'est l'objet que toute borne de commande imprime, donc il vient du
+monde du produit et pas d'un catalogue d'effets. C'est la seule audace de la
+page : tout le reste tient au filet d'un pixel.
+
+Si vous le reprenez ailleurs, deux points techniques. Le masque mange la
+bordure et l'ombre, donc le ticket ne se détache que par contraste de surface,
+d'où sa place sur l'encre. Et la découpe se règle par une seule variable,
+`--dent`.
+
+### Ce qui a été volontairement écarté
+
+Le design SaaS a ses propres clichés, et ils ont été évités sciemment :
+
+- la capture d'écran flottante en perspective 3D ;
+- les trois cartes de fonctionnalités à icônes abstraites ;
+- la grille de tarifs en trois colonnes dont celle du milieu est « la plus
+  populaire » — il n'y a qu'un produit et qu'un prix, l'annoncer autrement
+  serait une mise en scène ;
+- le fond noir à dégradé violet-bleu et le verre dépoli.
+
+La numérotation `01 / 02 / 03` a en revanche été gardée, mais seulement sur le
+déroulé de la vente, parce que c'est une vraie séquence : l'ordre y porte une
+information dont le lecteur a besoin.
+
+### Ce qui a été vérifié, et comment
+
+| Contrôle | Méthode | Résultat |
+|---|---|---|
+| Contraste | mesure du ratio réel de chaque texte visible contre son fond peint, sur six pages | tous passent le seuil WCAG applicable à leur taille |
+| Rendu | captures à 375, 768 et 1440 px sur cinq pages | aucun débordement horizontal |
+| JavaScript | écoute des erreurs de page pendant les captures | aucune |
+| JSON-LD | parsing réel des 68 blocs | 68 valides, 0 invalide |
+| Ancres internes | comparaison des `href="#…"` aux `id` de chaque page | aucune ancre orpheline |
+| Dépendances externes | extraction de tous les `src` et `href` distants | aucune : le site ne charge rien de l'extérieur |
+| Duplication | comparaison par séquences de huit mots | 3,7 % au pire |
+
+Trois défauts de contraste ont été trouvés et corrigés au passage : le gris
+tertiaire des dates d'articles passait sous le seuil à 12 px, le bouton
+désactivé de la page de commande était illisible en blanc sur gris moyen, et
+le séparateur du bandeau a été remplacé par un filet CSS plutôt que par un
+caractère.
+
+### Poids
+
+Chaque page embarque son style et son script, c'est le choix fait après
+l'incident de mise en ligne. L'addition reste raisonnable : 104 ko pour
+l'accueil, 122 ko pour la page de commande qui porte en plus le
+configurateur, 83 ko pour un article.
+
+---
+
 ## Le paiement : Stripe, en autorisation seule
 
 C'est le mode actif. `modePaiement: "php"` dans `assets/config.js`, et

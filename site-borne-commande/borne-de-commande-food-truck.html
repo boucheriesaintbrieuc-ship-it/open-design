@@ -13,16 +13,30 @@
 <meta property="og:url" content="https://borne-restaurants.fr/borne-de-commande-food-truck.html">
 <meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
-<meta name="theme-color" content="#F1F2F4">
+<meta name="theme-color" content="#F6F7F9">
 <script>document.documentElement.className+=" js"</script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%231B4DF5'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 /* =========================================================================
    Bornéa — feuille de style unique du site
-   Règle de couleur qui gouverne tout : le gris est la page, le noir est le
-   produit, l'indigo est l'action. Aucune autre couleur n'apparaît en dehors
-   de l'écran de la borne. Si vous ajoutez une teinte, elle doit tenir dans
-   cette phrase, sinon elle n'a rien à faire ici.
+
+   DIRECTION : la console du logiciel, pas la brochure du matériel.
+
+   Le produit vendu est un écran. La page est donc construite comme l'outil
+   lui-même : une coque claire et dense, de type console professionnelle, dans
+   laquelle le produit apparaît sur des surfaces sombres — parce que c'est là
+   qu'un écran se lit.
+
+   Règle de couleur qui gouverne tout :
+     l'encre est le produit, la console est la page, le bleu est l'action,
+     l'ambre est le ticket.
+   Une teinte qui ne tient pas dans cette phrase n'a rien à faire ici.
+
+   Signature : le ticket. Toute borne de commande imprime un reçu ; le site
+   s'en sert comme contenant pour les chiffres qui engagent — le prix, le
+   calcul de rentabilité, le récapitulatif de commande. Bord perforé découpé
+   au masque CSS, typographie mono, chiffres tabulaires. C'est la seule
+   audace de la page : tout le reste tient au filet d'un pixel.
    ========================================================================= */
 
 @layer reset, tokens, base, layout, composants, pages, utilitaires;
@@ -40,62 +54,100 @@
 
 @layer tokens {
   :root {
-    --studio:    #F1F2F4;   /* fond : gris de fond de studio photo */
-    --studio-2:  #E4E6EA;   /* bandes alternées, panneau produit */
+    /* ---- Surfaces ---- */
+    --encre:     #0B0E14;   /* le produit : tout panneau qui montre un écran */
+    --encre-2:   #141A24;   /* panneau surélevé posé sur l'encre */
+    --encre-3:   #1F2733;   /* filet et séparation sur fond encre */
+    --console:   #F6F7F9;   /* la page */
+    --console-2: #ECEEF2;   /* bandes alternées, fonds de panneau */
     --carte:     #FFFFFF;
-    --noir:      #101114;   /* le produit, les titres */
-    --gris:      #585C64;   /* texte secondaire */
-    --trait:     #D3D6DC;
-    --indigo:    #3B2BD9;   /* action : liens, boutons, focus */
-    --indigo-f:  #2F22B0;   /* survol */
-    --valide:    #0B6E43;   /* uniquement : paiement confirmé, réassurance */
+    --trait:     #DDE1E8;
+    --trait-f:   #C5CBD6;   /* filet appuyé : bord de tableau, séparateur fort */
 
-    /* Écran allumé : les seules couleurs vives du site vivent ici. */
-    --e-violet:  #6B4FE0;
-    --e-bleu:    #3AA6E8;
-    --e-rose:    #E86A9A;
-    --e-clair:   #F6E3E8;
+    /* ---- Texte ---- */
+    --noir:      #0B0E14;   /* titres et texte courant */
+    --gris:      #555E6D;   /* texte secondaire — 6,2:1 sur console */
+    --gris-clair:#656F7E;   /* texte tertiaire — 5,1:1 sur console, tient à 12 px */
+    --sur-encre: #E7EAEF;   /* texte courant sur fond encre */
+    --sur-encre-2:#9AA4B4;  /* texte secondaire sur fond encre — 5,4:1 */
 
-    --f-titre: "Helvetica Neue", "Segoe UI Variable Display", "Segoe UI", Inter, system-ui, sans-serif;
-    --f-ui:    "Helvetica Neue", "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
-    --f-prose: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
-    --f-data:  ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+    /* ---- Action ---- */
+    --action:    #1B4DF5;   /* boutons, liens, focus */
+    --action-f:  #1438C9;   /* survol */
+    --action-pale:#E8EDFF;  /* fond de pastille, surlignage */
+    --action-vif:#6E92FF;   /* liens sur fond encre */
 
+    /* ---- Signalisation ---- */
+    --lampe:     #9A4A06;   /* l'ambre du passe : motif ticket, donnée à surveiller */
+    --lampe-vif: #FFB020;   /* la même, uniquement sur fond encre */
+    --lampe-pale:#FFF4E2;
+    --valide:    #0A6B41;   /* confirmation, réassurance */
+    --valide-clair:#5CD6A0; /* confirmation sur fond encre */
+    --attente:   #A32E06;   /* erreur, refus */
+
+    /* ---- Fontes ----
+       Aucune webfont : une police en CDN transfère l'IP du visiteur hors UE.
+       Le caractère vient donc du traitement — chasse serrée sur les titres,
+       capitales espacées sur les étiquettes, chiffres tabulaires partout.
+       Chaque pile est éprouvée sur son DERNIER repli, pas sur le premier. */
+    --f-titre:   "Helvetica Neue", "Segoe UI Variable Display", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-ui:      "Helvetica Neue", "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-etiq:    "Arial Narrow", "Helvetica Neue Condensed", "Liberation Sans Narrow", "Segoe UI", system-ui, sans-serif;
+    --f-prose:   "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --f-data:    ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+
+    /* ---- Échelle typographique ----
+       Écarts volontairement larges entre niveaux : une gradation timide
+       donne une page plate, et le titre doit porter seul. */
     --t-xs:  .75rem;
     --t-sm:  clamp(.8125rem, .79rem + .12vw, .875rem);
     --t-md:  clamp(1rem, .96rem + .2vw, 1.0625rem);
     --t-lg:  clamp(1.125rem, 1.02rem + .5vw, 1.375rem);
-    --t-xl:  clamp(1.5rem, 1.15rem + 1.6vw, 2.375rem);
-    --t-2xl: clamp(2.25rem, 1.5rem + 3.4vw, 4rem);
+    --t-xl:  clamp(1.5rem, 1.1rem + 1.8vw, 2.5rem);
+    --t-2xl: clamp(2.4rem, 1.4rem + 4.4vw, 4.75rem);
 
     --pas:     clamp(.9rem, .65rem + 1.1vw, 1.35rem);
     --gout:    clamp(1.25rem, .9rem + 1.7vw, 2.25rem);
-    --section: clamp(3rem, 2rem + 4.5vw, 5.5rem);
-    --max:     1200px;
-    --mesure:  64ch;
-    --r:       5px;
-    --duree:   190ms;
+    --section: clamp(3.25rem, 2rem + 5vw, 6rem);
+    --max:     1220px;
+    --mesure:  66ch;
+    --r:       10px;
+    --r-s:     6px;
+    --r-l:     18px;
+    --duree:   180ms;
     --courbe:  cubic-bezier(.2,.7,.3,1);
+    --ombre:   0 1px 2px rgb(11 14 20 / .05), 0 4px 14px -6px rgb(11 14 20 / .10);
+    --ombre-f: 0 2px 4px rgb(11 14 20 / .07), 0 18px 40px -16px rgb(11 14 20 / .22);
   }
 }
 
 @layer base {
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 6.5rem; }
   body {
-    background: var(--studio); color: var(--noir);
+    background: var(--console); color: var(--noir);
     font-family: var(--f-ui); font-size: var(--t-md); line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.06; letter-spacing: -.035em; text-wrap: balance; }
+  h1, h2, h3, h4 {
+    font-family: var(--f-titre); font-weight: 700; line-height: 1.04;
+    letter-spacing: -.04em; text-wrap: balance;
+  }
+  h3 { letter-spacing: -.03em; }
   h4 { letter-spacing: -.02em; }
   p { text-wrap: pretty; }
-  strong, b { font-weight: 600; }
-  a { color: var(--indigo); text-underline-offset: .18em; }
-  a:hover { color: var(--indigo-f); }
+  strong, b { font-weight: 650; }
+  a { color: var(--action); text-underline-offset: .18em; text-decoration-thickness: from-font; }
+  a:hover { color: var(--action-f); }
   :where(a, button, input, select, textarea, summary):focus-visible {
-    outline: 3px solid var(--indigo); outline-offset: 2px; border-radius: 2px;
+    outline: 3px solid var(--action); outline-offset: 2px; border-radius: 3px;
   }
-  ::selection { background: var(--indigo); color: #fff; }
+  ::selection { background: var(--action); color: #fff; }
+
+  /* Tout nombre du site est tabulaire. Des prix qui dansent d'une ligne à
+     l'autre suffisent à faire douter du sérieux d'une page de tarifs. */
+  .prix, .montant, .chiffres, .tbl td, .tbl th, time, output,
+  input[type="number"], .art-meta { font-variant-numeric: tabular-nums; }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -104,420 +156,757 @@
 
 @layer layout {
   .env { width: min(100% - var(--gout) * 2, var(--max)); margin-inline: auto; }
-  .env-etroite { width: min(100% - var(--gout) * 2, 44rem); margin-inline: auto; }
+  .env-etroite { width: min(100% - var(--gout) * 2, 46rem); margin-inline: auto; }
   .sec { padding-block: var(--section); }
-  .sec--alt { background: var(--studio-2); }
-  /* Un enfant de grille se dimensionne par défaut sur son contenu le plus large :
-     sans min-width, un tableau à défilement élargit la page entière. */
+  .sec--alt { background: var(--console-2); border-block: 1px solid var(--trait); }
+
+  /* Un enfant de grille se dimensionne par défaut sur son contenu le plus
+     large : sans min-width, un tableau à défilement élargit la page entière. */
   .grille > *, .duo > *, .trio > * { min-width: 0; }
   .duo  { display: grid; gap: var(--gout); }
   .trio { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
   @media (min-width: 48rem) { .duo { grid-template-columns: 1fr 1fr; } }
+
   .saut { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .saut:focus { width: auto; height: auto; clip-path: none; left: 1rem; top: 1rem; z-index: 99; background: var(--noir); color: #fff; padding: .7rem 1rem; }
+  .saut:focus {
+    width: auto; height: auto; clip-path: none; left: 1rem; top: 1rem; z-index: 99;
+    background: var(--encre); color: #fff; padding: .7rem 1rem; border-radius: var(--r-s);
+  }
 }
 
 @layer composants {
 
-  /* ---------- En-tête ---------- */
+  /* ================= Bandeau d'annonce =================
+     Au-dessus de l'en-tête, sur fond encre. Il porte le seul argument qui
+     décide : le prix, l'absence d'abonnement, le port offert. */
+  .bandeau {
+    background: var(--encre); color: var(--sur-encre);
+    font-size: var(--t-sm); line-height: 1.3;
+  }
+  .bandeau__int {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: .5rem 1.1rem; min-height: 40px; padding-block: .5rem; text-align: center;
+  }
+  .bandeau b { color: #fff; font-weight: 650; }
+  .bandeau__int > span + span { border-left: 1px solid #2A3345; padding-left: 1.1rem; }
+  @media (max-width: 48rem) { .bandeau__int > span + span { border-left: 0; padding-left: 0; } }
+  .bandeau em {
+    font-style: normal; color: var(--lampe-vif);
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .12em;
+    font-size: var(--t-xs); font-weight: 700;
+  }
+  .bandeau a { color: var(--action-vif); }
+  .bandeau a:hover { color: #fff; }
+
+  /* ================= En-tête ================= */
   .tete {
     position: sticky; top: 0; z-index: 40;
-    background: var(--studio);   /* repli si color-mix n’est pas connu */
-    background: color-mix(in srgb, var(--studio) 88%, transparent);
-    backdrop-filter: blur(10px);
+    background: var(--console);   /* repli si color-mix n’est pas connu */
+    background: color-mix(in srgb, var(--console) 86%, transparent);
+    backdrop-filter: blur(12px) saturate(140%);
     border-bottom: 1px solid var(--trait);
   }
-  .tete__int { display: flex; align-items: center; gap: 1rem; min-height: 60px; }
-  .marque { display: inline-flex; align-items: center; gap: .55rem; font-family: var(--f-titre); font-weight: 700; letter-spacing: -.03em; font-size: 1.1rem; color: var(--noir); text-decoration: none; }
-  .marque svg { width: 20px; height: 20px; }
-  .nav { margin-left: auto; display: flex; align-items: center; gap: clamp(.6rem, .3rem + 1vw, 1.4rem); }
-  /* :not(.btn) est indispensable : sans lui cette règle repeint le bouton
-     « Commander » en gris sur fond indigo, illisible. */
-  .nav a:not(.btn) { font-size: var(--t-sm); color: var(--gris); text-decoration: none;
-                     display: inline-flex; align-items: center; min-height: 32px; }
-  .nav a:not(.btn):hover, .nav a:not(.btn)[aria-current="page"] { color: var(--noir); }
-  .nav a:not(.btn)[aria-current="page"] { font-weight: 600; }
-  /* Doit rester au moins aussi spécifique que .nav a:not(.btn) ci-dessus,
-     sinon les liens secondaires réapparaissent sur mobile et débordent. */
-  @media (max-width: 40rem) { .nav a:not(.btn).nav__secondaire { display: none; } }
+  .tete__int { display: flex; align-items: center; gap: 1rem; min-height: 64px; }
+  .marque {
+    display: inline-flex; align-items: center; gap: .55rem;
+    font-family: var(--f-titre); font-weight: 700; letter-spacing: -.04em;
+    font-size: 1.15rem; color: var(--noir); text-decoration: none;
+  }
+  .marque svg { width: 22px; height: 22px; color: var(--action); }
+  .nav { margin-left: auto; display: flex; align-items: center; gap: clamp(.5rem, .2rem + 1vw, 1.3rem); }
 
-  /* ---------- Boutons ---------- */
+  /* :not(.btn) est indispensable : sans lui cette règle repeint le bouton
+     « Commander » en gris sur fond bleu, illisible. */
+  .nav a:not(.btn) {
+    font-size: var(--t-sm); font-weight: 550; color: var(--gris); text-decoration: none;
+    display: inline-flex; align-items: center; min-height: 36px; padding-inline: .15rem;
+    position: relative;
+  }
+  .nav a:not(.btn):hover { color: var(--noir); }
+  .nav a:not(.btn)[aria-current="page"] { color: var(--noir); font-weight: 650; }
+  .nav a:not(.btn)[aria-current="page"]::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px;
+    height: 2px; background: var(--action);
+  }
+  @media (max-width: 54rem) { .nav a:not(.btn).nav__secondaire { display: none; } }
+
+  /* ================= Boutons ================= */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-    min-height: 50px; padding: .75rem 1.5rem;
-    background: var(--indigo); color: #fff; border: 1px solid var(--indigo);
-    border-radius: var(--r); font-weight: 600; font-size: var(--t-md);
-    text-decoration: none; cursor: pointer;
-    transition: background var(--duree) var(--courbe), border-color var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+    background: var(--action); color: #fff; text-decoration: none;
+    font-weight: 650; font-size: var(--t-sm); letter-spacing: -.01em;
+    padding: .72rem 1.15rem; min-height: 44px; border: 1px solid var(--action);
+    border-radius: var(--r-s); cursor: pointer;
+    box-shadow: 0 1px 2px rgb(11 14 20 / .14), inset 0 1px 0 rgb(255 255 255 / .16);
+    transition: background var(--duree) var(--courbe), transform var(--duree) var(--courbe),
+                box-shadow var(--duree) var(--courbe);
   }
-  .btn:hover { background: var(--indigo-f); border-color: var(--indigo-f); color: #fff; }
-  .btn:active { transform: translateY(1px); }
-  .btn[disabled] { opacity: .45; cursor: not-allowed; }
-  .btn--secondaire { background: transparent; color: var(--noir); border-color: var(--noir); }
-  .btn--secondaire:hover { background: var(--noir); color: #fff; border-color: var(--noir); }
-  .btn--large { width: 100%; min-height: 56px; font-size: var(--t-lg); }
-  .btn--petit { min-height: 42px; padding: .5rem 1rem; font-size: var(--t-sm); }
+  .btn:hover { background: var(--action-f); border-color: var(--action-f); color: #fff; transform: translateY(-1px); box-shadow: var(--ombre-f); }
+  .btn:active { transform: translateY(0); }
+  .btn[disabled] { background: #E6E9EE; border-color: var(--trait); color: var(--gris); cursor: not-allowed; box-shadow: none; transform: none; }
+  .btn--secondaire {
+    background: var(--carte); color: var(--noir); border-color: var(--trait-f);
+    box-shadow: var(--ombre);
+  }
+  .btn--secondaire:hover { background: var(--carte); color: var(--action); border-color: var(--action); }
+  .btn--large { font-size: var(--t-md); padding: .95rem 1.5rem; min-height: 52px; width: 100%; }
+  .btn--petit { padding: .5rem .85rem; min-height: 38px; font-size: var(--t-sm); }
 
-  /* ---------- Micro-typographie ---------- */
-  .surtitre { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .16em; color: var(--gris); }
-  .prose { font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .3vw, 1.1875rem); line-height: 1.7; max-width: var(--mesure); }
-  .prose p + p { margin-top: 1.1em; }
-  .prose h2 { font-size: var(--t-xl); margin-top: 2.4em; margin-bottom: .5em; }
-  .prose h3 { font-size: var(--t-lg); margin-top: 1.8em; margin-bottom: .4em; }
-  .prose ul, .prose ol { margin: 1.1em 0; padding-left: 1.3em; }
-  .prose li + li { margin-top: .45em; }
-  .prose figure { margin: 2em 0; }
-  .prix { font-family: var(--f-data); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  /* ================= Micro-typographie ================= */
+
+  /* L'étiquette : la voix des tableaux de menu. Condensée, capitales,
+     espacée, précédée d'un tiret qui l'ancre dans la colonne. */
+  .surtitre {
+    font-family: var(--f-etiq); text-transform: uppercase;
+    letter-spacing: .14em; font-size: var(--t-xs); font-weight: 700;
+    color: var(--gris); display: flex; align-items: center; gap: .6rem;
+  }
+  .surtitre::before {
+    content: ""; width: 1.6rem; height: 2px; background: var(--action); flex: none;
+  }
+  .chapo {
+    font-size: var(--t-lg); line-height: 1.45; color: var(--gris);
+    max-width: 46ch; margin-top: .9rem; letter-spacing: -.011em;
+  }
+  .prose { max-width: var(--mesure); }
+  .prose > * + * { margin-top: .85em; }
+  .prose h3, .prose h4 { margin-top: 1.6em; }
+  .prix, .montant { font-family: var(--f-data); letter-spacing: -.02em; }
   .note { font-size: var(--t-sm); color: var(--gris); }
 
-  /* ---------- Le produit dessiné ---------- */
-  .borne { display: block; }
-  .borne__cadre { fill: var(--noir); }
-  .borne__dalle--veille { fill: url(#ecranVeille); }
-  .borne__dalle--ui     { fill: #16171B; }
-
-  .scene {
-    background:
-      radial-gradient(120% 80% at 50% 15%, #FAFBFC 0%, var(--studio-2) 55%, #D7DAE0 100%);
-    border: 1px solid var(--trait); border-radius: var(--r);
-    display: grid; place-items: end center;
-    padding: clamp(1.5rem, 1rem + 3vw, 3rem) var(--pas) 0;
-    min-height: 22rem;
+  /* Pastille d'information, posée dans une ligne de texte. */
+  .pastille {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700;
+    background: var(--action-pale); color: var(--action-f);
+    padding: .2rem .5rem; border-radius: 3px; white-space: nowrap;
   }
-  .scene__sol { display: flex; align-items: flex-end; justify-content: center; gap: clamp(.5rem, 2vw, 2rem); width: 100%; }
-  .scene__sol .borne {
-    width: clamp(5rem, 22vw, 8.5rem);
-    transition: opacity var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+
+  /* ================= LE TICKET — signature =================
+     Un reçu détaché d'un rouleau. Le bord inférieur est réellement découpé
+     au masque, donc il fonctionne sur n'importe quel fond. Le masque mange
+     bordure et ombre : le ticket se détache par le contraste de surface, ce
+     qui est la raison pour laquelle il est posé sur l'encre. */
+  .ticket {
+    --dent: 11px;
+    background: var(--carte); color: var(--noir);
+    padding: var(--pas) var(--pas) calc(var(--pas) + var(--dent));
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
   }
-  .scene__sol .borne[hidden] { display: none; }
-  .scene__sol .borne[data-entrant] { animation: pose 260ms var(--courbe) both; }
-  @keyframes pose { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  /* La ligne de déchirement : pointillés, comme la perforation du rouleau. */
+  .ticket__fil { border: 0; border-top: 1px dashed var(--trait-f); margin-block: var(--pas); }
+  .ticket__ligne {
+    display: flex; align-items: baseline; gap: .6rem;
+    font-family: var(--f-data); font-size: var(--t-sm);
+  }
+  .ticket__ligne + .ticket__ligne { margin-top: .4rem; }
+  .ticket__ligne span:first-child { color: var(--gris); }
+  .ticket__ligne span:first-child::after {
+    content: ""; flex: 1; border-bottom: 1px dotted var(--trait-f);
+    margin: 0 .35rem; transform: translateY(-.22em);
+  }
+  .ticket__ligne { justify-content: space-between; }
 
-  /* ---------- Cartes et blocs ---------- */
-  .carte { background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r); padding: var(--pas); }
-  .carte h3 { font-size: var(--t-lg); }
+  /* ================= Panneau produit (fond encre) ================= */
+  .panneau {
+    background: var(--encre); color: var(--sur-encre);
+    border-radius: var(--r-l); padding: var(--gout);
+    background-image:
+      radial-gradient(120% 85% at 18% 0%, rgb(27 77 245 / .22), transparent 62%),
+      radial-gradient(90% 70% at 100% 100%, rgb(255 176 32 / .10), transparent 60%);
+  }
+  .panneau h2, .panneau h3 { color: #fff; }
+  .panneau a { color: var(--action-vif); }
 
-  .encadre-cle {
-    background: var(--carte); border: 1px solid var(--trait); border-left: 4px solid var(--indigo);
+  /* ================= Le produit dessiné ================= */
+  .borne { width: 100%; max-width: 15rem; height: auto; margin-inline: auto; }
+  .scene { display: grid; place-items: center; }
+
+  /* ================= Cartes et blocs ================= */
+  .carte {
+    background: var(--carte); border: 1px solid var(--trait);
     border-radius: var(--r); padding: var(--pas);
+    box-shadow: var(--ombre);
   }
-  .encadre-cle dl { display: grid; gap: .45rem; margin-top: .7rem; }
-  .encadre-cle div { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--trait); padding-top: .45rem; font-size: var(--t-sm); }
-  .encadre-cle div:first-child { border-top: 0; padding-top: 0; }
-  .encadre-cle dt { color: var(--gris); }
-  .encadre-cle dd { font-family: var(--f-data); font-variant-numeric: tabular-nums; text-align: right; }
 
-  /* ---------- Tableaux ---------- */
-  .cadre-defil { overflow-x: auto; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); }
-  .tbl { font-size: var(--t-sm); }
-  .tbl caption { text-align: left; font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .13em; color: var(--gris); padding: .8rem var(--pas) .4rem; }
-  .tbl th, .tbl td { text-align: left; padding: .6rem var(--pas); border-top: 1px solid var(--trait); vertical-align: top; }
-  .tbl thead th { border-top: 0; background: var(--studio-2); font-weight: 600; }
-  .tbl tbody th { font-weight: 400; color: var(--gris); width: 42%; }
-  .tbl td { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
-  .tbl td.txt { font-family: var(--f-ui); }
+  /* La fiche technique comme matériau graphique : ce public compare des
+     spécifications, donc les specs sont traitées comme un tableau de données
+     et pas comme une liste à puces. */
+  .encadre-cle {
+    background: var(--carte); border: 1px solid var(--trait);
+    border-radius: var(--r); overflow: hidden; box-shadow: var(--ombre);
+  }
+  .encadre-cle > h2 {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+    padding: .75rem var(--pas); border-bottom: 1px solid var(--trait);
+    background: var(--console-2);
+  }
+  .encadre-cle dl { display: grid; }
+  .encadre-cle dl > div {
+    display: grid; grid-template-columns: 11rem 1fr; gap: .3rem 1rem;
+    padding: .62rem var(--pas); border-top: 1px solid var(--trait);
+    font-size: var(--t-sm);
+  }
+  .encadre-cle dl > div:first-child { border-top: 0; }
+  .encadre-cle dl > div:nth-child(even) { background: color-mix(in srgb, var(--console-2) 55%, transparent); }
+  .encadre-cle dt {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .09em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris); padding-top: .12em;
+  }
+  .encadre-cle dd { font-weight: 550; }
+  @media (max-width: 34rem) { .encadre-cle dl > div { grid-template-columns: 1fr; } }
 
-  /* ---------- Listes de garanties ---------- */
-  .garanties { list-style: none; display: grid; gap: .6rem; }
-  .garanties li { display: grid; grid-template-columns: 1.4rem 1fr; gap: .7rem; align-items: start; font-size: var(--t-sm); }
-  .garanties svg { width: 1.15rem; height: 1.15rem; margin-top: .2rem; color: var(--valide); }
+  /* ================= Tableaux ================= */
+  .cadre-defil { overflow-x: auto; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); box-shadow: var(--ombre); }
+  .tbl { font-size: var(--t-sm); min-width: 34rem; }
+  .tbl caption { text-align: left; padding: .8rem var(--pas); color: var(--gris); font-size: var(--t-sm); border-bottom: 1px solid var(--trait); }
+  .tbl th, .tbl td { padding: .68rem var(--pas); text-align: left; border-top: 1px solid var(--trait); vertical-align: top; }
+  .tbl thead th {
+    border-top: 0; background: var(--console-2); color: var(--gris);
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; white-space: nowrap;
+  }
+  .tbl tbody tr:hover { background: color-mix(in srgb, var(--action-pale) 55%, transparent); }
+  .tbl td.oui, .tbl td.inclus { color: var(--valide); font-weight: 650; }
+  .tbl td.non, .tbl td.exclus { color: var(--attente); font-weight: 650; }
+  .tbl td.d, .tbl td.chiffres { font-family: var(--f-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-  /* ---------- Accordéon ---------- */
-  details { border-top: 1px solid var(--trait); }
-  details:last-of-type { border-bottom: 1px solid var(--trait); }
-  summary { cursor: pointer; list-style: none; padding: 1.05rem 2.4rem 1.05rem 0; position: relative; font-weight: 600; }
+  /* ================= Listes de garanties ================= */
+  .garanties { display: grid; gap: .5rem; }
+  .garanties li { display: grid; grid-template-columns: 1.1rem 1fr; gap: .6rem; align-items: start; font-size: var(--t-sm); }
+  .garanties svg { width: 1.1rem; height: 1.1rem; color: var(--valide); margin-top: .18em; }
+  .panneau .garanties svg { color: var(--valide-clair); }
+
+  /* ================= Accordéon ================= */
+  details {
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: 0 var(--pas); box-shadow: var(--ombre);
+  }
+  details + details { margin-top: .6rem; }
+  details[open] { border-color: var(--trait-f); }
+  summary {
+    cursor: pointer; font-weight: 650; padding: .9rem 0; list-style: none;
+    display: flex; align-items: center; gap: .8rem; min-height: 48px;
+  }
   summary::-webkit-details-marker { display: none; }
   summary::after {
-    content: ""; position: absolute; right: .5rem; top: 50%; width: .7rem; height: .7rem;
-    border-right: 2px solid var(--indigo); border-bottom: 2px solid var(--indigo);
-    translate: 0 -70%; rotate: 45deg; transition: rotate var(--duree) var(--courbe);
+    content: ""; margin-left: auto; flex: none; width: .62rem; height: .62rem;
+    border-right: 2px solid var(--gris); border-bottom: 2px solid var(--gris);
+    transform: rotate(45deg) translateY(-.12rem);
+    transition: transform var(--duree) var(--courbe);
   }
-  details[open] summary::after { rotate: -135deg; translate: 0 -30%; }
-  details .rep { padding-bottom: 1.1rem; color: var(--gris); max-width: var(--mesure); }
+  details[open] summary::after { transform: rotate(225deg) translateY(-.12rem); }
+  .rep { padding-bottom: 1rem; color: var(--gris); max-width: var(--mesure); }
 
-  /* ---------- Formulaires ---------- */
-  .champ { display: grid; gap: .3rem; }
-  .champ > span { font-size: var(--t-sm); font-weight: 600; }
-  .champ input, .champ textarea, .champ select {
-    min-height: 50px; padding: .65rem .8rem; background: var(--carte); color: var(--noir);
-    border: 1px solid var(--trait); border-radius: var(--r); width: 100%;
+  /* ================= Formulaires ================= */
+  .champ { display: grid; gap: .35rem; }
+  .champ > span, .champ > label {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
   }
-  .champ textarea { min-height: 8rem; resize: vertical; }
-  .champ input::placeholder, .champ textarea::placeholder { color: #969AA2; }
-  .champ input:focus, .champ textarea:focus, .champ select:focus { border-color: var(--indigo); }
-
-  /* ---------- Barre collante mobile ---------- */
-  .barre-mobile {
-    position: sticky; bottom: 0; z-index: 30;
-    background: var(--carte); border-top: 1px solid var(--trait);
-    padding: .6rem var(--gout); display: flex; align-items: center; gap: 1rem;
+  .champ input, .champ textarea, .champ select, input[type="text"], input[type="email"], input[type="tel"], textarea {
+    background: var(--carte); border: 1px solid var(--trait-f); border-radius: var(--r-s);
+    padding: .68rem .8rem; min-height: 46px; width: 100%;
+    transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe);
   }
-  .barre-mobile .prix { font-weight: 700; }
-  .barre-mobile .btn { margin-left: auto; }
-  @media (min-width: 62rem) { .barre-mobile { display: none; } }
-
-  /* ---------- Fil d'Ariane ---------- */
-  .fil { font-size: var(--t-sm); color: var(--gris); padding-block: .9rem; }
-  .fil ol { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; }
-  .fil li + li::before { content: "/"; margin-right: .4rem; color: var(--trait); }
-  .fil a { color: var(--gris); display: inline-block; padding-block: .25rem; }
-
-  /* ---------- Pied ---------- */
-  .pied { background: var(--noir); color: #A5A9B1; font-size: var(--t-sm); margin-top: var(--section); }
-  .pied a { color: #fff; }
-  .pied .cols { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); padding-block: var(--gout); }
-  .pied h2 { font-size: var(--t-sm); color: #fff; letter-spacing: 0; font-weight: 600; margin-bottom: .5rem; }
-  .pied ul { list-style: none; display: grid; gap: .1rem; }
-  /* Cible pointeur d’au moins 24 px de haut (WCAG 2.5.8) sur des liens
-     empilés, qui ne bénéficient pas de l’exception des liens en ligne. */
-  .pied ul a { display: inline-block; padding-block: .3rem; }
-  .pied__bas { border-top: 1px solid #2A2C31; padding-block: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
-}
-
-@layer pages {
-
-  /* ---------- Accueil : le produit tient, l'argument défile ---------- */
-  .vitrine { display: grid; gap: var(--gout); padding-block: var(--gout) var(--section); }
-  @media (min-width: 62rem) {
-    .vitrine { grid-template-columns: minmax(0, 27rem) minmax(0, 1fr); gap: clamp(2rem, 4vw, 4rem); align-items: start; }
-    .vitrine__objet { position: sticky; top: 5rem; }
+  .champ input:focus, .champ textarea:focus, textarea:focus {
+    border-color: var(--action); box-shadow: 0 0 0 3px var(--action-pale); outline: none;
   }
-  .vitrine__objet .scene { min-height: 26rem; }
-  .achat { margin-top: var(--pas); }
-  .achat__prix { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
-  .achat__prix .montant { font-family: var(--f-data); font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem); font-weight: 700; letter-spacing: -.04em; }
-  .achat__prix .ttc { color: var(--gris); font-size: var(--t-sm); font-family: var(--f-data); }
-  .achat .btn { margin-top: .9rem; }
+  .champ textarea { min-height: 7rem; resize: vertical; }
 
-  .argument h1 { font-size: var(--t-2xl); }
-  /* Trois arguments dans une colonne étroite : une liste à filets se lit
-     mieux que trois cartes qui se coupent en 2 + 1. */
-  .points { display: grid; gap: 0; }
-  .points > div { border-top: 1px solid var(--trait); padding-block: var(--pas); }
-  .points h3 { font-size: var(--t-lg); }
-  .points p { color: var(--gris); font-size: var(--t-sm); margin-top: .35rem; max-width: var(--mesure); }
-  .argument .chapo { font-family: var(--f-prose); font-size: clamp(1.125rem, 1rem + .6vw, 1.4375rem); line-height: 1.5; color: var(--noir); margin-top: 1rem; max-width: 38ch; }
-
-  /* ---------- Configurateur ---------- */
-  .config { display: grid; gap: var(--gout); }
-  @media (min-width: 62rem) { .config { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); align-items: start; } }
-  .config__recap { position: sticky; top: 5rem; }
   .option {
-    display: grid; grid-template-columns: auto 1fr auto; gap: .8rem; align-items: start;
-    border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte);
+    display: grid; grid-template-columns: auto 1fr auto; gap: .9rem; align-items: start;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
     padding: var(--pas); cursor: pointer;
     transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe);
   }
-  .option:hover { border-color: var(--indigo); }
-  .option:has(input:checked) { border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
-  .option input { width: 24px; height: 24px; margin-top: .1rem; accent-color: var(--indigo); }
-  .option .titre-opt { display: block; font-weight: 600; }
-  .option .desc-opt { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
-  .option .prix { font-weight: 600; white-space: nowrap; }
+  .option:hover { border-color: var(--trait-f); }
+  .option:has(input:checked) { border-color: var(--action); box-shadow: inset 0 0 0 1px var(--action); }
+  .option input { width: 24px; height: 24px; accent-color: var(--action); margin-top: .1rem; }
+  .titre-opt { display: block; font-weight: 650; }
+  .desc-opt { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+  .option > .prix { font-family: var(--f-data); font-weight: 650; white-space: nowrap; }
 
-  .compteur { display: inline-flex; align-items: stretch; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); overflow: hidden; }
-  .compteur button { width: 48px; min-height: 48px; background: transparent; border: 0; font-size: 1.3rem; cursor: pointer; color: var(--noir); }
-  .compteur button:hover { background: var(--studio-2); }
-  .compteur output { min-width: 3.2rem; display: grid; place-items: center; font-family: var(--f-data); font-variant-numeric: tabular-nums; font-weight: 700; border-inline: 1px solid var(--trait); }
-
-  .recap__lignes { display: grid; gap: .5rem; margin-block: var(--pas); }
-  .recap__lignes > div { display: flex; justify-content: space-between; gap: 1rem; font-size: var(--t-sm); border-top: 1px solid var(--trait); padding-top: .5rem; }
-  .recap__lignes > div:first-child { border-top: 0; padding-top: 0; }
-  .recap__lignes .prix { font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .recap__lignes .note { display: block; }
-  .recap__total { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; border-top: 2px solid var(--noir); padding-top: .7rem; }
-  .recap__total .prix { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; }
-
-  /* ---------- Confirmation ---------- */
-  .confirme { text-align: center; padding-block: var(--section); }
-  .confirme .pastille {
-    width: 4.5rem; height: 4.5rem; margin: 0 auto var(--pas); border-radius: 50%;
-    background: var(--valide); color: #fff; display: grid; place-items: center;
+  .compteur {
+    display: inline-flex; align-items: center; background: var(--carte);
+    border: 1px solid var(--trait-f); border-radius: var(--r-s); overflow: hidden;
   }
-  .confirme .pastille svg { width: 2.2rem; height: 2.2rem; }
-  .confirme h1 { font-size: var(--t-xl); }
-  .confirme p { margin-inline: auto; max-width: 46ch; color: var(--gris); margin-top: .8rem; }
-
-  /* ---------- Rappel produit en bas de page ---------- */
-  .rappel { display: grid; gap: var(--gout); align-items: center; }
-  @media (min-width: 48rem) { .rappel { grid-template-columns: 12rem 1fr auto; } }
-  .rappel .scene { min-height: 0; padding: var(--pas); }
-  .rappel .scene .borne { width: 5rem; }
-}
-
-@layer utilitaires {
-  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .centre { text-align: center; }
-  .mt-0 { margin-top: 0; }
-  .mt-1 { margin-top: var(--pas); }
-  .mt-2 { margin-top: var(--gout); }
-  .mesure { max-width: var(--mesure); }
-}
-
-@layer composants {
-  /* Marqueur des valeurs qui viennent de la fiche fournisseur et n'ont pas
-     encore été vérifiées sur un exemplaire réel. Cherchez "avf" dans les
-     fichiers pour toutes les retrouver, puis supprimez la classe. */
-  .avf { position: relative; }
-  .avf::after {
-    content: "à confirmer";
-    font-family: var(--f-ui); font-size: .625rem; text-transform: uppercase; letter-spacing: .08em;
-    background: #FCE9C9; color: #6B4A05; border-radius: 3px; padding: .1rem .3rem; margin-left: .4rem;
-    vertical-align: middle; white-space: nowrap;
+  .compteur button {
+    width: 46px; height: 46px; background: transparent; border: 0; cursor: pointer;
+    font-size: 1.25rem; color: var(--noir); line-height: 1;
   }
-  .compare { font-size: var(--t-sm); }
-  .compare td.oui { color: var(--valide); font-weight: 700; }
-  .compare td.non { color: #A03007; font-weight: 700; }
-  .inclus { list-style: none; display: grid; gap: .55rem; }
-  .inclus li { display: grid; grid-template-columns: 1.3rem 1fr; gap: .7rem; align-items: start; }
-  .inclus li::before { content: "•"; color: var(--indigo); font-weight: 700; }
-  .exclus li::before { content: "×"; color: #A03007; }
-  .erreur { background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412; border-radius: var(--r); padding: .8rem 1rem; font-size: var(--t-sm); }
-}
+  .compteur button:hover { background: var(--console-2); color: var(--action); }
+  .compteur output {
+    min-width: 3rem; text-align: center; font-family: var(--f-data); font-weight: 650;
+    border-inline: 1px solid var(--trait); align-self: stretch; display: grid; place-items: center;
+  }
 
-@layer composants {
-  /* ---------- Lecteur de récitation ----------
-     Pastille discrète, toujours atteignable au clavier. La couleur reste
-     celle de l'action : aucune teinte nouvelle n'entre dans la page. */
-  .ecoute {
-    position: fixed; left: var(--gout); bottom: var(--gout); z-index: 35;
-    display: flex; align-items: center; gap: .55rem;
-    background: var(--carte); border: 1px solid var(--trait); border-radius: 999px;
-    padding: .35rem .35rem .35rem .85rem;
-    box-shadow: 0 2px 10px rgba(16, 17, 20, .10);
-    max-width: calc(100% - var(--gout) * 2);
+  /* ================= Barre collante mobile ================= */
+  .barre-mobile {
+    position: fixed; inset: auto 0 0 0; z-index: 45;
+    display: none; align-items: center; gap: .8rem;
+    background: var(--encre); color: #fff;
+    padding: .65rem var(--gout) calc(.65rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--encre-3);
   }
-  .ecoute[hidden] { display: none; }
-  .ecoute__titre { font-size: var(--t-sm); color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ecoute__btn {
-    flex: none; width: 40px; height: 40px; border-radius: 50%;
-    display: grid; place-items: center; cursor: pointer;
-    background: var(--indigo); color: #fff; border: 1px solid var(--indigo);
-    transition: background var(--duree) var(--courbe);
+  .barre-mobile .prix { font-family: var(--f-data); font-weight: 700; }
+  .barre-mobile .btn { margin-left: auto; width: auto; }
+  @media (max-width: 48rem) { .barre-mobile { display: flex; } body { padding-bottom: 4.5rem; } }
+
+  /* ================= Fil d'Ariane ================= */
+  .fil { padding-block: 1.1rem .2rem; font-size: var(--t-sm); }
+  .fil ol { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; padding: 0; color: var(--gris); }
+  .fil li + li::before { content: "/"; margin-right: .4rem; color: var(--trait-f); }
+  .fil a { color: var(--gris); text-decoration: none; }
+  .fil a:hover { color: var(--action); }
+  .fil [aria-current="page"] { color: var(--noir); font-weight: 600; }
+
+  /* ================= Pied ================= */
+  .pied {
+    background: var(--encre); color: var(--sur-encre-2);
+    padding-block: var(--section) var(--pas); margin-top: var(--section);
+    font-size: var(--t-sm);
   }
-  .ecoute__btn:hover { background: var(--indigo-f); border-color: var(--indigo-f); }
-  .ecoute__btn svg { width: 20px; height: 20px; }
-  /* Le trait d'onde pulse doucement quand ça joue, pour qu'on voie d'où vient le son. */
-  .ecoute[data-actif="1"] .ecoute__onde { animation: onde 1.6s ease-in-out infinite; transform-origin: left center; }
-  @keyframes onde { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-  @media (max-width: 30rem) {
-    .ecoute__titre { display: none; }
-    .ecoute { padding: .3rem; }
+  .pied .cols {
+    display: grid; gap: var(--gout);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+  .pied h2 {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+    font-size: var(--t-xs); font-weight: 700; color: #fff; margin-bottom: .9rem;
+  }
+  .pied ul { display: grid; gap: .5rem; }
+  .pied a { color: var(--sur-encre-2); text-decoration: none; }
+  .pied a:hover { color: #fff; text-decoration: underline; }
+  .pied__bas {
+    display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; justify-content: space-between;
+    margin-top: var(--section); padding-top: var(--pas);
+    border-top: 1px solid var(--encre-3); color: var(--sur-encre-2); font-size: var(--t-xs);
   }
 }
 
 @layer pages {
-  /* ---------- Blog ----------
-     La colonne de lecture est volontairement étroite et le corps passe en
-     serif : un article se lit, une fiche produit se parcourt. Le changement
-     de famille signale ce changement de régime sans décor supplémentaire. */
-  .blog-tete { padding-block: var(--gout) var(--pas); }
-  .blog-grille { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
-  .blog-carte {
+
+  /* ================= Accueil : le hero =================
+     Le texte d'abord, le produit ensuite, dans les deux sens de lecture.
+     Le produit vit sur l'encre, parce qu'un écran ne se montre pas sur du
+     gris clair. */
+  .vitrine {
+    display: grid; gap: var(--gout);
+    padding-block: clamp(2rem, 1rem + 4vw, 4rem) var(--section);
+    align-items: start;
+  }
+  .vitrine__objet { order: 2; }
+  .argument { order: 1; }
+  @media (min-width: 62rem) {
+    .vitrine { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: calc(var(--gout) * 1.4); }
+    .vitrine__objet { position: sticky; top: 7rem; }
+  }
+
+  .argument h1 {
+    font-size: var(--t-2xl); margin-top: 1rem;
+    letter-spacing: -.045em; max-width: 20ch;
+  }
+
+  /* Le panneau produit : photo sur l'encre, ticket de prix détaché dessous. */
+  .vitrine__objet {
+    background: var(--encre); border-radius: var(--r-l); padding: var(--pas);
+    background-image:
+      radial-gradient(130% 80% at 15% 0%, rgb(27 77 245 / .26), transparent 60%),
+      radial-gradient(90% 70% at 100% 100%, rgb(255 176 32 / .12), transparent 58%);
+    box-shadow: var(--ombre-f);
+  }
+  .vitrine__objet .photo {
+    background: transparent; border: 0; border-radius: var(--r); overflow: hidden; margin: 0;
+  }
+  .vitrine__objet .photo img { border-radius: var(--r); }
+
+  /* La carte d'achat devient le ticket. Le masque mange bordure et rayon :
+     on les retire pour éviter un bord coupé net en haut. */
+  .achat {
+    --dent: 11px;
+    border: 0; border-radius: 0; box-shadow: none;
+    margin-top: var(--pas);
+    padding: var(--pas) var(--pas) calc(var(--pas) + var(--dent));
+    background: var(--carte);
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+  }
+  .achat .surtitre { color: var(--lampe); }
+  .achat .surtitre::before { background: var(--lampe); }
+  .achat__prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: .1rem .6rem; margin-top: .55rem; }
+  .achat__prix .montant {
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 3.4rem); font-weight: 700;
+    letter-spacing: -.045em; line-height: 1;
+  }
+  .achat__prix .ttc { font-size: var(--t-sm); color: var(--gris); }
+  .achat .btn { margin-top: var(--pas); }
+  .achat .garanties { padding-top: var(--pas); margin-top: var(--pas); border-top: 1px dashed var(--trait-f); }
+
+  /* ================= Trois points en panneaux ================= */
+  .points { display: grid; gap: 1px; background: var(--trait); border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden; }
+  @media (min-width: 48rem) { .points { grid-template-columns: repeat(3, 1fr); } }
+  .points > div { background: var(--carte); padding: var(--pas); }
+  .points h3 { font-size: var(--t-lg); }
+  .points p { margin-top: .5rem; font-size: var(--t-sm); color: var(--gris); }
+
+  /* ================= Bandeau d'avantages ================= */
+  .avantages {
+    display: grid; gap: 1px; background: var(--trait);
+    border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  }
+  .avantages > div { background: var(--carte); padding: var(--pas); }
+  .avantages b {
+    display: block; font-family: var(--f-data); font-size: var(--t-lg);
+    font-weight: 700; letter-spacing: -.03em; color: var(--noir);
+  }
+  .avantages span { display: block; margin-top: .3rem; font-size: var(--t-sm); color: var(--gris); }
+
+  /* ================= Déroulé vertical ================= */
+  .deroule-v { counter-reset: d; display: grid; }
+  .deroule-v li {
+    counter-increment: d; display: grid; grid-template-columns: 2.6rem 1fr;
+    gap: .2rem .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait);
+  }
+  .deroule-v li::before {
+    content: counter(d, decimal-leading-zero); grid-row: 1 / span 2;
+    font-family: var(--f-data); font-weight: 700; font-size: var(--t-sm);
+    color: var(--action); padding-top: .18em;
+  }
+  .deroule-v b { grid-column: 2; font-weight: 650; }
+  .deroule-v span { grid-column: 2; display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+
+  .deroule { counter-reset: d; display: grid; }
+  .deroule li {
+    counter-increment: d; display: grid; grid-template-columns: 2.4rem 1fr;
+    gap: .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait);
+  }
+  .deroule li::before {
+    content: counter(d, decimal-leading-zero);
+    font-family: var(--f-data); font-weight: 700; color: var(--action); font-size: var(--t-sm);
+  }
+  .deroule b { display: block; font-weight: 650; }
+  .deroule span { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+
+  /* ================= Récit ================= */
+  .recit { background: var(--encre); color: var(--sur-encre); padding-block: var(--section); }
+  .recit h2 { color: #fff; font-size: var(--t-xl); }
+  .recit .surtitre { color: var(--lampe-vif); }
+  .recit .surtitre::before { background: var(--lampe-vif); }
+  .recit .prose { font-family: var(--f-prose); font-size: 1.0625rem; line-height: 1.68; color: var(--sur-encre); }
+  .recit .prose p + p { margin-top: .9em; }
+  .recit a { color: var(--action-vif); }
+  .recit strong { color: #fff; }
+
+  /* Les trois chiffres qui ferment le récit. Filet ambre en tête, parce que
+     ce sont des preuves et pas des actions : le bleu reste réservé aux
+     choses sur lesquelles on clique. */
+  .recit .chiffres {
+    display: grid; gap: var(--gout); margin-top: var(--gout);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+  .recit .chiffres > div { border-top: 2px solid var(--lampe-vif); padding-top: .85rem; }
+  .recit .chiffres b {
+    display: block; font-family: var(--f-titre); font-variant-numeric: tabular-nums;
+    font-size: clamp(1.8rem, 1.2rem + 1.7vw, 2.5rem); font-weight: 700;
+    color: #fff; letter-spacing: -.04em; line-height: 1.05;
+  }
+  .recit .chiffres span {
+    display: block; margin-top: .45rem; font-family: var(--f-ui);
+    font-size: var(--t-sm); line-height: 1.5; color: var(--sur-encre-2);
+  }
+
+  /* ================= Vidéo ================= */
+  .video { position: relative; border-radius: var(--r-l); overflow: hidden; background: var(--encre); box-shadow: var(--ombre-f); }
+  .video video { width: 100%; height: auto; display: block; }
+  .video__play {
+    position: absolute; inset: 0; display: grid; place-content: center; gap: .7rem;
+    justify-items: center; background: rgb(11 14 20 / .34); border: 0; cursor: pointer;
+    color: #fff; font-weight: 650; font-size: var(--t-sm);
+  }
+  .video__play svg { width: 54px; height: 54px; background: var(--action); border-radius: 50%; padding: 12px; color: #fff; }
+  .video__play:hover svg { background: var(--action-f); }
+  .video figcaption { padding: .7rem var(--pas); font-size: var(--t-xs); color: var(--sur-encre-2); }
+
+  /* ================= Configurateur ================= */
+  .config { display: grid; gap: var(--gout); align-items: start; }
+  @media (min-width: 62rem) { .config { grid-template-columns: minmax(0, 1fr) minmax(0, 23rem); } }
+  .config__recap { position: sticky; top: 7rem; }
+  .config__recap .carte { padding: var(--pas); }
+  .recap__lignes { display: grid; gap: .45rem; margin-top: var(--pas); font-size: var(--t-sm); font-family: var(--f-data); }
+  .recap__lignes > div { display: flex; justify-content: space-between; gap: .8rem; }
+  .recap__total {
+    display: flex; justify-content: space-between; align-items: baseline; gap: .8rem;
+    margin-top: var(--pas); padding-top: var(--pas); border-top: 1px dashed var(--trait-f);
+    font-weight: 650;
+  }
+  .recap__total .prix { font-size: var(--t-xl); font-weight: 700; letter-spacing: -.04em; }
+
+  /* ================= Confirmation ================= */
+  .confirme { text-align: center; padding-block: var(--section); }
+  .confirme h1 { font-size: var(--t-xl); margin-top: var(--pas); }
+  /* Ici la pastille n'est pas une étiquette mais la grande coche de
+     confirmation : on écrase le composant en ligne. */
+  .confirme .pastille {
+    width: 4.5rem; height: 4.5rem; margin: 0 auto var(--pas); padding: 0;
+    border-radius: 50%; background: var(--valide); color: #fff;
+    display: grid; place-items: center;
+  }
+  .confirme .pastille svg { width: 2.2rem; height: 2.2rem; }
+
+  /* ================= Rappel produit ================= */
+  .rappel {
+    background: var(--encre); color: var(--sur-encre); border-radius: var(--r-l);
+    padding: var(--gout); display: grid; gap: var(--pas); align-items: center;
+    background-image: radial-gradient(110% 90% at 85% 0%, rgb(27 77 245 / .24), transparent 60%);
+  }
+  @media (min-width: 48rem) { .rappel { grid-template-columns: 1fr auto; } }
+  .rappel h2 { color: #fff; font-size: var(--t-xl); }
+  .rappel p { color: var(--sur-encre-2); margin-top: .5rem; font-size: var(--t-sm); }
+  .rappel .btn { white-space: nowrap; }
+
+  /* ================= Comparatif ================= */
+  .compare .secours { color: var(--gris); font-size: var(--t-sm); }
+
+  /* ================= Lecteur de récitation ================= */
+  .ecoute {
+    display: flex; align-items: center; gap: .8rem; flex-wrap: wrap;
     background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
-    padding: var(--pas); display: flex; flex-direction: column; gap: .5rem;
-    transition: border-color var(--duree) var(--courbe), transform var(--duree) var(--courbe);
+    padding: .75rem var(--pas); box-shadow: var(--ombre);
   }
-  .blog-carte:hover { border-color: var(--indigo); transform: translateY(-2px); }
-  .blog-carte h2 { font-size: var(--t-lg); }
-  .blog-carte h2 a { color: var(--noir); text-decoration: none; }
-  .blog-carte h2 a:hover { color: var(--indigo); }
-  .blog-carte p { font-size: var(--t-sm); color: var(--gris); }
-  .blog-carte .meta { margin-top: auto; font-family: var(--f-data); font-size: var(--t-xs); color: var(--gris); text-transform: uppercase; letter-spacing: .1em; }
+  .ecoute__titre {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .12em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+  }
+  .ecoute__btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--console-2); border: 1px solid var(--trait-f); border-radius: var(--r-s);
+    padding: .45rem .8rem; min-height: 40px; cursor: pointer; font-size: var(--t-sm); font-weight: 600;
+  }
+  .ecoute__btn:hover { border-color: var(--action); color: var(--action); }
+  .ecoute__btn svg { width: 20px; height: 20px; }
 
-  .article { width: min(100% - var(--gout) * 2, 44rem); margin-inline: auto; padding-bottom: var(--section); }
-  .article h1 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); margin-top: .5rem; }
-  .art-meta { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .12em; color: var(--gris); }
+  /* ================= Blog ================= */
+  .blog-tete { padding-block: var(--section) var(--gout); }
+  .blog-tete h1 { font-size: var(--t-2xl); letter-spacing: -.045em; max-width: 24ch; }
+  .blog-grille {
+    display: grid; gap: var(--gout);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  }
+  /* La carte est un <article> qui contient le lien, pas un lien. Le titre
+     porte donc un calque transparent sur toute la carte : la surface entière
+     devient cliquable sans imbriquer de lien dans un lien, et le titre reste
+     la cible annoncée aux lecteurs d'écran. */
+  .blog-carte {
+    position: relative; display: flex; flex-direction: column; gap: .55rem;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: var(--pas); box-shadow: var(--ombre);
+    transition: transform var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe), border-color var(--duree) var(--courbe);
+  }
+  .blog-carte:hover { transform: translateY(-2px); box-shadow: var(--ombre-f); border-color: var(--trait-f); }
+  .blog-carte h2, .blog-carte h3 { font-size: var(--t-lg); }
+  .blog-carte h2 a, .blog-carte h3 a { color: var(--noir); text-decoration: none; }
+  .blog-carte h2 a::after, .blog-carte h3 a::after { content: ""; position: absolute; inset: 0; }
+  .blog-carte:hover h2 a, .blog-carte:hover h3 a { color: var(--action); }
+  .blog-carte h2 a:focus-visible, .blog-carte h3 a:focus-visible { outline-offset: 4px; }
+  .blog-carte > p { font-size: var(--t-sm); color: var(--gris); }
+  .blog-carte .meta {
+    margin-top: auto; padding-top: .3rem;
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris-clair);
+  }
+  .blog-carte .txt { font-size: var(--t-sm); color: var(--gris); }
+  .blog-carte .liens { margin-top: auto; font-size: var(--t-sm); color: var(--action); font-weight: 650; }
+
+  /* ================= Article ================= */
+  /* L'article n'est enveloppé dans aucun conteneur : il porte lui-même sa
+     largeur et ses gouttières. Sans cette règle, le texte colle au bord. */
+  .article {
+    width: min(100% - var(--gout) * 2, 46rem); margin-inline: auto;
+    padding-block: var(--pas) var(--section);
+  }
+  .article h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem); letter-spacing: -.045em; max-width: 26ch; }
+  .art-meta {
+    display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-top: var(--pas);
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris-clair);
+  }
   .art-resume {
-    font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .4vw, 1.25rem); line-height: 1.55;
-    border-left: 4px solid var(--indigo); padding: .3rem 0 .3rem var(--pas); margin-block: var(--gout);
+    margin-top: var(--gout); padding: var(--pas) var(--pas) var(--pas) calc(var(--pas) + 3px);
+    background: var(--carte); border: 1px solid var(--trait);
+    border-left: 3px solid var(--action); border-radius: var(--r-s);
+    font-size: var(--t-md); color: var(--noir); box-shadow: var(--ombre);
   }
-  .art-corps { font-family: var(--f-prose); font-size: clamp(1.0625rem, 1rem + .3vw, 1.1875rem); line-height: 1.75; }
-  .art-corps > * + * { margin-top: 1.1em; }
-  .art-corps h2 { font-family: var(--f-titre); font-size: var(--t-xl); margin-top: 2em; margin-bottom: .1em; }
-  .art-corps h3 { font-family: var(--f-titre); font-size: var(--t-lg); margin-top: 1.6em; margin-bottom: .1em; }
-  .art-corps ul, .art-corps ol { padding-left: 1.3em; }
-  .art-corps li + li { margin-top: .4em; }
-  .art-corps a { text-underline-offset: .2em; }
-
+  .art-corps { margin-top: var(--gout); max-width: var(--mesure); font-family: var(--f-prose); font-size: 1.09rem; line-height: 1.7; }
+  .art-corps > * + * { margin-top: 1em; }
+  .art-corps h2 {
+    font-family: var(--f-titre); font-size: var(--t-xl); margin-top: 2.2em;
+    padding-top: .9em; border-top: 1px solid var(--trait);
+  }
+  .art-corps h3 { font-family: var(--f-titre); font-size: var(--t-lg); margin-top: 1.8em; }
+  .art-corps ul, .art-corps ol { padding-left: 1.3em; display: grid; gap: .4em; }
+  .art-corps blockquote {
+    border-left: 3px solid var(--lampe); padding-left: var(--pas);
+    color: var(--gris); font-style: italic;
+  }
+  .art-corps .tbl, .art-corps .cadre-defil { font-family: var(--f-ui); }
   .art-offre {
-    background: var(--noir); color: #E8E9EC; border-radius: var(--r);
-    padding: var(--gout); margin-top: var(--section);
+    margin-top: var(--section); background: var(--encre); color: var(--sur-encre);
+    border-radius: var(--r-l); padding: var(--gout);
+    background-image: radial-gradient(110% 90% at 88% 0%, rgb(27 77 245 / .24), transparent 60%);
   }
-  .art-offre h2 { color: #fff; font-size: var(--t-lg); }
-  .art-offre p { font-family: var(--f-prose); margin-top: .8rem; }
-  .art-offre strong { color: #fff; }
-  .art-offre .liens { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: var(--pas); }
-  .art-offre .btn--secondaire { color: #fff; border-color: #4A4D55; }
-  .art-offre .btn--secondaire:hover { background: #fff; color: var(--noir); border-color: #fff; }
+  .art-offre h2 { color: #fff; font-size: var(--t-xl); }
+  .art-offre p { color: var(--sur-encre-2); margin-top: .6rem; }
+  .art-offre .prix { color: #fff; font-weight: 700; }
+  .art-offre .btn { margin-top: var(--pas); }
+  .art-offre .garanties { margin-top: var(--pas); }
+  .art-voisins { margin-top: var(--section); }
+  .art-voisins h2 {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris); margin-bottom: var(--pas);
+  }
 
-  .art-voisins { margin-top: var(--section); border-top: 1px solid var(--trait); padding-top: var(--gout); }
-  .art-voisins ul { list-style: none; display: grid; gap: .1rem; margin-top: .8rem; }
-  .art-voisins li { border-top: 1px solid var(--trait); }
-  .art-voisins li:first-child { border-top: 0; }
-  .art-voisins a { display: block; padding: .8rem 0; text-decoration: none; font-weight: 600; }
-  .art-voisins a span { display: block; font-weight: 400; font-size: var(--t-sm); color: var(--gris); margin-top: .15rem; }
+  /* ================= Photos produit ================= */
+  .photo {
+    background: var(--console-2); border: 1px solid var(--trait);
+    border-radius: var(--r); overflow: hidden;
+  }
+  .photo img { width: 100%; height: auto; }
+  .photo figcaption { padding: .55rem var(--pas); font-size: var(--t-xs); color: var(--gris); border-top: 1px solid var(--trait); background: var(--carte); }
+  .galerie { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
 
-  /* ---------- Photos produit ---------- */
-  .photo { background: var(--studio-2); border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden; }
-  .photo img { width: 100%; height: auto; display: block; }
-  .photo figcaption { font-size: var(--t-sm); color: var(--gris); padding: .7rem var(--pas); border-top: 1px solid var(--trait); background: var(--carte); }
-  .galerie { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  /* ================= Solutions (configurateur) ================= */
+  .solutions { display: grid; gap: var(--pas); }
+  @media (min-width: 46rem) { .solutions { grid-template-columns: 1fr 1fr; } }
 
-  /* ---------- Révélation au défilement ----------
-     Le seul mouvement de la page. Désactivé si le visiteur a demandé
-     moins d'animations, et neutre si le script ne tourne pas. */
+  /* ================= Erreur et avertissement ================= */
+  .erreur {
+    background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412;
+    border-radius: var(--r-s); padding: .7rem 1rem; font-size: var(--t-sm);
+  }
+  .avf {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700;
+    background: var(--lampe-pale); color: var(--lampe);
+    padding: .1rem .4rem; border-radius: 3px; white-space: nowrap;
+  }
+}
+
+@layer utilitaires {
+  .mt-1 { margin-top: var(--pas); }
+  .mt-2 { margin-top: var(--gout); }
+  .centre { text-align: center; }
+  .mesure { max-width: var(--mesure); }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* Révélation au défilement : le seul mouvement de la page.
+     L'état masqué n'existe que sous html.js, posée par un script en tête de
+     document. Sans JavaScript la classe est absente et tout reste visible ;
+     avec prefers-reduced-motion, site.js la retire. */
   [data-reveal] { opacity: 1; }
-  html.js [data-reveal] { opacity: 0; transform: translateY(14px); }
-  html.js [data-reveal][data-vu] { opacity: 1; transform: none; transition: opacity 520ms var(--courbe), transform 520ms var(--courbe); }
+  html.js [data-reveal] { opacity: 0; transform: translateY(12px); }
+  html.js [data-reveal][data-vu] {
+    opacity: 1; transform: none;
+    transition: opacity 480ms var(--courbe), transform 480ms var(--courbe);
+  }
   @media (prefers-reduced-motion: reduce) {
     html.js [data-reveal] { opacity: 1; transform: none; }
   }
-
-  /* ---------- Récit ---------- */
-  .recit { background: var(--noir); color: #D6D8DC; }
-  .recit h2, .recit h3 { color: #fff; }
-  .recit .env { padding-block: var(--section); }
-  .recit .prose { font-family: var(--f-prose); max-width: 42rem; }
-  .recit .prose p + p { margin-top: 1.1em; }
-  .recit .chiffres { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); margin-top: var(--gout); }
-  .recit .chiffres div { border-top: 2px solid var(--indigo); padding-top: .8rem; }
-  .recit .chiffres b { display: block; font-family: var(--f-data); font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem); font-weight: 700; color: #fff; letter-spacing: -.03em; }
-  .recit .chiffres span { font-size: var(--t-sm); color: #9BA0A8; }
 }
 
-@layer composants {
-  /* ---------- Vidéo de présentation ----------
-     preload="none" : rien ne part sur le réseau avant que le visiteur
-     appuie sur lecture. Le bouton couvre l'affiche et disparaît au clic. */
-  .video { position: relative; border-radius: var(--r); overflow: hidden; background: #0D0D0F; border: 1px solid var(--trait); }
-  .video video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; }
-  .video__play {
-    position: absolute; inset: 0; width: 100%; border: 0; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .9rem;
-    background: rgba(13, 13, 15, .35); color: #fff; font-weight: 600; font-size: var(--t-md);
-    transition: background var(--duree) var(--courbe);
+/* =========================================================================
+   Ajouts du hero SaaS. Déclarés après les couches pour rester lisibles :
+   ces deux blocs n'existent que sur la page d'accueil.
+   ========================================================================= */
+@layer pages {
+
+  /* Deux appels à l'action côte à côte : construire, ou voir d'abord. */
+  .actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .actions .btn { flex: 0 1 auto; }
+  @media (max-width: 26rem) { .actions .btn { flex: 1 1 100%; } }
+
+  /* La bande de chiffres : quatre faits, en mono, séparés au filet.
+     Elle remplace la rangée d'icônes décoratives qu'on met par réflexe. */
+  .chiffres-cle {
+    display: grid; gap: 1px; background: var(--trait);
+    border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(min(50% - 1px, 9.5rem), 1fr));
   }
-  .video__play:hover { background: rgba(13, 13, 15, .18); }
-  .video__play svg { width: 4.5rem; height: 4.5rem; background: var(--indigo); border-radius: 50%; padding: .9rem; }
-  .video__play[hidden] { display: none; }
-  .video figcaption { font-size: var(--t-sm); color: var(--gris); padding: .7rem var(--pas); background: var(--carte); border-top: 1px solid var(--trait); }
+  .chiffres-cle > div { background: var(--carte); padding: .85rem var(--pas); }
+  .chiffres-cle dt {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .11em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+  }
+  .chiffres-cle dd {
+    margin-top: .3rem; font-size: var(--t-lg); font-weight: 700;
+    letter-spacing: -.035em; line-height: 1.1;
+  }
+  .chiffres-cle dd span {
+    display: block; margin-top: .25rem; font-family: var(--f-ui);
+    font-size: var(--t-xs); font-weight: 400; letter-spacing: 0; color: var(--gris);
+  }
+}
 
-  /* ---------- Déroulé vertical ---------- */
-  .deroule-v { counter-reset: dv; list-style: none; display: grid; gap: 0; max-width: 46rem; }
-  .deroule-v li { counter-increment: dv; display: grid; grid-template-columns: 2.6rem 1fr; gap: .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait); }
-  .deroule-v li::before { content: counter(dv, decimal-leading-zero); font-family: var(--f-data); font-weight: 700; color: var(--indigo); font-size: var(--t-sm); }
-  /* b et span sont des enfants directs de la grille : sans grid-column, le
-     span retombe dans la colonne du numéro et le texte se casse à un mot
-     par ligne. */
-  .deroule-v b { grid-column: 2; display: block; font-size: var(--t-md); }
-  .deroule-v span { grid-column: 2; display: block; color: var(--gris); font-size: var(--t-sm); margin-top: .25rem; max-width: 42rem; }
+/* =========================================================================
+   Correction de chasse : la mono tient les données, pas les grands nombres.
 
-  /* ---------- Bandeau d'avantages ---------- */
-  .avantages { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
-  .avantages div { border-top: 2px solid var(--valide); padding-top: .8rem; }
-  .avantages b { display: block; font-family: var(--f-data); font-size: clamp(1.2rem, 1rem + .9vw, 1.6rem); font-weight: 700; letter-spacing: -.03em; }
-  .avantages span { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .25rem; }
+   En monospace, l'espace avant le symbole euro occupe une chasse pleine :
+   « 720 € » à 3,4 rem s'affiche avec un trou au milieu et paraît cassé.
+   La règle est donc : mono sous 1,25 rem (tableaux, lignes de ticket,
+   récapitulatif), grotesque à chiffres tabulaires au-dessus.
+   ========================================================================= */
+@layer pages {
+  .achat__prix .montant,
+  .chiffres-cle dd.chiffres,
+  .recap__total .prix,
+  .avantages b {
+    font-family: var(--f-titre);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.045em;
+  }
+
+  /* Les étiquettes de la bande de chiffres n'ont pas toutes une ligne :
+     on réserve la même hauteur pour que les nombres s'alignent. */
+  .chiffres-cle > div { display: grid; align-content: start; }
+  .chiffres-cle dt { min-height: 2.3em; }
+}
+
+@layer pages {
+  /* La barre collante affiche un grand nombre : même règle de chasse. */
+  .barre-mobile .prix { font-family: var(--f-titre); font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+
+  /* Sur téléphone, le bandeau ne doit pas manger un quart de l'écran.
+     Les séparateurs et l'appel à l'action disparaissent : la barre collante
+     du bas porte déjà le même bouton. */
+  @media (max-width: 48rem) {
+    .bandeau__int { gap: .2rem .7rem; font-size: var(--t-xs); }
+    .bandeau__int > span:last-child { display: none; }
+  }
+}
+
+@layer pages {
+  /* Dans le récapitulatif, le libellé peut revenir à la ligne, jamais le
+     montant : « 600,00 » sur une ligne et « € » sur la suivante donne
+     l'impression d'un prix cassé juste avant de payer. */
+  .recap__lignes > div > :first-child { min-width: 0; }
+  .recap__lignes > div > :last-child { white-space: nowrap; flex: none; }
+  .recap__total > :last-child { white-space: nowrap; }
 }
 
 </style>
@@ -664,6 +1053,14 @@
     <rect x="5" y="20" width="14" height="2.4" rx="1.2" fill="currentColor"/>
   </symbol>
 </svg>
+<div class="bandeau">
+  <div class="env bandeau__int">
+    <span><em>Sans abonnement</em></span>
+    <span><b>720 € TTC</b> la borne, payés une fois</span>
+    <span><b>Livraison offerte</b> en France métropolitaine</span>
+    <span><a href="commander.html">Construire ma borne</a></span>
+  </div>
+</div>
 <header class="tete">
   <div class="env tete__int">
     <a class="marque" href="index.html"><svg aria-hidden="true"><use href="#i-logo"/></svg>Bornéa</a>

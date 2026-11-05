@@ -124,6 +124,19 @@ NAV = [
     ("contact.html", "Contact", False),
 ]
 
+def bandeau():
+    """Le bandeau du haut ne porte que ce qui decide : le prix, l'absence
+    d'abonnement, le port offert. Trois faits, pas un slogan."""
+    return f"""<div class="bandeau">
+  <div class="env bandeau__int">
+    <span><em>Sans abonnement</em></span>
+    <span><b>720 € TTC</b> la borne, payés une fois</span>
+    <span><b>Livraison offerte</b> en France métropolitaine</span>
+    <span><a href="commander.html">Construire ma borne</a></span>
+  </div>
+</div>"""
+
+
 def entete():
     morceaux = []
     for u, t, principal in NAV:
@@ -239,9 +252,9 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body="", 
 <meta property="og:url" content="{canon}">
 <meta property="og:image" content="{DOMAINE}/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
-<meta name="theme-color" content="#F1F2F4">
+<meta name="theme-color" content="#F6F7F9">
 <script>document.documentElement.className+=" js"</script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23101114'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%233B2BD9'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%231B4DF5'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 {{CSS_ICI}}
 {style_page or ""}
@@ -250,6 +263,7 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body="", 
 <body{f' class="{classe_body}"' if classe_body else ''}>
 <a class="saut" href="#contenu">Aller au contenu</a>
 {SPRITE.strip()}
+{bandeau()}
 {entete()}
 {corps}
 {pied()}
@@ -302,8 +316,21 @@ CORPS_INDEX = """
     <h1>Borne de commande pour restaurant</h1>
     <p class="chapo">Un écran tactile sur pied, posé à l’entrée de votre salle, sur lequel vos clients composent leur commande pendant que votre équipe reste en cuisine. Vendu une fois, sans abonnement.</p>
 
+    <div class="actions mt-2">
+      <a class="btn" href="commander.html">Construire ma borne</a>
+      <a class="btn btn--secondaire" href="#video">Voir la borne en service</a>
+    </div>
+    <p class="note mt-1">Le configurateur est gratuit et sans compte à créer. Vous repartez avec le fichier de votre borne, que vous payiez ou non.</p>
+
+    <dl class="chiffres-cle mt-2">
+      <div><dt>Prix</dt><dd class="chiffres">720 €<span>TTC, payés une fois</span></dd></div>
+      <div><dt>Abonnement</dt><dd class="chiffres">0 €<span>par mois, à vie</span></dd></div>
+      <div><dt>Installation</dt><dd class="chiffres">0 €<span>nous montons votre page</span></dd></div>
+      <div><dt>Mise en service</dt><dd class="chiffres">15 min<span>vous branchez, elle commande</span></dd></div>
+    </dl>
+
     <div class="encadre-cle mt-2" data-reveal>
-      <h2 style="font-size:var(--t-lg)">L’essentiel en dix secondes</h2>
+      <h2>L’essentiel en dix secondes</h2>
       <dl>
         <div><dt>Prix</dt><dd>600 € HT, payés une fois</dd></div>
         <div><dt>Abonnement</dt><dd>aucun, jamais</dd></div>
@@ -899,7 +926,7 @@ CORPS_GUIDE = fil([("Accueil", "index.html"), ("Guide d’achat", None)]) + """
     <p class="chapo prose" style="max-width:38ch;font-size:clamp(1.125rem,1rem+.6vw,1.4375rem);line-height:1.5;margin-top:1rem">Ce qu’il faut regarder avant d’acheter, ce que les vendeurs passent sous silence, et le calcul qui dit si ça vaut le coup chez vous.</p>
 
     <div class="encadre-cle mt-2">
-      <h2 style="font-size:var(--t-lg)">Les réponses courtes</h2>
+      <h2>Les réponses courtes</h2>
       <dl>
         <div><dt>Prix d’une borne</dt><dd>400 à 3 500 € selon le format</dd></div>
         <div><dt>Ce qui coûte cher</dt><dd>le logiciel, souvent au mois</dd></div>
