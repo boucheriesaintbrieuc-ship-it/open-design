@@ -8,7 +8,7 @@
 window.CONFIG = {
 
   /* ---- Identité ------------------------------------------------------ */
-  marque:    "Bornéa",
+  marque:    "O’Borne",
   domaine:   "https://borne-restaurants.fr",         /* sans barre oblique finale */
   telephone: "+33756939700",
   telAffiche:"07 56 93 97 00",

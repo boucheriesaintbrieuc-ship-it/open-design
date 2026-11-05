@@ -602,7 +602,3 @@
 
 /* ---- La transition sur la page d'accueil ------------------------------ */
 .essayer { position: relative; overflow: hidden; }
-.essayer__montage {
-  width: min(23rem, 62vw); margin-inline: auto; position: relative;
-}
-.essayer__montage .monte__c { transition: none; }   /* piloté au défilement */

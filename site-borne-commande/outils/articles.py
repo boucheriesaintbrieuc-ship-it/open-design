@@ -261,7 +261,7 @@ ARTICLES = [
  "resume": "Nous avons construit l’application de notre borne nous-mêmes, avec de l’IA, pour notre restaurant. Voici le temps que ça a pris, ce que ça couvre, et les trois limites que nous avons rencontrées.",
  "corps": """
 <p>Nous avons deux activités qui n’ont a priori rien à voir : une usine en Chine, et un restaurant. Le jour où il a fallu équiper la salle en bornes, les deux se sont rejointes.</p>
-<p>Les devis tournaient autour de 3 000 € par poste, plus un mensuel. Pour une salle qui a besoin de deux écrans, l’addition devenait difficile à justifier. Nous avons fait venir nos propres tablettes, et il est resté la vraie question : le logiciel.</p>
+<p>Les devis tournaient autour de 3 000 € par poste, plus un mensuel. Pour une salle qui a besoin de deux écrans, l’addition devenait difficile à justifier. Nous avons fait venir nos propres tablettes, et il est resté le logiciel.</p>
 
 <h2>Ce que fait réellement une application de borne</h2>
 <p>Commencez par là, parce que la réponse est moins impressionnante qu’on ne le croit. Une borne affiche des produits, enregistre des choix, calcule un total, applique un taux de TVA, et envoie une commande à une imprimante.</p>
@@ -288,7 +288,7 @@ ARTICLES = [
 <p>Notre réponse a été de séparer les deux : la borne prend la commande et l’envoie à la caisse, c’est la caisse certifiée qui enregistre le règlement. L’architecture est plus simple et le problème disparaît.</p>
 
 <h2>Ce que nous en retenons</h2>
-<p>Faire son application de borne est devenu accessible à quelqu’un de méthodique, à condition de ne pas toucher à l’encaissement. Le gain n’est pas seulement le mensuel économisé : c’est de pouvoir changer un écran le mardi parce qu’on a vu le lundi que les clients hésitaient.</p>
+<p>Faire son application de borne est devenu accessible à quelqu’un de méthodique, à condition de ne pas toucher à l’encaissement. Le mensuel économisé compte, mais moins que ça : on peut changer un écran le mardi parce qu’on a vu le lundi que les clients hésitaient.</p>
 <p>Ce n’est pas pour tout le monde. Si personne chez vous n’a envie d’ouvrir un ordinateur, achetez une solution complète et dormez tranquille. Si quelqu’un a cette envie, le matériel ne doit pas être ce qui vous bloque.</p>
 """,
  "faq": [

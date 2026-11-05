@@ -16,7 +16,7 @@ from articles import ARTICLES
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 DOMAINE = "https://borne-restaurants.fr"
-MARQUE = "Bornéa"
+MARQUE = "O’Borne"
 TEL_AFF = "07 56 93 97 00"
 TEL = "+33756939700"
 MAIL = "infos@borne-restaurants.fr"
@@ -103,7 +103,14 @@ SPRITE = """
     </g>
   </symbol>
   <symbol id="i-logo" viewBox="0 0 24 24">
-    <rect x="6" y="2" width="12" height="15" rx="2" fill="currentColor"/>
+    <!-- La borne vue de face, avec le chevron des barquettes découpé dans
+         l'écran : le même motif que la bande de séparation du site. -->
+    <mask id="m-logo">
+      <rect x="0" y="0" width="24" height="24" fill="#fff"/>
+      <path d="M6 7.4 10.2 7.4 6 12.6 Z M11.2 7.4 15.4 7.4 11.2 12.6 Z M16.4 7.4 18 7.4 18 9.4 16.4 12.6 Z"
+            fill="#000"/>
+    </mask>
+    <rect x="6" y="2" width="12" height="15" rx="2.4" fill="currentColor" mask="url(#m-logo)"/>
     <rect x="11" y="17" width="2" height="4" fill="currentColor"/>
     <rect x="5" y="20" width="14" height="2.4" rx="1.2" fill="currentColor"/>
   </symbol>
@@ -146,12 +153,13 @@ def entete():
     liens = "".join(morceaux)
     return f"""<header class="tete">
   <div class="env tete__int">
-    <a class="marque" href="index.html"><svg aria-hidden="true"><use href="#i-logo"/></svg>{MARQUE}</a>
+    <a class="marque" href="index.html"><svg aria-hidden="true"><use href="#i-logo"/></svg><span><i>O’</i>Borne</span></a>
     <nav class="nav" aria-label="Navigation principale">
       {liens}
       <a class="btn btn--petit" href="commander.html">Commander</a>
     </nav>
   </div>
+  <i class="chevron-bande" aria-hidden="true"></i>
 </header>"""
 
 def pied():
@@ -485,40 +493,40 @@ CORPS_INDEX = """
     <div class="stage__pivot" data-pivot>
       <div class="objet objet--garde" data-objet data-x="-330" data-y="-210" data-z="-190" aria-hidden="true">
         <div class="tuile">
-          <div class="tuile__img" style="--t:linear-gradient(145deg,#C98B3A,#7A4A14)"></div>
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#F2901B,#8A4F08)"></div>
           <p class="tuile__nom">Menu kebab</p>
           <p class="tuile__prix">9,90 €</p>
         </div>
       </div>
       <div class="objet" data-objet data-x="-300" data-y="170" data-z="-150" aria-hidden="true">
         <div class="tuile">
-          <div class="tuile__img" style="--t:linear-gradient(145deg,#4C7BFF,#1E2F8E)"></div>
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#B9A2E8,#5B3C9E)"></div>
           <p class="tuile__nom">Tacos poulet</p>
           <p class="tuile__prix">8,50 €</p>
         </div>
       </div>
       <div class="objet" data-objet data-x="-210" data-y="300" data-z="30" aria-hidden="true">
         <div class="tuile">
-          <div class="tuile__img" style="--t:linear-gradient(145deg,#FFB020,#B06A05)"></div>
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#FFB457,#C97A13)"></div>
           <p class="tuile__nom">Frites maison</p>
           <p class="tuile__prix">3,20 €</p>
         </div>
       </div>
       <div class="objet" data-objet data-x="300" data-y="240" data-z="-130" aria-hidden="true">
         <div class="tuile">
-          <div class="tuile__img" style="--t:linear-gradient(145deg,#39C98A,#0D6A47)"></div>
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#8E74C8,#3F2A6E)"></div>
           <p class="tuile__nom">Boisson 33 cl</p>
           <p class="tuile__prix">2,00 €</p>
         </div>
       </div>
       <div class="objet" data-objet data-x="320" data-y="-180" data-z="-30" aria-hidden="true">
         <div class="tuile">
-          <div class="tuile__img" style="--t:linear-gradient(145deg,#E86A9A,#8A2A52)"></div>
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#CDBBF2,#6C4BB8)"></div>
           <p class="tuile__nom">Tiramisu</p>
           <p class="tuile__prix">4,50 €</p>
         </div>
       </div>
-      <div class="objet" data-objet data-x="-330" data-y="250" data-z="130" aria-hidden="true">
+      <div class="objet" data-objet data-x="-195" data-y="305" data-z="110" aria-hidden="true">
         <div class="recu">
           <b>B-214</b>
           <span>Sur place</span>
@@ -587,17 +595,6 @@ CORPS_INDEX = """
     <p class="surtitre">Essayez tout de suite</p>
     <h2 style="font-size:var(--t-xl)">La borne, montée sur une vraie carte</h2>
     <p class="prose mt-1">Celle d’un restaurant qui tourne, avec ses trente-neuf produits, ses formules et ses prix. Commandez comme le ferait votre client : rien n’est débité, c’est une simulation.</p>
-
-    <div class="essayer__montage mt-2" data-montage>
-      <span class="fumee" aria-hidden="true"><i></i><i></i><i></i></span>
-      <div class="monte" role="img" aria-label="Un smash burger se monte, couche après couche, au fil du défilement">
-        <img class="monte__c" data-c="1" src="img/menu/couche-c1.webp" alt="" loading="lazy" decoding="async">
-        <img class="monte__c" data-c="2" src="img/menu/couche-c2.webp" alt="" loading="lazy" decoding="async">
-        <img class="monte__c" data-c="3" src="img/menu/couche-c3.webp" alt="" loading="lazy" decoding="async">
-        <img class="monte__c" data-c="4" src="img/menu/couche-c4.webp" alt="" loading="lazy" decoding="async">
-        <img class="monte__c" data-c="5" src="img/menu/couche-c5.webp" alt="" loading="lazy" decoding="async">
-      </div>
-    </div>
 
     <div class="mt-2">
       <div class="borne-demo" id="borne-demo" role="application" aria-label="Borne de commande de démonstration">
@@ -836,12 +833,12 @@ CORPS_INDEX = """
 
 <section class="recit">
   <div class="env">
-    <p class="surtitre" style="color:#9BA0A8">Pourquoi nous vendons ça</p>
+    <p class="surtitre">Pourquoi nous vendons ça</p>
     <h2 style="font-size:var(--t-xl)">Nous avons une usine. Et un restaurant.</h2>
     <div class="prose mt-2" data-reveal>
       <p>Les deux n’ont longtemps rien eu à voir. D’un côté une usine en Chine qui fabrique des écrans, de l’autre une salle à faire tourner, avec un service de midi qui bouchonnait au comptoir.</p>
       <p>Quand nous avons demandé des devis pour équiper cette salle, les montants allaient de 2 400 à 4 100 € par borne, plus 59 à 149 € par mois. Pour deux écrans, l’addition dépassait 13 000 € sur trois ans. Le matériel, lui, nous le connaissions : nous en fabriquons.</p>
-      <p>Nous avons donc fait venir nos propres tablettes, et il est resté la vraie question, celle du logiciel. Nous avons écrit le nôtre nous-mêmes, en nous faisant assister par l’IA, et il tourne depuis dans notre salle : il prend les commandes, applique le bon taux de TVA et les envoie en cuisine. Ce n’est pas un produit, c’est un outil taillé pour notre carte, et il ne nous coûte aucune licence.</p>
+      <p>Nous avons donc fait venir nos propres tablettes, et il est resté le plus dur : le logiciel. Nous avons écrit le nôtre nous-mêmes, en nous faisant assister par l’IA, et il tourne depuis dans notre salle : il prend les commandes, applique le bon taux de TVA et les envoie en cuisine. Ce n’est pas un produit, c’est un outil taillé pour notre carte, et il ne nous coûte aucune licence.</p>
       <p>Une fois les deux bornes installées et rentables, la suite s’est imposée toute seule : vendre le même matériel, au prix du matériel, à des restaurateurs qui se posaient les mêmes questions que nous.</p>
     </div>
     <div class="chiffres" data-reveal>
@@ -949,7 +946,7 @@ CORPS_INDEX = """
         <h3 style="font-size:var(--t-md)">Ce que c’est, précisément</h3>
         <p>Un écran tactile de bureau monté sur une colonne et un socle rond lesté, le tout en blanc mat. L’écran se démonte de sa colonne et pivote à la main entre paysage et portrait, grâce à une rotule visible sur la photo.</p>
         <p>À l’intérieur, un appareil Android complet : Play Store accessible, navigateur, Wi-Fi, caméra frontale désactivable et batterie intégrée. Ce n’est donc pas un écran passif branché sur un ordinateur, c’est un appareil autonome qui démarre seul sur la page que vous lui désignez.</p>
-        <p>Cette ouverture est le point important. Un écran verrouillé par son fabricant ne sert qu’avec le logiciel du fabricant, et s’éteint le jour où vous arrêtez de payer. Celui-ci accepte n’importe quelle application Android, y compris celle de votre éditeur de caisse, et la page que nous montons pour vous.</p>
+        <p>Un écran verrouillé par son fabricant ne sert qu’avec le logiciel du fabricant, et s’éteint le jour où vous arrêtez de payer. Celui-ci accepte n’importe quelle application Android, y compris celle de votre éditeur de caisse, et la page que nous montons pour vous.</p>
         <h3 style="font-size:var(--t-md)">Ce qu’il sait faire au-delà de la prise de commande</h3>
         <p>Posé en paysage près de la cuisine, il affiche les commandes à préparer. En portrait dans une vitrine, il sert d’affichage de carte ou de promotion. Branché sur rien du tout, il reste une tablette de travail pour l’équipe.</p>
         <p>La batterie change la façon de l’installer : vous le déplacez en terrasse à midi, vous le rentrez le soir, et vous évitez la rallonge qui traverse un passage, qui est en pratique la première cause de chute dans un établissement recevant du public.</p>
@@ -1103,7 +1100,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
       <section class="etape">
         <div class="etape__tete"><span class="etape__num">1</span><h2>Votre matériel</h2></div>
         <fieldset class="carte mt-1">
-          <legend class="surtitre" style="padding:0 0 .6rem">Quantité</legend>
+          <legend class="surtitre">Quantité</legend>
           <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
             <div class="compteur">
               <button type="button" data-qte="-1" aria-label="Retirer une borne">−</button>
@@ -1115,7 +1112,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
         </fieldset>
 
         <fieldset class="mt-2">
-          <legend class="surtitre" style="padding:0 0 .6rem">Options</legend>
+          <legend class="surtitre">Options</legend>
           <div style="display:grid;gap:.7rem">
             <label class="option">
               <input type="checkbox" id="opt-mise-en-service">
@@ -1767,8 +1764,7 @@ FICHIERS.append(page(
     "Borne de commande tactile pour restaurant : écran vertical sur pied, 600 € HT, sans abonnement ni logiciel imposé. Livraison offerte, garantie 2 ans.",
     CORPS_INDEX, ld=[ORG, PRODUIT, FAQ_INDEX],
     style_page=_lire("assets/scene3d.css") + "\n" + _lire("assets/demo-borne.css"),
-    script_page=_lire("assets/scene3d.js") + "\n" + _lire("assets/demo-borne.js")
-                + "\n" + _lire("assets/montage.js")))
+    script_page=_lire("assets/scene3d.js") + "\n" + _lire("assets/demo-borne.js")))
 
 FICHIERS.append(page(
     "demo-borne-de-commande.html",
@@ -1776,7 +1772,7 @@ FICHIERS.append(page(
     "Essayez une vraie borne de commande dans votre navigateur : carte complète, options, TVA sur place ou à emporter, ticket avec numéro d’appel.",
     CORPS_DEMO,
     style_page=_lire("assets/demo-borne.css"),
-    script_page=_lire("assets/demo-borne.js") + "\n" + _lire("assets/montage.js")))
+    script_page=_lire("assets/demo-borne.js")))
 
 FICHIERS.append(page(
     "guide-borne-de-commande-restaurant.html",

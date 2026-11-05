@@ -30,9 +30,9 @@
 .stage__lumiere {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(60% 50% at 62% 34%, rgb(76 123 255 / .34), transparent 70%),
-    radial-gradient(42% 38% at 24% 72%, rgb(255 176 32 / .16), transparent 72%),
-    radial-gradient(90% 70% at 50% 120%, rgb(11 14 20 / .9), transparent 60%);
+    radial-gradient(58% 48% at 64% 32%, rgb(242 144 27 / .30), transparent 70%),
+    radial-gradient(46% 42% at 22% 70%, rgb(108 75 184 / .34), transparent 74%),
+    radial-gradient(90% 70% at 50% 120%, rgb(12 8 16 / .92), transparent 60%);
 }
 
 /* Le sol : un plan couché en 3D. C'est lui qui donne l'assise, sans quoi
@@ -42,8 +42,8 @@
   width: 220%; height: 70%; transform: translateX(-50%) perspective(900px) rotateX(74deg);
   transform-origin: 50% 100%; pointer-events: none;
   background:
-    repeating-linear-gradient(90deg, rgb(120 150 220 / .13) 0 1px, transparent 1px 86px),
-    repeating-linear-gradient(0deg,  rgb(120 150 220 / .13) 0 1px, transparent 1px 86px);
+    repeating-linear-gradient(90deg, rgb(200 170 230 / .13) 0 1px, transparent 1px 86px),
+    repeating-linear-gradient(0deg,  rgb(200 170 230 / .13) 0 1px, transparent 1px 86px);
   -webkit-mask: radial-gradient(60% 72% at 50% 100%, #000 10%, transparent 72%);
   mask: radial-gradient(60% 72% at 50% 100%, #000 10%, transparent 72%);
 }
@@ -78,7 +78,7 @@
 }
 .borne3d__face {
   position: absolute; inset: 0; border-radius: 12px;
-  background: #0E1219; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .07);
+  background: #120E18; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .07);
   transform: translateZ(9px); overflow: hidden;
 }
 .borne3d__dos {
@@ -100,7 +100,7 @@
    pas une vidéo posée à côté du produit. */
 .borne3d__ecran {
   position: absolute; inset: 10px; border-radius: 6px; overflow: hidden;
-  background: #05070B;
+  background: #0C0810;
 }
 .borne3d__ecran video, .borne3d__ecran img {
   width: 100%; height: 100%; object-fit: cover; display: block;
@@ -124,7 +124,7 @@
   transform: rotateX(82deg); transform-origin: 50% 0;
   border-radius: 50%;
   background: radial-gradient(58% 58% at 42% 34%, #F2F4F7, #BFC5CE 54%, #6E747E);
-  box-shadow: 0 0 60px 16px rgb(76 123 255 / .10), inset 0 0 0 1px rgb(255 255 255 / .35);
+  box-shadow: 0 0 60px 16px rgb(242 144 27 / .12), inset 0 0 0 1px rgb(255 255 255 / .35);
 }
 
 /* ---- Les objets qui orbitent ------------------------------------------
@@ -142,15 +142,15 @@
 /* La tuile : exactement ce que la borne affiche, carré photo, nom, prix. */
 .tuile {
   width: 150px; border-radius: 14px; padding: 10px;
-  background: linear-gradient(165deg, #1B2231, #10151E);
+  background: linear-gradient(165deg, #2B2138, #16101D);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / .10);
 }
 .tuile__img {
   height: 88px; border-radius: 9px;
-  background: var(--t, linear-gradient(140deg, #4C7BFF, #2B3FA8));
+  background: var(--t, linear-gradient(140deg, #F2901B, #A3560A));
   box-shadow: inset 0 -18px 28px rgb(0 0 0 / .25);
 }
-.tuile__nom { margin-top: 8px; font-size: 12px; font-weight: 650; color: #EEF1F6; letter-spacing: -.01em; }
+.tuile__nom { margin-top: 8px; font-size: 12px; font-weight: 650; color: #F7F2FA; letter-spacing: -.01em; }
 .tuile__prix {
   margin-top: 2px; font-family: var(--f-data); font-variant-numeric: tabular-nums;
   font-size: 12px; font-weight: 700; color: var(--lampe-vif);
@@ -175,9 +175,9 @@
 .recu span {
   display: block; margin-top: 3px; font-family: var(--f-etiq);
   text-transform: uppercase; letter-spacing: .12em; font-size: 9px;
-  font-weight: 700; color: #6A7384;
+  font-weight: 700; color: #6B5E7A;
 }
-.recu hr { border: 0; border-top: 1px dashed #C8CDD6; margin: 8px 0 6px; }
+.recu hr { border: 0; border-top: 1px dashed #D3CBC0; margin: 8px 0 6px; }
 
 /* ---- Le texte, devant la scène --------------------------------------- */
 .stage__texte {
@@ -187,8 +187,6 @@
 @media (min-width: 62rem) {
   .stage__texte > * { max-width: min(38rem, 42vw); }
 }
-.stage__texte .surtitre { color: var(--lampe-vif); }
-.stage__texte .surtitre::before { background: var(--lampe-vif); }
 
 /* Le titre surdimensionné. L'épaisseur vient d'un empilement d'ombres, pas
    d'une image : il reste sélectionnable, traduisible et indexable. */
@@ -198,12 +196,12 @@
   line-height: .94; letter-spacing: -.05em; color: #fff;
   max-width: 11ch;
   text-shadow:
-    0 1px 0 #AEBBDA, 0 2px 0 #8C9AC0, 0 3px 0 #6E7CA6,
-    0 4px 0 #56638C, 0 5px 0 #414D74,
-    0 16px 34px rgb(0 0 0 / .55), 0 0 64px rgb(76 123 255 / .34);
+    0 1px 0 #C97A13, 0 2px 0 #A3610C, 0 3px 0 #7C4908,
+    0 4px 0 #563105, 0 5px 0 #331C03,
+    0 18px 38px rgb(0 0 0 / .7), 0 0 72px rgb(242 144 27 / .30);
 }
-.stage .chapo { color: #B7C0D1; max-width: 34ch; }
-.stage .note { color: #8E99AC; }
+.stage .chapo { color: #CFC4DF; max-width: 34ch; }
+.stage .note { color: #AFA2C0; }
 
 .stage__cta { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: var(--gout); }
 .stage .btn--secondaire {

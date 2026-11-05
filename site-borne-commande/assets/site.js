@@ -1,5 +1,5 @@
 /* =========================================================================
-   Bornéa — comportements du site.
+   O’Borne — comportements du site.
    Vanilla, sans dépendance. Chaque bloc se désactive tout seul si son
    markup est absent de la page, ce qui permet de charger ce fichier partout.
    ========================================================================= */

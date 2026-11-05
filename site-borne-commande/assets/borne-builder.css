@@ -8,7 +8,7 @@
 .etape:first-of-type { border-top: 0; margin-top: var(--gout); padding-top: 0; }
 .etape__num {
   display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%;
-  background: #2B57F0; color: #fff; font-family: var(--f-data); font-size: .8rem; font-weight: 700;
+  background: var(--action); color: #1A1016; font-family: var(--f-data); font-size: .8rem; font-weight: 700;
 }
 .etape__tete { display: flex; align-items: center; gap: .8rem; }
 .etape__tete h2 { font-size: var(--t-lg); }
