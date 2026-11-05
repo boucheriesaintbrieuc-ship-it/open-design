@@ -1,6 +1,6 @@
 # Site « Borne de commande restaurant »
 
-Site marchand mono-produit, trente pages dont un blog de dix-huit articles, tunnel
+Site marchand mono-produit, trente et une pages dont un blog de dix-huit articles, tunnel
 complet jusqu’au paiement Stripe.
 Aucune dépendance externe : pas de CDN, pas de police tierce, pas de bibliothèque
 JavaScript, aucune requête réseau au chargement.
@@ -304,6 +304,91 @@ listés plus haut :
 
 Ces informations ne figurent pas encore sur le site parce que je ne les ai pas.
 Elles doivent y être avant la première vente.
+
+---
+
+## La borne de démonstration
+
+`demo-borne-de-commande.html` est une borne complète et jouable, montée sur
+la carte réelle de Smash Avenue. C'est l'argument de vente le plus direct du
+site : plutôt que d'expliquer ce que fait une borne, on la fait essayer.
+
+### Le parcours
+
+Sept écrans, dans l'ordre d'une vraie borne : veille, sur place ou à
+emporter, carte, fiche produit avec ses options, panier, paiement, ticket
+avec numéro d'appel, puis retour en veille.
+
+### Ce qui est vraiment calculé
+
+**La TVA change avec le mode de consommation** : 10 % sur place, 5,5 % à
+emporter. C'est le premier point qu'un restaurateur vérifie, et une borne
+qui affiche le même ticket dans les deux cas se fait repérer en trente
+secondes. Vérifié au navigateur sur une commande identique :
+
+| | Sur place | À emporter |
+|---|---|---|
+| Total | 31,70 € | 31,70 € |
+| dont TVA | 2,88 € | 1,65 € |
+| Hors taxes | 28,82 € | 30,05 € |
+
+Les formules et suppléments sont calculés aussi : menu à +3 €, patate douce
+à +4 €, tailles ×3 / ×6 qui remplacent le prix de base, toppings de bubble
+waffle à +1 €, glaces et coulis à +0,50 €.
+
+### La carte
+
+39 produits en 8 catégories, relevés sur vos quatre planches menu :
+12 smash burgers, 5 box, 3 salades, 4 frites, 4 accompagnements,
+6 asiatiques, 2 menus, 3 desserts.
+
+Les photos sont découpées dans vos planches, une par produit, 255 ko au
+total pour les 39. Elles sont nettes à la taille d'une tuile. Si vous voulez
+les afficher en grand un jour, il faudra les photos d'origine : la planche
+fait 562 px de large, c'est la limite.
+
+### Ce qui manque, et pourquoi
+
+**Les boissons.** Vos planches donnent le prix d'une boisson *dans un menu*
+(+1 € avec une salade, +3 € avec un burger), jamais le prix d'une boisson
+seule. Je ne l'ai pas inventé. Donnez-moi la liste et je l'ajoute.
+
+**Deux lignes d'ingrédients** étaient partiellement illisibles sur la
+planche, notamment celle du Melty Smash. J'ai écrit ce qui se lisait et
+raccourci le reste plutôt que de deviner. Relisez les 39 descriptions avant
+de montrer la démonstration à un client : c'est sa carte, pas la nôtre.
+
+### Détails de comportement
+
+- **Veille automatique** au bout de 60 secondes sans geste, panier remis à
+  zéro. Sans ça, un client trouve le panier du précédent.
+- **Retour en veille** 9 secondes après le ticket.
+- **Le paiement est une simulation**, et l'écran le dit en toutes lettres.
+- **Plein écran** disponible sous la borne, pour la montrer sur une tablette.
+
+### Un défaut de CSS qui vaut d'être retenu
+
+Le bouton « Payer par carte » s'est affiché sans son fond orange pendant la
+construction. La cause : `.borne-demo button` vaut (0,1,1) en spécificité et
+écrasait `.kbtn` qui ne vaut que (0,1,0). Une remise à zéro de contexte
+battait la règle du composant, sans qu'aucune erreur ne soit levée.
+
+La parade est `:where()`, qui met la remise à zéro à une spécificité nulle :
+
+```css
+.borne-demo :where(button) { background: none; … }
+```
+
+Trois composants étaient touchés en silence. Si vous ajoutez des styles à la
+borne, gardez cette forme.
+
+### Le décalage à connaître
+
+Cette démonstration est plus riche que ce que génère aujourd'hui le
+configurateur de `commander.html`. C'est volontaire à ce stade — elle sert
+de référence — mais **ne la montrez pas comme le résultat exact du
+configurateur** tant que les deux ne sont pas alignés. Dites-le et je mets
+le générateur au niveau.
 
 ---
 

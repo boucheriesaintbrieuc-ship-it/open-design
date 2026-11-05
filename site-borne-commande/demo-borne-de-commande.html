@@ -1,0 +1,2710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borne de commande : la démonstration jouable | Bornéa</title>
+<meta name="description" content="Essayez une vraie borne de commande dans votre navigateur : carte complète, options, TVA sur place ou à emporter, ticket avec numéro d’appel.">
+<link rel="canonical" href="https://borne-restaurants.fr/demo-borne-de-commande.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bornéa">
+<meta property="og:title" content="Borne de commande : la démonstration jouable | Bornéa">
+<meta property="og:description" content="Essayez une vraie borne de commande dans votre navigateur : carte complète, options, TVA sur place ou à emporter, ticket avec numéro d’appel.">
+<meta property="og:url" content="https://borne-restaurants.fr/demo-borne-de-commande.html">
+<meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#0B0F17">
+<script>document.documentElement.className+=" js"</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%235B86FF'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
+<style>
+/* =========================================================================
+   Bornéa — feuille de style unique du site
+
+   DIRECTION : la console du logiciel, pas la brochure du matériel.
+
+   Le produit vendu est un écran. La page est donc construite comme l'outil
+   lui-même : une coque claire et dense, de type console professionnelle, dans
+   laquelle le produit apparaît sur des surfaces sombres — parce que c'est là
+   qu'un écran se lit.
+
+   Règle de couleur qui gouverne tout :
+     l'encre est le produit, la console est la page, le bleu est l'action,
+     l'ambre est le ticket.
+   Une teinte qui ne tient pas dans cette phrase n'a rien à faire ici.
+
+   Signature : le ticket. Toute borne de commande imprime un reçu ; le site
+   s'en sert comme contenant pour les chiffres qui engagent — le prix, le
+   calcul de rentabilité, le récapitulatif de commande. Bord perforé découpé
+   au masque CSS, typographie mono, chiffres tabulaires. C'est la seule
+   audace de la page : tout le reste tient au filet d'un pixel.
+   ========================================================================= */
+
+@layer reset, tokens, base, layout, composants, pages, utilitaires;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol, fieldset, legend { margin: 0; padding: 0; }
+  fieldset { border: 0; min-width: 0; }
+  ul[role="list"], ol[role="list"] { list-style: none; }
+  img, svg, video { display: block; max-width: 100%; height: auto; }
+  input, button, select, textarea { font: inherit; color: inherit; }
+  a { color: inherit; }
+  table { border-collapse: collapse; width: 100%; }
+}
+
+@layer tokens {
+  :root {
+    /* ---- Surfaces ----
+       Le site est sombre. La profondeur se lit donc par empilement : plus
+       une surface est proche du visiteur, plus elle est claire. L'encre
+       reste le niveau le plus bas, réservé au produit et aux barres. */
+    --encre:     #05070B;   /* le plus profond : scène 3D, bandeau, barre mobile */
+    --encre-2:   #0E131C;   /* panneau surélevé posé sur l'encre */
+    --encre-3:   #1E2735;   /* filet et séparation sur fond encre */
+    --console:   #0B0F17;   /* la page */
+    --console-2: #111826;   /* bandes alternées, fonds de panneau */
+    --carte:     #151D2B;   /* carte : un cran au-dessus de la page */
+    --trait:     #232D3F;
+    --trait-f:   #35415698;  /* filet appuyé : bord de tableau, séparateur fort */
+
+    /* ---- Texte ---- */
+    --texte:     #EDF1F7;   /* titres et texte courant — 15,8:1 sur la page */
+    --gris:      #A3ADBD;   /* texte secondaire — 8,3:1 */
+    --gris-clair:#8B95A6;   /* texte tertiaire — 6,2:1, tient à 12 px */
+    --sur-encre: #E7EAEF;
+    --sur-encre-2:#9AA4B4;
+
+    /* ---- Action ---- */
+    --action:    #5B86FF;   /* boutons, liens, focus */
+    --action-f:  #89A8FF;   /* survol */
+    --action-pale:#15203A;  /* fond de pastille, surlignage */
+    --action-vif:#89A8FF;
+
+    /* ---- Signalisation ---- */
+    --lampe:     #FFB020;   /* l'ambre du passe : motif ticket, donnée à surveiller */
+    --lampe-vif: #FFB020;
+    --lampe-pale:#2A1E08;
+    --valide:    #46D5A2;   /* confirmation, réassurance */
+    --valide-clair:#46D5A2;
+    --attente:   #FF8E72;   /* erreur, refus */
+
+    /* ---- Fontes ----
+       Aucune webfont : une police en CDN transfère l'IP du visiteur hors UE.
+       Le caractère vient donc du traitement — chasse serrée sur les titres,
+       capitales espacées sur les étiquettes, chiffres tabulaires partout.
+       Chaque pile est éprouvée sur son DERNIER repli, pas sur le premier. */
+    --f-titre:   "Helvetica Neue", "Segoe UI Variable Display", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-ui:      "Helvetica Neue", "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
+    --f-etiq:    "Arial Narrow", "Helvetica Neue Condensed", "Liberation Sans Narrow", "Segoe UI", system-ui, sans-serif;
+    --f-prose:   "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --f-data:    ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+
+    /* ---- Échelle typographique ----
+       Écarts volontairement larges entre niveaux : une gradation timide
+       donne une page plate, et le titre doit porter seul. */
+    --t-xs:  .75rem;
+    --t-sm:  clamp(.8125rem, .79rem + .12vw, .875rem);
+    --t-md:  clamp(1rem, .96rem + .2vw, 1.0625rem);
+    --t-lg:  clamp(1.125rem, 1.02rem + .5vw, 1.375rem);
+    --t-xl:  clamp(1.5rem, 1.1rem + 1.8vw, 2.5rem);
+    --t-2xl: clamp(2.4rem, 1.4rem + 4.4vw, 4.75rem);
+
+    --pas:     clamp(.9rem, .65rem + 1.1vw, 1.35rem);
+    --gout:    clamp(1.25rem, .9rem + 1.7vw, 2.25rem);
+    --section: clamp(3.25rem, 2rem + 5vw, 6rem);
+    --max:     1220px;
+    --mesure:  66ch;
+    --r:       10px;
+    --r-s:     6px;
+    --r-l:     18px;
+    --duree:   180ms;
+    --courbe:  cubic-bezier(.2,.7,.3,1);
+    --ombre:   0 1px 2px rgb(0 0 0 / .40), 0 6px 18px -8px rgb(0 0 0 / .55);
+    --ombre-f: 0 2px 6px rgb(0 0 0 / .45), 0 22px 48px -18px rgb(0 0 0 / .75);
+  }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 6.5rem; }
+  body {
+    background: var(--console); color: var(--texte);
+    font-family: var(--f-ui); font-size: var(--t-md); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--f-titre); font-weight: 700; line-height: 1.04;
+    letter-spacing: -.04em; text-wrap: balance;
+  }
+  h3 { letter-spacing: -.03em; }
+  h4 { letter-spacing: -.02em; }
+  p { text-wrap: pretty; }
+  strong, b { font-weight: 650; }
+  a { color: var(--action); text-underline-offset: .18em; text-decoration-thickness: from-font; }
+  a:hover { color: var(--action-f); }
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 3px solid var(--action); outline-offset: 2px; border-radius: 3px;
+  }
+  ::selection { background: var(--action); color: #fff; }
+
+  /* Tout nombre du site est tabulaire. Des prix qui dansent d'une ligne à
+     l'autre suffisent à faire douter du sérieux d'une page de tarifs. */
+  .prix, .montant, .chiffres, .tbl td, .tbl th, time, output,
+  input[type="number"], .art-meta { font-variant-numeric: tabular-nums; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+}
+
+@layer layout {
+  .env { width: min(100% - var(--gout) * 2, var(--max)); margin-inline: auto; }
+  .env-etroite { width: min(100% - var(--gout) * 2, 46rem); margin-inline: auto; }
+  .sec { padding-block: var(--section); }
+  .sec--alt { background: var(--console-2); border-block: 1px solid var(--trait); }
+
+  /* Un enfant de grille se dimensionne par défaut sur son contenu le plus
+     large : sans min-width, un tableau à défilement élargit la page entière. */
+  .grille > *, .duo > *, .trio > * { min-width: 0; }
+  .duo  { display: grid; gap: var(--gout); }
+  .trio { display: grid; gap: var(--gout); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  @media (min-width: 48rem) { .duo { grid-template-columns: 1fr 1fr; } }
+
+  .saut { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .saut:focus {
+    width: auto; height: auto; clip-path: none; left: 1rem; top: 1rem; z-index: 99;
+    background: var(--encre); color: #fff; padding: .7rem 1rem; border-radius: var(--r-s);
+  }
+}
+
+@layer composants {
+
+  /* ================= Bandeau d'annonce =================
+     Au-dessus de l'en-tête, sur fond encre. Il porte le seul argument qui
+     décide : le prix, l'absence d'abonnement, le port offert. */
+  .bandeau {
+    background: var(--encre); color: var(--sur-encre);
+    font-size: var(--t-sm); line-height: 1.3;
+  }
+  .bandeau__int {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: .5rem 1.1rem; min-height: 40px; padding-block: .5rem; text-align: center;
+  }
+  .bandeau b { color: #fff; font-weight: 650; }
+  .bandeau__int > span + span { border-left: 1px solid #2A3345; padding-left: 1.1rem; }
+  @media (max-width: 48rem) { .bandeau__int > span + span { border-left: 0; padding-left: 0; } }
+  .bandeau em {
+    font-style: normal; color: var(--lampe-vif);
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .12em;
+    font-size: var(--t-xs); font-weight: 700;
+  }
+  .bandeau a { color: var(--action-vif); }
+  .bandeau a:hover { color: #fff; }
+
+  /* ================= En-tête ================= */
+  .tete {
+    position: sticky; top: 0; z-index: 40;
+    background: var(--console);   /* repli si color-mix n’est pas connu */
+    background: color-mix(in srgb, var(--console) 86%, transparent);
+    backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid var(--trait);
+  }
+  .tete__int { display: flex; align-items: center; gap: 1rem; min-height: 64px; }
+  .marque {
+    display: inline-flex; align-items: center; gap: .55rem;
+    font-family: var(--f-titre); font-weight: 700; letter-spacing: -.04em;
+    font-size: 1.15rem; color: var(--texte); text-decoration: none;
+  }
+  .marque svg { width: 22px; height: 22px; color: var(--action); }
+  .nav { margin-left: auto; display: flex; align-items: center; gap: clamp(.5rem, .2rem + 1vw, 1.3rem); }
+
+  /* :not(.btn) est indispensable : sans lui cette règle repeint le bouton
+     « Commander » en gris sur fond bleu, illisible. */
+  .nav a:not(.btn) {
+    font-size: var(--t-sm); font-weight: 550; color: var(--gris); text-decoration: none;
+    display: inline-flex; align-items: center; min-height: 36px; padding-inline: .15rem;
+    position: relative;
+  }
+  .nav a:not(.btn):hover { color: var(--texte); }
+  .nav a:not(.btn)[aria-current="page"] { color: var(--texte); font-weight: 650; }
+  .nav a:not(.btn)[aria-current="page"]::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px;
+    height: 2px; background: var(--action);
+  }
+  @media (max-width: 54rem) { .nav a:not(.btn).nav__secondaire { display: none; } }
+
+  /* ================= Boutons ================= */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    background: var(--action); color: #fff; text-decoration: none;
+    font-weight: 650; font-size: var(--t-sm); letter-spacing: -.01em;
+    padding: .72rem 1.15rem; min-height: 44px; border: 1px solid var(--action);
+    border-radius: var(--r-s); cursor: pointer;
+    box-shadow: 0 1px 2px rgb(11 14 20 / .14), inset 0 1px 0 rgb(255 255 255 / .16);
+    transition: background var(--duree) var(--courbe), transform var(--duree) var(--courbe),
+                box-shadow var(--duree) var(--courbe);
+  }
+  .btn:hover { background: var(--action-f); border-color: var(--action-f); color: #fff; transform: translateY(-1px); box-shadow: var(--ombre-f); }
+  .btn:active { transform: translateY(0); }
+  .btn[disabled] { background: #E6E9EE; border-color: var(--trait); color: var(--gris); cursor: not-allowed; box-shadow: none; transform: none; }
+  .btn--secondaire {
+    background: var(--carte); color: var(--texte); border-color: var(--trait-f);
+    box-shadow: var(--ombre);
+  }
+  .btn--secondaire:hover { background: var(--carte); color: var(--action); border-color: var(--action); }
+  .btn--large { font-size: var(--t-md); padding: .95rem 1.5rem; min-height: 52px; width: 100%; }
+  .btn--petit { padding: .5rem .85rem; min-height: 38px; font-size: var(--t-sm); }
+
+  /* ================= Micro-typographie ================= */
+
+  /* L'étiquette : la voix des tableaux de menu. Condensée, capitales,
+     espacée, précédée d'un tiret qui l'ancre dans la colonne. */
+  .surtitre {
+    font-family: var(--f-etiq); text-transform: uppercase;
+    letter-spacing: .14em; font-size: var(--t-xs); font-weight: 700;
+    color: var(--gris); display: flex; align-items: center; gap: .6rem;
+  }
+  .surtitre::before {
+    content: ""; width: 1.6rem; height: 2px; background: var(--action); flex: none;
+  }
+  .chapo {
+    font-size: var(--t-lg); line-height: 1.45; color: var(--gris);
+    max-width: 46ch; margin-top: .9rem; letter-spacing: -.011em;
+  }
+  .prose { max-width: var(--mesure); }
+  .prose > * + * { margin-top: .85em; }
+  .prose h3, .prose h4 { margin-top: 1.6em; }
+  .prix, .montant { font-family: var(--f-data); letter-spacing: -.02em; }
+  .note { font-size: var(--t-sm); color: var(--gris); }
+
+  /* Pastille d'information, posée dans une ligne de texte. */
+  .pastille {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700;
+    background: var(--action-pale); color: var(--action-f);
+    padding: .2rem .5rem; border-radius: 3px; white-space: nowrap;
+  }
+
+  /* ================= LE TICKET — signature =================
+     Un reçu détaché d'un rouleau. Le bord inférieur est réellement découpé
+     au masque, donc il fonctionne sur n'importe quel fond. Le masque mange
+     bordure et ombre : le ticket se détache par le contraste de surface, ce
+     qui est la raison pour laquelle il est posé sur l'encre. */
+  .ticket {
+    --dent: 11px;
+    background: var(--carte); color: var(--texte);
+    padding: var(--pas) var(--pas) calc(var(--pas) + var(--dent));
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+  }
+  /* La ligne de déchirement : pointillés, comme la perforation du rouleau. */
+  .ticket__fil { border: 0; border-top: 1px dashed var(--trait-f); margin-block: var(--pas); }
+  .ticket__ligne {
+    display: flex; align-items: baseline; gap: .6rem;
+    font-family: var(--f-data); font-size: var(--t-sm);
+  }
+  .ticket__ligne + .ticket__ligne { margin-top: .4rem; }
+  .ticket__ligne span:first-child { color: var(--gris); }
+  .ticket__ligne span:first-child::after {
+    content: ""; flex: 1; border-bottom: 1px dotted var(--trait-f);
+    margin: 0 .35rem; transform: translateY(-.22em);
+  }
+  .ticket__ligne { justify-content: space-between; }
+
+  /* ================= Panneau produit (fond encre) ================= */
+  .panneau {
+    background: var(--encre); color: var(--sur-encre);
+    border-radius: var(--r-l); padding: var(--gout);
+    background-image:
+      radial-gradient(120% 85% at 18% 0%, rgb(27 77 245 / .22), transparent 62%),
+      radial-gradient(90% 70% at 100% 100%, rgb(255 176 32 / .10), transparent 60%);
+  }
+  .panneau h2, .panneau h3 { color: #fff; }
+  .panneau a { color: var(--action-vif); }
+
+  /* ================= Le produit dessiné ================= */
+  .borne { width: 100%; max-width: 15rem; height: auto; margin-inline: auto; }
+  .scene { display: grid; place-items: center; }
+
+  /* ================= Cartes et blocs ================= */
+  .carte {
+    background: var(--carte); border: 1px solid var(--trait);
+    border-radius: var(--r); padding: var(--pas);
+    box-shadow: var(--ombre);
+  }
+
+  /* La fiche technique comme matériau graphique : ce public compare des
+     spécifications, donc les specs sont traitées comme un tableau de données
+     et pas comme une liste à puces. */
+  .encadre-cle {
+    background: var(--carte); border: 1px solid var(--trait);
+    border-radius: var(--r); overflow: hidden; box-shadow: var(--ombre);
+  }
+  .encadre-cle > h2 {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+    padding: .75rem var(--pas); border-bottom: 1px solid var(--trait);
+    background: var(--console-2);
+  }
+  .encadre-cle dl { display: grid; }
+  .encadre-cle dl > div {
+    display: grid; grid-template-columns: 11rem 1fr; gap: .3rem 1rem;
+    padding: .62rem var(--pas); border-top: 1px solid var(--trait);
+    font-size: var(--t-sm);
+  }
+  .encadre-cle dl > div:first-child { border-top: 0; }
+  .encadre-cle dl > div:nth-child(even) { background: color-mix(in srgb, var(--console-2) 55%, transparent); }
+  .encadre-cle dt {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .09em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris); padding-top: .12em;
+  }
+  .encadre-cle dd { font-weight: 550; }
+  @media (max-width: 34rem) { .encadre-cle dl > div { grid-template-columns: 1fr; } }
+
+  /* ================= Tableaux ================= */
+  .cadre-defil { overflow-x: auto; border: 1px solid var(--trait); border-radius: var(--r); background: var(--carte); box-shadow: var(--ombre); }
+  .tbl { font-size: var(--t-sm); min-width: 34rem; }
+  .tbl caption { text-align: left; padding: .8rem var(--pas); color: var(--gris); font-size: var(--t-sm); border-bottom: 1px solid var(--trait); }
+  .tbl th, .tbl td { padding: .68rem var(--pas); text-align: left; border-top: 1px solid var(--trait); vertical-align: top; }
+  .tbl thead th {
+    border-top: 0; background: var(--console-2); color: var(--gris);
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; white-space: nowrap;
+  }
+  .tbl tbody tr:hover { background: color-mix(in srgb, var(--action-pale) 55%, transparent); }
+  .tbl td.oui, .tbl td.inclus { color: var(--valide); font-weight: 650; }
+  .tbl td.non, .tbl td.exclus { color: var(--attente); font-weight: 650; }
+  .tbl td.d, .tbl td.chiffres { font-family: var(--f-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* ================= Listes de garanties ================= */
+  .garanties { display: grid; gap: .5rem; }
+  .garanties li { display: grid; grid-template-columns: 1.1rem 1fr; gap: .6rem; align-items: start; font-size: var(--t-sm); }
+  .garanties svg { width: 1.1rem; height: 1.1rem; color: var(--valide); margin-top: .18em; }
+  .panneau .garanties svg { color: var(--valide-clair); }
+
+  /* ================= Accordéon ================= */
+  details {
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: 0 var(--pas); box-shadow: var(--ombre);
+  }
+  details + details { margin-top: .6rem; }
+  details[open] { border-color: var(--trait-f); }
+  summary {
+    cursor: pointer; font-weight: 650; padding: .9rem 0; list-style: none;
+    display: flex; align-items: center; gap: .8rem; min-height: 48px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: ""; margin-left: auto; flex: none; width: .62rem; height: .62rem;
+    border-right: 2px solid var(--gris); border-bottom: 2px solid var(--gris);
+    transform: rotate(45deg) translateY(-.12rem);
+    transition: transform var(--duree) var(--courbe);
+  }
+  details[open] summary::after { transform: rotate(225deg) translateY(-.12rem); }
+  .rep { padding-bottom: 1rem; color: var(--gris); max-width: var(--mesure); }
+
+  /* ================= Formulaires ================= */
+  .champ { display: grid; gap: .35rem; }
+  .champ > span, .champ > label {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+  }
+  .champ input, .champ textarea, .champ select, input[type="text"], input[type="email"], input[type="tel"], textarea {
+    background: var(--carte); border: 1px solid var(--trait-f); border-radius: var(--r-s);
+    padding: .68rem .8rem; min-height: 46px; width: 100%;
+    transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe);
+  }
+  .champ input:focus, .champ textarea:focus, textarea:focus {
+    border-color: var(--action); box-shadow: 0 0 0 3px var(--action-pale); outline: none;
+  }
+  .champ textarea { min-height: 7rem; resize: vertical; }
+
+  .option {
+    display: grid; grid-template-columns: auto 1fr auto; gap: .9rem; align-items: start;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: var(--pas); cursor: pointer;
+    transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe);
+  }
+  .option:hover { border-color: var(--trait-f); }
+  .option:has(input:checked) { border-color: var(--action); box-shadow: inset 0 0 0 1px var(--action); }
+  .option input { width: 24px; height: 24px; accent-color: var(--action); margin-top: .1rem; }
+  .titre-opt { display: block; font-weight: 650; }
+  .desc-opt { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+  .option > .prix { font-family: var(--f-data); font-weight: 650; white-space: nowrap; }
+
+  .compteur {
+    display: inline-flex; align-items: center; background: var(--carte);
+    border: 1px solid var(--trait-f); border-radius: var(--r-s); overflow: hidden;
+  }
+  .compteur button {
+    width: 46px; height: 46px; background: transparent; border: 0; cursor: pointer;
+    font-size: 1.25rem; color: var(--texte); line-height: 1;
+  }
+  .compteur button:hover { background: var(--console-2); color: var(--action); }
+  .compteur output {
+    min-width: 3rem; text-align: center; font-family: var(--f-data); font-weight: 650;
+    border-inline: 1px solid var(--trait); align-self: stretch; display: grid; place-items: center;
+  }
+
+  /* ================= Barre collante mobile ================= */
+  .barre-mobile {
+    position: fixed; inset: auto 0 0 0; z-index: 45;
+    display: none; align-items: center; gap: .8rem;
+    background: var(--encre); color: #fff;
+    padding: .65rem var(--gout) calc(.65rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--encre-3);
+  }
+  .barre-mobile .prix { font-family: var(--f-data); font-weight: 700; }
+  .barre-mobile .btn { margin-left: auto; width: auto; }
+  @media (max-width: 48rem) { .barre-mobile { display: flex; } body { padding-bottom: 4.5rem; } }
+
+  /* ================= Fil d'Ariane ================= */
+  .fil { padding-block: 1.1rem .2rem; font-size: var(--t-sm); }
+  .fil ol { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; padding: 0; color: var(--gris); }
+  .fil li + li::before { content: "/"; margin-right: .4rem; color: var(--trait-f); }
+  .fil a { color: var(--gris); text-decoration: none; }
+  .fil a:hover { color: var(--action); }
+  .fil [aria-current="page"] { color: var(--texte); font-weight: 600; }
+
+  /* ================= Pied ================= */
+  .pied {
+    background: var(--encre); color: var(--sur-encre-2);
+    padding-block: var(--section) var(--pas); margin-top: var(--section);
+    font-size: var(--t-sm);
+  }
+  .pied .cols {
+    display: grid; gap: var(--gout);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+  .pied h2 {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+    font-size: var(--t-xs); font-weight: 700; color: #fff; margin-bottom: .9rem;
+  }
+  .pied ul { display: grid; gap: .5rem; }
+  .pied a { color: var(--sur-encre-2); text-decoration: none; }
+  .pied a:hover { color: #fff; text-decoration: underline; }
+  .pied__bas {
+    display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; justify-content: space-between;
+    margin-top: var(--section); padding-top: var(--pas);
+    border-top: 1px solid var(--encre-3); color: var(--sur-encre-2); font-size: var(--t-xs);
+  }
+}
+
+@layer pages {
+
+  /* ================= Accueil : le hero =================
+     Le texte d'abord, le produit ensuite, dans les deux sens de lecture.
+     Le produit vit sur l'encre, parce qu'un écran ne se montre pas sur du
+     gris clair. */
+  .vitrine {
+    display: grid; gap: var(--gout);
+    padding-block: clamp(2rem, 1rem + 4vw, 4rem) var(--section);
+    align-items: start;
+  }
+  .vitrine__objet { order: 2; }
+  .argument { order: 1; }
+  @media (min-width: 62rem) {
+    .vitrine { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: calc(var(--gout) * 1.4); }
+    .vitrine__objet { position: sticky; top: 7rem; }
+  }
+
+  .argument h1 {
+    font-size: var(--t-2xl); margin-top: 1rem;
+    letter-spacing: -.045em; max-width: 20ch;
+  }
+
+  /* Le panneau produit : photo sur l'encre, ticket de prix détaché dessous. */
+  .vitrine__objet {
+    background: var(--encre); border-radius: var(--r-l); padding: var(--pas);
+    background-image:
+      radial-gradient(130% 80% at 15% 0%, rgb(27 77 245 / .26), transparent 60%),
+      radial-gradient(90% 70% at 100% 100%, rgb(255 176 32 / .12), transparent 58%);
+    box-shadow: var(--ombre-f);
+  }
+  .vitrine__objet .photo {
+    background: transparent; border: 0; border-radius: var(--r); overflow: hidden; margin: 0;
+  }
+  .vitrine__objet .photo img { border-radius: var(--r); }
+
+  /* La carte d'achat devient le ticket. Le masque mange bordure et rayon :
+     on les retire pour éviter un bord coupé net en haut. */
+  .achat {
+    --dent: 11px;
+    border: 0; border-radius: 0; box-shadow: none;
+    margin-top: var(--pas);
+    padding: var(--pas) var(--pas) calc(var(--pas) + var(--dent));
+    background: var(--carte);
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+      radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2))
+        bottom / var(--dent) var(--dent) repeat-x;
+  }
+  .achat .surtitre { color: var(--lampe); }
+  .achat .surtitre::before { background: var(--lampe); }
+  .achat__prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: .1rem .6rem; margin-top: .55rem; }
+  .achat__prix .montant {
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 3.4rem); font-weight: 700;
+    letter-spacing: -.045em; line-height: 1;
+  }
+  .achat__prix .ttc { font-size: var(--t-sm); color: var(--gris); }
+  .achat .btn { margin-top: var(--pas); }
+  .achat .garanties { padding-top: var(--pas); margin-top: var(--pas); border-top: 1px dashed var(--trait-f); }
+
+  /* ================= Trois points en panneaux ================= */
+  .points { display: grid; gap: 1px; background: var(--trait); border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden; }
+  @media (min-width: 48rem) { .points { grid-template-columns: repeat(3, 1fr); } }
+  .points > div { background: var(--carte); padding: var(--pas); }
+  .points h3 { font-size: var(--t-lg); }
+  .points p { margin-top: .5rem; font-size: var(--t-sm); color: var(--gris); }
+
+  /* ================= Bandeau d'avantages ================= */
+  .avantages {
+    display: grid; gap: 1px; background: var(--trait);
+    border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  }
+  .avantages > div { background: var(--carte); padding: var(--pas); }
+  .avantages b {
+    display: block; font-family: var(--f-data); font-size: var(--t-lg);
+    font-weight: 700; letter-spacing: -.03em; color: var(--texte);
+  }
+  .avantages span { display: block; margin-top: .3rem; font-size: var(--t-sm); color: var(--gris); }
+
+  /* ================= Déroulé vertical ================= */
+  .deroule-v { counter-reset: d; display: grid; }
+  .deroule-v li {
+    counter-increment: d; display: grid; grid-template-columns: 2.6rem 1fr;
+    gap: .2rem .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait);
+  }
+  .deroule-v li::before {
+    content: counter(d, decimal-leading-zero); grid-row: 1 / span 2;
+    font-family: var(--f-data); font-weight: 700; font-size: var(--t-sm);
+    color: var(--action); padding-top: .18em;
+  }
+  .deroule-v b { grid-column: 2; font-weight: 650; }
+  .deroule-v span { grid-column: 2; display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+
+  .deroule { counter-reset: d; display: grid; }
+  .deroule li {
+    counter-increment: d; display: grid; grid-template-columns: 2.4rem 1fr;
+    gap: .9rem; padding: var(--pas) 0; border-top: 1px solid var(--trait);
+  }
+  .deroule li::before {
+    content: counter(d, decimal-leading-zero);
+    font-family: var(--f-data); font-weight: 700; color: var(--action); font-size: var(--t-sm);
+  }
+  .deroule b { display: block; font-weight: 650; }
+  .deroule span { display: block; font-size: var(--t-sm); color: var(--gris); margin-top: .2rem; }
+
+  /* ================= Récit ================= */
+  .recit { background: var(--encre); color: var(--sur-encre); padding-block: var(--section); }
+  .recit h2 { color: #fff; font-size: var(--t-xl); }
+  .recit .surtitre { color: var(--lampe-vif); }
+  .recit .surtitre::before { background: var(--lampe-vif); }
+  .recit .prose { font-family: var(--f-prose); font-size: 1.0625rem; line-height: 1.68; color: var(--sur-encre); }
+  .recit .prose p + p { margin-top: .9em; }
+  .recit a { color: var(--action-vif); }
+  .recit strong { color: #fff; }
+
+  /* Les trois chiffres qui ferment le récit. Filet ambre en tête, parce que
+     ce sont des preuves et pas des actions : le bleu reste réservé aux
+     choses sur lesquelles on clique. */
+  .recit .chiffres {
+    display: grid; gap: var(--gout); margin-top: var(--gout);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+  .recit .chiffres > div { border-top: 2px solid var(--lampe-vif); padding-top: .85rem; }
+  .recit .chiffres b {
+    display: block; font-family: var(--f-titre); font-variant-numeric: tabular-nums;
+    font-size: clamp(1.8rem, 1.2rem + 1.7vw, 2.5rem); font-weight: 700;
+    color: #fff; letter-spacing: -.04em; line-height: 1.05;
+  }
+  .recit .chiffres span {
+    display: block; margin-top: .45rem; font-family: var(--f-ui);
+    font-size: var(--t-sm); line-height: 1.5; color: var(--sur-encre-2);
+  }
+
+  /* ================= Vidéo ================= */
+  .video { position: relative; border-radius: var(--r-l); overflow: hidden; background: var(--encre); box-shadow: var(--ombre-f); }
+  .video video { width: 100%; height: auto; display: block; }
+  .video__play {
+    position: absolute; inset: 0; display: grid; place-content: center; gap: .7rem;
+    justify-items: center; background: rgb(11 14 20 / .34); border: 0; cursor: pointer;
+    color: #fff; font-weight: 650; font-size: var(--t-sm);
+  }
+  .video__play svg { width: 54px; height: 54px; background: var(--action); border-radius: 50%; padding: 12px; color: #fff; }
+  .video__play:hover svg { background: var(--action-f); }
+  .video figcaption { padding: .7rem var(--pas); font-size: var(--t-xs); color: var(--sur-encre-2); }
+
+  /* ================= Configurateur ================= */
+  .config { display: grid; gap: var(--gout); align-items: start; }
+  @media (min-width: 62rem) { .config { grid-template-columns: minmax(0, 1fr) minmax(0, 23rem); } }
+  .config__recap { position: sticky; top: 7rem; }
+  .config__recap .carte { padding: var(--pas); }
+  .recap__lignes { display: grid; gap: .45rem; margin-top: var(--pas); font-size: var(--t-sm); font-family: var(--f-data); }
+  .recap__lignes > div { display: flex; justify-content: space-between; gap: .8rem; }
+  .recap__total {
+    display: flex; justify-content: space-between; align-items: baseline; gap: .8rem;
+    margin-top: var(--pas); padding-top: var(--pas); border-top: 1px dashed var(--trait-f);
+    font-weight: 650;
+  }
+  .recap__total .prix { font-size: var(--t-xl); font-weight: 700; letter-spacing: -.04em; }
+
+  /* ================= Confirmation ================= */
+  .confirme { text-align: center; padding-block: var(--section); }
+  .confirme h1 { font-size: var(--t-xl); margin-top: var(--pas); }
+  /* Ici la pastille n'est pas une étiquette mais la grande coche de
+     confirmation : on écrase le composant en ligne. */
+  .confirme .pastille {
+    width: 4.5rem; height: 4.5rem; margin: 0 auto var(--pas); padding: 0;
+    border-radius: 50%; background: var(--valide); color: #fff;
+    display: grid; place-items: center;
+  }
+  .confirme .pastille svg { width: 2.2rem; height: 2.2rem; }
+
+  /* ================= Rappel produit ================= */
+  .rappel {
+    background: var(--encre); color: var(--sur-encre); border-radius: var(--r-l);
+    padding: var(--gout); display: grid; gap: var(--pas); align-items: center;
+    background-image: radial-gradient(110% 90% at 85% 0%, rgb(27 77 245 / .24), transparent 60%);
+  }
+  @media (min-width: 48rem) { .rappel { grid-template-columns: 1fr auto; } }
+  .rappel h2 { color: #fff; font-size: var(--t-xl); }
+  .rappel p { color: var(--sur-encre-2); margin-top: .5rem; font-size: var(--t-sm); }
+  .rappel .btn { white-space: nowrap; }
+
+  /* ================= Comparatif ================= */
+  .compare .secours { color: var(--gris); font-size: var(--t-sm); }
+
+  /* ================= Lecteur de récitation ================= */
+  .ecoute {
+    display: flex; align-items: center; gap: .8rem; flex-wrap: wrap;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: .75rem var(--pas); box-shadow: var(--ombre);
+  }
+  .ecoute__titre {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .12em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+  }
+  .ecoute__btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--console-2); border: 1px solid var(--trait-f); border-radius: var(--r-s);
+    padding: .45rem .8rem; min-height: 40px; cursor: pointer; font-size: var(--t-sm); font-weight: 600;
+  }
+  .ecoute__btn:hover { border-color: var(--action); color: var(--action); }
+  .ecoute__btn svg { width: 20px; height: 20px; }
+
+  /* ================= Blog ================= */
+  .blog-tete { padding-block: var(--section) var(--gout); }
+  .blog-tete h1 { font-size: var(--t-2xl); letter-spacing: -.045em; max-width: 24ch; }
+  .blog-grille {
+    display: grid; gap: var(--gout);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  }
+  /* La carte est un <article> qui contient le lien, pas un lien. Le titre
+     porte donc un calque transparent sur toute la carte : la surface entière
+     devient cliquable sans imbriquer de lien dans un lien, et le titre reste
+     la cible annoncée aux lecteurs d'écran. */
+  .blog-carte {
+    position: relative; display: flex; flex-direction: column; gap: .55rem;
+    background: var(--carte); border: 1px solid var(--trait); border-radius: var(--r);
+    padding: var(--pas); box-shadow: var(--ombre);
+    transition: transform var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe), border-color var(--duree) var(--courbe);
+  }
+  .blog-carte:hover { transform: translateY(-2px); box-shadow: var(--ombre-f); border-color: var(--trait-f); }
+  .blog-carte h2, .blog-carte h3 { font-size: var(--t-lg); }
+  .blog-carte h2 a, .blog-carte h3 a { color: var(--texte); text-decoration: none; }
+  .blog-carte h2 a::after, .blog-carte h3 a::after { content: ""; position: absolute; inset: 0; }
+  .blog-carte:hover h2 a, .blog-carte:hover h3 a { color: var(--action); }
+  .blog-carte h2 a:focus-visible, .blog-carte h3 a:focus-visible { outline-offset: 4px; }
+  .blog-carte > p { font-size: var(--t-sm); color: var(--gris); }
+  .blog-carte .meta {
+    margin-top: auto; padding-top: .3rem;
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris-clair);
+  }
+  .blog-carte .txt { font-size: var(--t-sm); color: var(--gris); }
+  .blog-carte .liens { margin-top: auto; font-size: var(--t-sm); color: var(--action); font-weight: 650; }
+
+  /* ================= Article ================= */
+  /* L'article n'est enveloppé dans aucun conteneur : il porte lui-même sa
+     largeur et ses gouttières. Sans cette règle, le texte colle au bord. */
+  .article {
+    width: min(100% - var(--gout) * 2, 46rem); margin-inline: auto;
+    padding-block: var(--pas) var(--section);
+  }
+  .article h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem); letter-spacing: -.045em; max-width: 26ch; }
+  .art-meta {
+    display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-top: var(--pas);
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris-clair);
+  }
+  .art-resume {
+    margin-top: var(--gout); padding: var(--pas) var(--pas) var(--pas) calc(var(--pas) + 3px);
+    background: var(--carte); border: 1px solid var(--trait);
+    border-left: 3px solid var(--action); border-radius: var(--r-s);
+    font-size: var(--t-md); color: var(--texte); box-shadow: var(--ombre);
+  }
+  .art-corps { margin-top: var(--gout); max-width: var(--mesure); font-family: var(--f-prose); font-size: 1.09rem; line-height: 1.7; }
+  .art-corps > * + * { margin-top: 1em; }
+  .art-corps h2 {
+    font-family: var(--f-titre); font-size: var(--t-xl); margin-top: 2.2em;
+    padding-top: .9em; border-top: 1px solid var(--trait);
+  }
+  .art-corps h3 { font-family: var(--f-titre); font-size: var(--t-lg); margin-top: 1.8em; }
+  .art-corps ul, .art-corps ol { padding-left: 1.3em; display: grid; gap: .4em; }
+  .art-corps blockquote {
+    border-left: 3px solid var(--lampe); padding-left: var(--pas);
+    color: var(--gris); font-style: italic;
+  }
+  .art-corps .tbl, .art-corps .cadre-defil { font-family: var(--f-ui); }
+  .art-offre {
+    margin-top: var(--section); background: var(--encre); color: var(--sur-encre);
+    border-radius: var(--r-l); padding: var(--gout);
+    background-image: radial-gradient(110% 90% at 88% 0%, rgb(27 77 245 / .24), transparent 60%);
+  }
+  .art-offre h2 { color: #fff; font-size: var(--t-xl); }
+  .art-offre p { color: var(--sur-encre-2); margin-top: .6rem; }
+  .art-offre .prix { color: #fff; font-weight: 700; }
+  .art-offre .btn { margin-top: var(--pas); }
+  .art-offre .garanties { margin-top: var(--pas); }
+  .art-voisins { margin-top: var(--section); }
+  .art-voisins h2 {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris); margin-bottom: var(--pas);
+  }
+
+  /* ================= Photos produit ================= */
+  .photo {
+    background: var(--console-2); border: 1px solid var(--trait);
+    border-radius: var(--r); overflow: hidden;
+  }
+  .photo img { width: 100%; height: auto; }
+  .photo figcaption { padding: .55rem var(--pas); font-size: var(--t-xs); color: var(--gris); border-top: 1px solid var(--trait); background: var(--carte); }
+  .galerie { display: grid; gap: var(--pas); grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+
+  /* ================= Solutions (configurateur) ================= */
+  .solutions { display: grid; gap: var(--pas); }
+  @media (min-width: 46rem) { .solutions { grid-template-columns: 1fr 1fr; } }
+
+  /* ================= Erreur et avertissement ================= */
+  .erreur {
+    background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412;
+    border-radius: var(--r-s); padding: .7rem 1rem; font-size: var(--t-sm);
+  }
+  .avf {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+    font-size: var(--t-xs); font-weight: 700;
+    background: var(--lampe-pale); color: var(--lampe);
+    padding: .1rem .4rem; border-radius: 3px; white-space: nowrap;
+  }
+}
+
+@layer utilitaires {
+  .mt-1 { margin-top: var(--pas); }
+  .mt-2 { margin-top: var(--gout); }
+  .centre { text-align: center; }
+  .mesure { max-width: var(--mesure); }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* Révélation au défilement : le seul mouvement de la page.
+     L'état masqué n'existe que sous html.js, posée par un script en tête de
+     document. Sans JavaScript la classe est absente et tout reste visible ;
+     avec prefers-reduced-motion, site.js la retire. */
+  [data-reveal] { opacity: 1; }
+  html.js [data-reveal] {
+    opacity: 0;
+    transform: perspective(1000px) translate3d(0, 20px, -60px) rotateX(6deg);
+  }
+  html.js [data-reveal][data-vu] {
+    opacity: 1; transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0deg);
+    transition: opacity 560ms var(--courbe), transform 620ms var(--courbe);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.js [data-reveal] { opacity: 1; transform: none; }
+  }
+}
+
+/* =========================================================================
+   Ajouts du hero SaaS. Déclarés après les couches pour rester lisibles :
+   ces deux blocs n'existent que sur la page d'accueil.
+   ========================================================================= */
+@layer pages {
+
+  /* Deux appels à l'action côte à côte : construire, ou voir d'abord. */
+  .actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .actions .btn { flex: 0 1 auto; }
+  @media (max-width: 26rem) { .actions .btn { flex: 1 1 100%; } }
+
+  /* La bande de chiffres : quatre faits, en mono, séparés au filet.
+     Elle remplace la rangée d'icônes décoratives qu'on met par réflexe. */
+  .chiffres-cle {
+    display: grid; gap: 1px; background: var(--trait);
+    border: 1px solid var(--trait); border-radius: var(--r); overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(min(50% - 1px, 9.5rem), 1fr));
+  }
+  .chiffres-cle > div { background: var(--carte); padding: .85rem var(--pas); }
+  .chiffres-cle dt {
+    font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .11em;
+    font-size: var(--t-xs); font-weight: 700; color: var(--gris);
+  }
+  .chiffres-cle dd {
+    margin-top: .3rem; font-size: var(--t-lg); font-weight: 700;
+    letter-spacing: -.035em; line-height: 1.1;
+  }
+  .chiffres-cle dd span {
+    display: block; margin-top: .25rem; font-family: var(--f-ui);
+    font-size: var(--t-xs); font-weight: 400; letter-spacing: 0; color: var(--gris);
+  }
+}
+
+/* =========================================================================
+   Correction de chasse : la mono tient les données, pas les grands nombres.
+
+   En monospace, l'espace avant le symbole euro occupe une chasse pleine :
+   « 720 € » à 3,4 rem s'affiche avec un trou au milieu et paraît cassé.
+   La règle est donc : mono sous 1,25 rem (tableaux, lignes de ticket,
+   récapitulatif), grotesque à chiffres tabulaires au-dessus.
+   ========================================================================= */
+@layer pages {
+  .achat__prix .montant,
+  .chiffres-cle dd.chiffres,
+  .recap__total .prix,
+  .avantages b {
+    font-family: var(--f-titre);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.045em;
+  }
+
+  /* Les étiquettes de la bande de chiffres n'ont pas toutes une ligne :
+     on réserve la même hauteur pour que les nombres s'alignent. */
+  .chiffres-cle > div { display: grid; align-content: start; }
+  .chiffres-cle dt { min-height: 2.3em; }
+}
+
+@layer pages {
+  /* La barre collante affiche un grand nombre : même règle de chasse. */
+  .barre-mobile .prix { font-family: var(--f-titre); font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+
+  /* Sur téléphone, le bandeau ne doit pas manger un quart de l'écran.
+     Les séparateurs et l'appel à l'action disparaissent : la barre collante
+     du bas porte déjà le même bouton. */
+  @media (max-width: 48rem) {
+    .bandeau__int { gap: .2rem .7rem; font-size: var(--t-xs); }
+    .bandeau__int > span:last-child { display: none; }
+  }
+}
+
+@layer pages {
+  /* Dans le récapitulatif, le libellé peut revenir à la ligne, jamais le
+     montant : « 600,00 » sur une ligne et « € » sur la suivante donne
+     l'impression d'un prix cassé juste avant de payer. */
+  .recap__lignes > div > :first-child { min-width: 0; }
+  .recap__lignes > div > :last-child { white-space: nowrap; flex: none; }
+  .recap__total > :last-child { white-space: nowrap; }
+}
+
+/* =========================================================================
+   AJUSTEMENTS DE LA SURFACE SOMBRE
+
+   Tout ce qui, dans les couches précédentes, supposait une page claire.
+   Déclaré en dernier dans les mêmes couches : à spécificité égale, c'est
+   cette version qui l'emporte, sans avoir à réécrire quarante règles.
+   ========================================================================= */
+@layer composants {
+
+  /* Le bandeau et la barre mobile sont le niveau le plus profond : ils
+     doivent se détacher de la page, qui est déjà sombre. */
+  .bandeau { border-bottom: 1px solid var(--encre-3); }
+  .barre-mobile { border-top: 1px solid var(--encre-3); }
+
+  /* Le bouton secondaire en verre, au lieu du bouton blanc. */
+  .btn--secondaire {
+    background: rgb(255 255 255 / .06); color: var(--texte);
+    border-color: var(--trait-f); backdrop-filter: blur(6px); box-shadow: none;
+  }
+  .btn--secondaire:hover {
+    background: rgb(255 255 255 / .12); color: #fff; border-color: var(--action);
+  }
+  .btn[disabled] { background: #1A2231; border-color: var(--trait); color: var(--gris-clair); }
+
+  /* LE TICKET RESTE DU PAPIER. C'est tout l'intérêt : un reçu blanc sur une
+     page sombre se voit de loin, et c'est bien un objet physique qu'on
+     représente. Il faut donc lui fixer ses couleurs, sans quoi il hérite du
+     texte clair de la page et devient illisible. */
+  .ticket { background: #FBFBFC; color: #0E1219; }
+  .ticket__fil { border-top-color: #C8CDD6; }
+  .ticket__ligne span:first-child { color: #5A6372; }
+  .ticket__ligne span:first-child::after { border-bottom-color: #C8CDD6; }
+
+  /* Champs de formulaire : un champ doit rester visiblement creusé. */
+  .champ input, .champ textarea, .champ select,
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    background: #0D131E; color: var(--texte);
+  }
+  .champ input::placeholder, textarea::placeholder { color: #6B7586; }
+
+  /* Les cartes gagnent un filet de lumière sur l'arête haute. C'est ce
+     détail qui distingue une interface sombre soignée d'un simple fond
+     noir : sans lui, les cartes paraissent découpées au cutter. */
+  .carte, .encadre-cle, details, .option, .cadre-defil, .blog-carte, .ecoute {
+    box-shadow: var(--ombre), inset 0 1px 0 rgb(255 255 255 / .05);
+  }
+
+  .erreur { background: #2A1310; border-color: #6B2A1C; color: #FFB4A1; }
+
+  .pied { border-top: 1px solid var(--encre-3); }
+}
+
+@layer pages {
+  /* La carte d'achat est un ticket : mêmes couleurs de papier. */
+  .achat { background: #FBFBFC; color: #0E1219; }
+  .achat .note, .achat__prix .ttc { color: #5A6372; }
+  .achat .garanties { border-top-color: #C8CDD6; }
+  .achat .garanties svg { color: #0A6B41; }
+  .achat .garanties a { color: #1B4DF5; }
+  .achat .surtitre { color: #9A4A06; }
+  .achat .surtitre::before { background: #9A4A06; }
+
+  /* Le récit se distingue de la page par sa lumière, plus par sa teinte. */
+  .recit {
+    background: var(--encre);
+    background-image:
+      radial-gradient(70% 60% at 18% 0%, rgb(91 134 255 / .16), transparent 62%),
+      radial-gradient(60% 50% at 92% 100%, rgb(255 176 32 / .09), transparent 60%);
+    border-block: 1px solid var(--encre-3);
+  }
+
+  .art-resume { background: var(--carte); color: var(--texte); }
+
+  /* Corps d'article sur fond sombre : on remonte le corps et l'interligne,
+     parce qu'un texte clair sur fond sombre paraît toujours plus maigre. */
+  .art-corps { color: #D6DDE7; font-size: 1.12rem; line-height: 1.78; }
+  .art-corps strong { color: #fff; }
+
+  /* La grande coche de confirmation : fond vif, signe sombre. */
+  .confirme .pastille { background: var(--valide); color: #04210F; }
+
+  .photo { background: var(--console-2); }
+  .vitrine__objet .photo { background: transparent; }
+}
+
+/* =========================================================================
+   Le bleu a deux emplois qui ne demandent pas la même valeur.
+
+   En lien sur fond sombre, il doit être clair pour se détacher de la page.
+   En fond de bouton sous un texte blanc, cette même valeur claire ne donne
+   que 3,3:1. Le bouton garde donc un bleu plus dense, et le lien le bleu
+   clair : un seul jeton ne peut pas satisfaire les deux mesures.
+   ========================================================================= */
+@layer composants {
+  .btn { background: #2B57F0; border-color: #2B57F0; }
+  .btn:hover { background: #1B4DF5; border-color: #1B4DF5; }
+  .btn--secondaire { background: rgb(255 255 255 / .06); border-color: var(--trait-f); }
+  .btn--secondaire:hover { background: rgb(255 255 255 / .12); border-color: var(--action); }
+  .btn[disabled] { background: #1A2231; border-color: var(--trait); }
+}
+@layer pages {
+  /* Le « livraison offerte » du ticket est sur papier blanc : il lui faut
+     le vert sombre, pas le vert vif réservé aux fonds sombres. */
+  .achat .note strong { color: #0A6B41; }
+}
+/* =========================================================================
+   BORNE DE DÉMONSTRATION — Smash Avenue
+
+   Cette feuille n'habille pas le site : elle habille la borne. Les couleurs
+   sont celles du client, l'orange et le violet de ses planches menu, parce
+   que c'est l'argument même de la démonstration — le client voit sa carte
+   et ses couleurs, pas les nôtres.
+
+   Contraintes d'un écran de borne, qui ne sont pas celles d'un site :
+   - format portrait, l'écran est pivoté sur sa colonne ;
+   - cible tactile de 64 px minimum, on vise avec un pouce gras et pressé ;
+   - aucun survol : le doigt n'a pas d'état intermédiaire ;
+   - texte jamais sous 15 px, lu debout à 50 cm dans un hall éclairé.
+   ========================================================================= */
+
+.borne-demo {
+  --or:        #F2901B;   /* l'orange des planches */
+  --or-f:      #D97708;
+  --violet:    #B9A2E8;
+  --violet-f:  #6C4BB8;
+  --nuit:      #16121D;   /* le fond de l'écran */
+  --nuit-2:    #211B2C;
+  --nuit-3:    #2E2640;
+  --craie:     #FFFFFF;
+  --craie-2:   #CFC6DF;
+  --vert:      #37C98A;
+  --r-k:       18px;
+
+  position: relative;
+  display: flex; flex-direction: column;
+  aspect-ratio: 9 / 16;
+  width: 100%; max-width: 520px; margin-inline: auto;
+  background: var(--nuit); color: var(--craie);
+  border-radius: var(--r-k); overflow: hidden;
+  font-family: var(--f-ui);
+  container-type: inline-size;
+  -webkit-user-select: none; user-select: none;
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / .8);
+}
+.borne-demo *, .borne-demo *::before, .borne-demo *::after { box-sizing: border-box; }
+/* :where() met cette remise à zéro à une spécificité nulle. Sans lui, le
+   sélecteur « .borne-demo button » vaut (0,1,1) et écrase « .kbtn » (0,1,0) :
+   le bouton de paiement perdait son fond orange sans qu'aucune erreur ne
+   soit levée. C'est le piège de spécificité classique entre une règle de
+   contexte et une règle de composant. */
+.borne-demo :where(button) { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+
+/* Tout le texte de la borne grandit avec elle : une borne affichée en
+   vignette sur un mobile et la même en plein écran doivent avoir la même
+   composition, donc les tailles sont en unités de conteneur. */
+.borne-demo { font-size: clamp(13px, 3.1cqw, 17px); line-height: 1.45; }
+
+/* ---- Pile d'écrans ---------------------------------------------------- */
+.ecran {
+  position: absolute; inset: 0; display: none;
+  flex-direction: column; overflow: hidden;
+}
+.ecran[data-actif] { display: flex; }
+.ecran[data-actif] { animation: ecranEntre 380ms var(--courbe) both; }
+@keyframes ecranEntre {
+  from { opacity: 0; transform: perspective(900px) translate3d(0, 14px, -70px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============ 1. Veille ============ */
+.veille {
+  justify-content: center; align-items: center; text-align: center;
+  padding: 8cqw; cursor: pointer;
+  background:
+    radial-gradient(70% 50% at 50% 18%, rgb(242 144 27 / .35), transparent 70%),
+    radial-gradient(60% 45% at 50% 100%, rgb(108 75 184 / .45), transparent 70%),
+    var(--nuit);
+}
+/* Les produits dérivent derrière le titre : une borne en veille doit donner
+   faim avant de donner des instructions. */
+.veille__fond { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.veille__fond img {
+  position: absolute; width: 21cqw; border-radius: 12px; opacity: .3;
+  filter: saturate(1.15); animation: derive 22s linear infinite;
+}
+/* Voile sombre par-dessus les produits : sans lui, un milkshake passe
+   derrière le titre et le rend illisible. */
+.veille__fond::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(58% 40% at 50% 54%, rgb(22 18 29 / .94), rgb(22 18 29 / .55) 70%, transparent);
+}
+@keyframes derive {
+  from { transform: translate3d(0, 108cqh, 0) rotate(-7deg) scale(.86); opacity: 0; }
+  14%  { opacity: .34; }
+  86%  { opacity: .34; }
+  to   { transform: translate3d(0, -42cqh, 0) rotate(9deg) scale(1.04); opacity: 0; }
+}
+.veille__logo {
+  position: relative; font-family: var(--f-etiq); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .22em; font-size: 1.1em;
+  color: var(--or);
+}
+.veille h2 {
+  position: relative; margin: .5em 0 0;
+  font-size: clamp(2.1rem, 11cqw, 4rem); line-height: .94;
+  letter-spacing: -.045em; text-transform: uppercase; font-weight: 800;
+  text-shadow: 0 0 60px rgb(242 144 27 / .5);
+}
+.veille p { position: relative; margin-top: .9em; color: var(--craie-2); max-width: 24ch; }
+.veille__touche {
+  position: relative; margin-top: 2em;
+  display: inline-flex; align-items: center; gap: .7em;
+  background: var(--or); color: #1A1005; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 1.1em 2em; border-radius: 999px; font-size: 1.05em;
+  animation: battement 2.4s ease-in-out infinite;
+}
+@keyframes battement {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgb(242 144 27 / .55); }
+  50%      { transform: scale(1.035); box-shadow: 0 0 0 22px rgb(242 144 27 / 0); }
+}
+
+/* ============ Bandeau commun ============ */
+.kbar {
+  display: flex; align-items: center; gap: .7em;
+  padding: .85em 1em; background: var(--nuit-2);
+  border-bottom: 1px solid var(--nuit-3); flex: none;
+}
+.kbar__marque {
+  font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .16em;
+  font-weight: 700; color: var(--or); font-size: .92em;
+}
+.kbar__mode {
+  margin-left: auto; font-size: .82em; color: var(--craie-2);
+  background: var(--nuit-3); padding: .35em .8em; border-radius: 999px;
+}
+.kretour {
+  display: inline-flex; align-items: center; gap: .4em;
+  min-height: 44px; padding: .4em .8em; margin: -.4em 0 -.4em -.6em;
+  border-radius: 10px; font-weight: 650; font-size: .9em;
+}
+.kretour:active { background: var(--nuit-3); }
+
+/* ============ 2. Mode de consommation ============ */
+.mode { justify-content: center; padding: 7cqw; gap: 4cqw; text-align: center; }
+.mode h2 { font-size: clamp(1.5rem, 6.6cqw, 2.4rem); text-transform: uppercase; letter-spacing: -.03em; }
+.mode__choix { display: grid; gap: 3cqw; }
+.mode__btn {
+  display: grid; gap: .5em; place-items: center;
+  padding: 2em 1em; border-radius: var(--r-k);
+  background: var(--nuit-2); border: 2px solid var(--nuit-3);
+  min-height: 92px;
+}
+.mode__btn:active { border-color: var(--or); background: var(--nuit-3); }
+.mode__btn b { font-size: 1.3em; text-transform: uppercase; letter-spacing: -.02em; }
+.mode__btn span { font-size: .85em; color: var(--craie-2); }
+.mode__btn svg { width: 40px; height: 40px; color: var(--or); }
+
+/* ============ 3. Carte ============ */
+.carte-k { display: grid; grid-template-columns: 26cqw 1fr; flex: 1; min-height: 0; }
+.rail {
+  background: var(--nuit-2); border-right: 1px solid var(--nuit-3);
+  overflow-y: auto; padding: .6em 0; -webkit-overflow-scrolling: touch;
+}
+.rail button {
+  display: grid; gap: .25em; width: 100%; padding: 1em .6em;
+  text-align: center; border-left: 3px solid transparent;
+  font-size: .82em; font-weight: 650; color: var(--craie-2); min-height: 72px;
+}
+.rail button[aria-selected="true"] {
+  color: var(--craie); background: var(--nuit); border-left-color: var(--or);
+}
+.rail img {
+  width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
+  margin: 0 auto .1em; display: block; border: 2px solid transparent;
+}
+.rail button[aria-selected="true"] img { border-color: var(--or); }
+
+.grille-k { overflow-y: auto; padding: 1em; -webkit-overflow-scrolling: touch; }
+.grille-k h3 {
+  font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+  font-size: .82em; color: var(--or); margin-bottom: .9em;
+}
+.produits-k { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8em; }
+@container (min-width: 640px) { .produits-k { grid-template-columns: repeat(3, 1fr); } }
+
+.pk {
+  display: flex; flex-direction: column; text-align: left;
+  background: var(--nuit-2); border: 1px solid var(--nuit-3);
+  border-radius: 14px; overflow: hidden; min-height: 150px;
+  animation: pkEntre 420ms var(--courbe) both;
+}
+.pk:active { transform: scale(.975); border-color: var(--or); }
+@keyframes pkEntre {
+  from { opacity: 0; transform: translateY(14px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+.pk img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--nuit-3); }
+.pk__txt { padding: .65em .7em .8em; display: flex; flex-direction: column; gap: .2em; flex: 1; }
+.pk__nom { font-weight: 700; font-size: .95em; line-height: 1.2; letter-spacing: -.015em; }
+.pk__ing {
+  font-size: .72em; color: var(--craie-2); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.pk__prix {
+  margin-top: auto; padding-top: .45em;
+  font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -.02em;
+  color: var(--or); font-size: 1.05em;
+}
+
+/* ============ 4. Fiche produit ============ */
+.fiche { background: var(--nuit); }
+.fiche__corps { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+/* Les produits ne sont pas tous au même format : une gaufre est en
+   portrait, un burger en paysage. Recadrer en force coupe la moitié du
+   dessert. Le produit est donc affiché en entier, posé sur une version
+   floutée de lui-même qui remplit le cadre. */
+.fiche__photo {
+  position: relative; background-size: cover; background-position: center;
+  overflow: hidden;
+}
+.fiche__photo::before {
+  content: ""; position: absolute; inset: -20px;
+  backdrop-filter: blur(24px) saturate(1.25) brightness(.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25) brightness(.5);
+}
+.fiche__photo img {
+  position: relative; width: 100%; aspect-ratio: 16 / 10;
+  object-fit: contain; filter: drop-shadow(0 16px 28px rgb(0 0 0 / .55));
+}
+.fiche__photo::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 45%;
+  background: linear-gradient(transparent, var(--nuit));
+}
+.fiche__tete { padding: 0 1.1em 1em; margin-top: -1.6em; position: relative; }
+.fiche h2 {
+  font-size: clamp(1.4rem, 6.4cqw, 2.1rem); text-transform: uppercase;
+  letter-spacing: -.035em; line-height: 1;
+}
+.fiche__ing { margin-top: .55em; color: var(--craie-2); font-size: .88em; }
+.fiche__prix {
+  margin-top: .5em; font-variant-numeric: tabular-nums;
+  font-weight: 800; font-size: 1.55em; letter-spacing: -.03em; color: var(--or);
+}
+
+.groupe { padding: 1.1em; border-top: 1px solid var(--nuit-3); }
+.groupe__tete {
+  display: flex; align-items: baseline; gap: .6em; margin-bottom: .8em;
+}
+.groupe__tete h4 {
+  font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .13em;
+  font-size: .8em; font-weight: 700; margin: 0;
+}
+.groupe__tete span { font-size: .75em; color: var(--craie-2); margin-left: auto; }
+.opts { display: grid; gap: .5em; }
+.opt {
+  display: flex; align-items: center; gap: .8em; width: 100%;
+  padding: .85em 1em; min-height: 60px; border-radius: 12px;
+  background: var(--nuit-2); border: 2px solid transparent; text-align: left;
+}
+.opt[aria-pressed="true"] { border-color: var(--or); background: #2A1D0C; }
+.opt__coche {
+  width: 24px; height: 24px; border-radius: 7px; flex: none;
+  border: 2px solid var(--nuit-3); display: grid; place-items: center;
+}
+.opt[aria-pressed="true"] .opt__coche { background: var(--or); border-color: var(--or); color: #1A1005; }
+.opt__coche svg { width: 15px; height: 15px; opacity: 0; transition: opacity 140ms var(--courbe); }
+.opt[aria-pressed="true"] .opt__coche svg { opacity: 1; }
+/* Un rond pour un choix unique, un carré pour un choix multiple : la forme
+   doit dire d'avance si cocher l'un décoche l'autre. */
+.opt[data-type="unique"] .opt__coche, .opt[data-type="taille"] .opt__coche { border-radius: 50%; }
+.opt__nom { flex: 1; font-weight: 600; font-size: .92em; }
+.opt__prix { font-variant-numeric: tabular-nums; font-weight: 650; font-size: .86em; color: var(--craie-2); }
+
+.fiche__pied {
+  flex: none; display: flex; align-items: center; gap: .8em;
+  padding: .9em 1em calc(.9em + env(safe-area-inset-bottom));
+  background: var(--nuit-2); border-top: 1px solid var(--nuit-3);
+}
+.qte { display: flex; align-items: center; background: var(--nuit); border-radius: 12px; overflow: hidden; }
+.qte button { width: 52px; height: 56px; font-size: 1.4em; font-weight: 700; }
+.qte button:active { background: var(--nuit-3); }
+.qte output {
+  min-width: 2.2em; text-align: center; font-family: var(--f-data);
+  font-weight: 700; font-size: 1.05em;
+}
+.kbtn {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: .6em;
+  background: var(--or); color: #1A1005; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .03em; min-height: 60px; padding: 0 1.2em; border-radius: 12px;
+  font-size: 1em;
+}
+.kbtn:active { background: var(--or-f); }
+.kbtn--fant { background: var(--nuit-3); color: var(--craie); border: 1px solid #45395E; }
+.kbtn--fant:active { background: #3A3150; }
+.kbtn[disabled] { background: var(--nuit-3); color: #6C6382; }
+
+/* ============ Panier ============ */
+.panier-barre {
+  flex: none; display: flex; align-items: center; gap: .8em;
+  padding: .85em 1em calc(.85em + env(safe-area-inset-bottom));
+  background: var(--nuit-2); border-top: 1px solid var(--nuit-3);
+}
+.panier-barre__info { display: grid; }
+.panier-barre b { font-variant-numeric: tabular-nums; font-size: 1.3em; font-weight: 800; letter-spacing: -.03em; }
+.panier-barre span { font-size: .76em; color: var(--craie-2); }
+.pastille-k {
+  position: relative; display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px; background: var(--nuit-3);
+}
+.pastille-k svg { width: 22px; height: 22px; }
+.pastille-k i {
+  position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px;
+  border-radius: 999px; background: var(--or); color: #1A1005;
+  font-style: normal; font-family: var(--f-data); font-weight: 700; font-size: 12px;
+  display: grid; place-items: center; padding: 0 5px;
+}
+.pastille-k i.saute { animation: saute 420ms var(--courbe); }
+@keyframes saute {
+  0% { transform: scale(1); } 45% { transform: scale(1.5); } 100% { transform: scale(1); }
+}
+
+.lignes-k { flex: 1; overflow-y: auto; padding: 1em; display: grid; gap: .7em; align-content: start; }
+.lk {
+  display: grid; grid-template-columns: 62px 1fr auto; gap: .8em; align-items: center;
+  background: var(--nuit-2); border-radius: 12px; padding: .7em;
+}
+.lk img { width: 62px; height: 62px; border-radius: 9px; object-fit: cover; }
+.lk__nom { font-weight: 650; font-size: .92em; }
+.lk__det { font-size: .75em; color: var(--craie-2); margin-top: .15em; }
+.lk__prix { font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -.02em; }
+.lk .qte button { width: 42px; height: 42px; font-size: 1.1em; }
+
+.total-k { flex: none; padding: 1em; border-top: 1px solid var(--nuit-3); background: var(--nuit-2); }
+.total-k__l { display: flex; justify-content: space-between; font-size: .84em; color: var(--craie-2); }
+.total-k__l + .total-k__l { margin-top: .3em; }
+.total-k__g {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: .7em; padding-top: .7em; border-top: 1px dashed var(--nuit-3);
+  font-weight: 800; text-transform: uppercase; letter-spacing: .02em;
+}
+.total-k__g b { font-variant-numeric: tabular-nums; font-size: 1.6em; letter-spacing: -.04em; }
+
+/* ============ Paiement ============ */
+.paie { justify-content: center; align-items: center; text-align: center; padding: 8cqw; gap: 1.4em; }
+.paie__cb {
+  width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--nuit-2); border: 3px solid var(--or);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.paie__cb svg { width: 42px; height: 42px; color: var(--or); }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(242 144 27 / .45); }
+  60%      { box-shadow: 0 0 0 26px rgb(242 144 27 / 0); }
+}
+.paie h2 { font-size: clamp(1.3rem, 5.6cqw, 1.9rem); text-transform: uppercase; letter-spacing: -.03em; }
+.paie__montant {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 9cqw, 3rem); font-weight: 800; letter-spacing: -.045em; color: var(--or);
+}
+.paie__barre { width: 72%; height: 6px; border-radius: 999px; background: var(--nuit-3); overflow: hidden; }
+.paie__barre i { display: block; height: 100%; width: 0; background: var(--or); border-radius: 999px; }
+.paie__barre i.court { animation: remplit 2.6s linear forwards; }
+@keyframes remplit { to { width: 100%; } }
+
+/* ============ Ticket ============ */
+.fin {
+  /* Aligné en haut et défilant : centrer un contenu plus haut que l'écran
+     le fait déborder par le haut, et le numéro d'appel disparaît. */
+  justify-content: flex-start; align-items: center; text-align: center;
+  padding: 5cqw 5cqw 7cqw; gap: .85em; overflow-y: auto;
+  background: radial-gradient(70% 45% at 50% 20%, rgb(55 201 138 / .2), transparent 70%), var(--nuit);
+}
+.fin__ok {
+  width: 62px; height: 62px; flex: none; border-radius: 50%; background: var(--vert); color: #04210F;
+  display: grid; place-items: center; animation: pop 460ms var(--courbe) both;
+}
+.fin__ok svg { width: 30px; height: 30px; }
+@keyframes pop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Le ticket sort de la borne : il se déroule, comme sur une imprimante. */
+.recu-k {
+  --dent: 10px;
+  width: min(72cqw, 286px); flex: none; background: #FBFBFC; color: #15121C;
+  padding: .95em 1em calc(.95em + var(--dent));
+  text-align: left; font-family: var(--f-data);
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2)) bottom / var(--dent) var(--dent) repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2)) bottom / var(--dent) var(--dent) repeat-x;
+  animation: sort 760ms var(--courbe) both;
+  transform-origin: 50% 0;
+}
+@keyframes sort {
+  from { transform: scaleY(0) translateY(-12px); opacity: 0; }
+  to   { transform: scaleY(1) translateY(0); opacity: 1; }
+}
+.recu-k__num {
+  font-size: 2.1em; font-weight: 700; letter-spacing: -.05em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.recu-k__et {
+  font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+  font-size: .72em; font-weight: 700; color: #6A7384;
+}
+.recu-k hr { border: 0; border-top: 1px dashed #C8CDD6; margin: .8em 0; }
+.recu-k__l { display: flex; justify-content: space-between; gap: .8em; font-size: .78em; }
+.recu-k__l + .recu-k__l { margin-top: .25em; }
+.recu-k__t { display: flex; justify-content: space-between; font-weight: 700; margin-top: .6em; }
+.fin__compte { font-size: .82em; color: var(--craie-2); }
+
+/* ============ Cadre de la démonstration, sur le site ============ */
+.demo-cadre { display: grid; gap: var(--gout); align-items: start; }
+@media (min-width: 62rem) { .demo-cadre { grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); } }
+.demo-aide { display: grid; gap: .8rem; }
+.demo-aide li { display: grid; grid-template-columns: 1.6rem 1fr; gap: .6rem; font-size: var(--t-sm); }
+.demo-aide b {
+  font-family: var(--f-data); color: var(--lampe); font-weight: 700;
+}
+
+/* Plein écran : la borne prend tout, dans sa vraie proportion. */
+.borne-demo:fullscreen { max-width: none; aspect-ratio: auto; height: 100%; border-radius: 0; }
+.borne-demo:fullscreen .veille { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  .borne-demo *, .borne-demo *::before, .borne-demo *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+  }
+}
+</style>
+</head>
+<body>
+<a class="saut" href="#contenu">Aller au contenu</a>
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ecranVeille" x1="0" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#6B4FE0"/>
+      <stop offset=".34" stop-color="#3AA6E8"/>
+      <stop offset=".62" stop-color="#F6E3E8"/>
+      <stop offset=".84" stop-color="#E86A9A"/>
+      <stop offset="1" stop-color="#5B3FC4"/>
+    </linearGradient>
+  </defs>
+
+  <symbol id="borne-veille" viewBox="0 0 200 660">
+    <rect x="14" y="6" width="172" height="302" rx="8" fill="#101114"/>
+    <rect x="22" y="14" width="156" height="286" rx="3" fill="url(#ecranVeille)"/>
+    <rect x="92" y="304" width="16" height="322" rx="5" fill="#101114"/>
+    <rect x="34" y="624" width="132" height="14" fill="#101114"/>
+    <ellipse cx="100" cy="624" rx="66" ry="15" fill="#22242A"/>
+    <ellipse cx="100" cy="638" rx="66" ry="15" fill="#101114"/>
+  </symbol>
+
+  <symbol id="borne-commande" viewBox="0 0 200 660">
+    <rect x="14" y="6" width="172" height="302" rx="8" fill="#101114"/>
+    <rect x="22" y="14" width="156" height="286" rx="3" fill="#1B1D23"/>
+    <rect x="32" y="26" width="74" height="9" rx="4" fill="#6E727C"/>
+    <rect x="32" y="46" width="136" height="58" rx="4" fill="#2A2D35"/>
+    <rect x="40" y="56" width="38" height="38" rx="3" fill="#6B4FE0"/>
+    <rect x="86" y="60" width="62" height="8" rx="4" fill="#9AA0AB"/>
+    <rect x="86" y="76" width="34" height="8" rx="4" fill="#5D626D"/>
+    <rect x="32" y="112" width="136" height="58" rx="4" fill="#2A2D35"/>
+    <rect x="40" y="122" width="38" height="38" rx="3" fill="#3AA6E8"/>
+    <rect x="86" y="126" width="52" height="8" rx="4" fill="#9AA0AB"/>
+    <rect x="86" y="142" width="34" height="8" rx="4" fill="#5D626D"/>
+    <rect x="32" y="178" width="136" height="58" rx="4" fill="#2A2D35"/>
+    <rect x="40" y="188" width="38" height="38" rx="3" fill="#E86A9A"/>
+    <rect x="86" y="192" width="58" height="8" rx="4" fill="#9AA0AB"/>
+    <rect x="86" y="208" width="34" height="8" rx="4" fill="#5D626D"/>
+    <rect x="32" y="252" width="136" height="34" rx="5" fill="#3B2BD9"/>
+    <rect x="66" y="264" width="68" height="10" rx="5" fill="#FFFFFF"/>
+    <rect x="92" y="304" width="16" height="322" rx="5" fill="#101114"/>
+    <rect x="34" y="624" width="132" height="14" fill="#101114"/>
+    <ellipse cx="100" cy="624" rx="66" ry="15" fill="#22242A"/>
+    <ellipse cx="100" cy="638" rx="66" ry="15" fill="#101114"/>
+  </symbol>
+
+  <symbol id="borne-profil" viewBox="0 0 200 660">
+    <rect x="86" y="6" width="20" height="302" rx="4" fill="#101114"/>
+    <rect x="80" y="14" width="6" height="286" rx="2" fill="#2A2D35"/>
+    <rect x="104" y="150" width="26" height="34" rx="3" fill="#1B1D23"/>
+    <rect x="112" y="158" width="4" height="4" fill="#4A4E58"/>
+    <rect x="120" y="158" width="4" height="4" fill="#4A4E58"/>
+    <rect x="112" y="170" width="4" height="4" fill="#4A4E58"/>
+    <rect x="120" y="170" width="4" height="4" fill="#4A4E58"/>
+    <rect x="126" y="160" width="16" height="14" rx="3" fill="#101114"/>
+    <rect x="128" y="170" width="16" height="456" rx="5" fill="#101114"/>
+    <rect x="70" y="624" width="132" height="14" fill="#101114"/>
+    <ellipse cx="136" cy="624" rx="66" ry="15" fill="#22242A"/>
+    <ellipse cx="136" cy="638" rx="66" ry="15" fill="#101114"/>
+  </symbol>
+
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/>
+  </symbol>
+  <symbol id="i-son" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g class="ecoute__onde" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M15.6 9.2a4 4 0 0 1 0 5.6"/>
+      <path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/>
+    </g>
+  </symbol>
+  <symbol id="i-son-coupe" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9h3.2L12 4.8v14.4L7.2 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M16 9.5l5 5M21 9.5l-5 5"/>
+    </g>
+  </symbol>
+  <symbol id="i-logo" viewBox="0 0 24 24">
+    <rect x="6" y="2" width="12" height="15" rx="2" fill="currentColor"/>
+    <rect x="11" y="17" width="2" height="4" fill="currentColor"/>
+    <rect x="5" y="20" width="14" height="2.4" rx="1.2" fill="currentColor"/>
+  </symbol>
+</svg>
+<div class="bandeau">
+  <div class="env bandeau__int">
+    <span><em>Sans abonnement</em></span>
+    <span><b>720 € TTC</b> la borne, payés une fois</span>
+    <span><b>Livraison offerte</b> en France métropolitaine</span>
+    <span><a href="commander.html">Construire ma borne</a></span>
+  </div>
+</div>
+<header class="tete">
+  <div class="env tete__int">
+    <a class="marque" href="index.html"><svg aria-hidden="true"><use href="#i-logo"/></svg>Bornéa</a>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="index.html">La borne</a><a href="demo-borne-de-commande.html">Démonstration</a><a href="blog.html" class="nav__secondaire">Blog</a><a href="guide-borne-de-commande-restaurant.html" class="nav__secondaire">Guide d’achat</a><a href="livraison-et-retours.html" class="nav__secondaire">Livraison</a><a href="contact.html" class="nav__secondaire">Contact</a>
+      <a class="btn btn--petit" href="commander.html">Commander</a>
+    </nav>
+  </div>
+</header>
+<nav class="env fil" aria-label="Fil d’Ariane"><ol><li><a href="index.html">Accueil</a></li><li><span aria-current="page">Démonstration</span></li></ol></nav><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://borne-restaurants.fr/"}, {"@type": "ListItem", "position": 2, "name": "Démonstration"}]}</script>
+<main id="contenu" class="env" style="padding-bottom:var(--section)">
+
+  <div class="blog-tete">
+    <p class="surtitre">Démonstration jouable</p>
+    <h1 style="font-size:var(--t-2xl)">Essayez une borne, maintenant</h1>
+    <p class="chapo">Voici une borne montée sur la carte d’un vrai restaurant, Smash Avenue. Commandez comme le ferait votre client : choisissez, composez, payez. Rien n’est débité, c’est une simulation.</p>
+  </div>
+
+  <div class="demo-cadre mt-2">
+    <div>
+      <!-- ================= LA BORNE ================= -->
+      <div class="borne-demo" id="borne-demo" role="application" aria-label="Borne de commande de démonstration">
+
+        <!-- 1. Veille -->
+        <section class="ecran veille" data-ecran="veille" data-aller="carte" tabindex="0">
+          <div class="veille__fond" id="veille-fond" aria-hidden="true"></div>
+          <p class="veille__logo">Smash Avenue</p>
+          <h2>Commandez<br>ici</h2>
+          <p>Composez votre commande sur l’écran, réglez, et récupérez-la au comptoir avec votre numéro.</p>
+          <span class="veille__touche" data-focus>Touchez pour commander</span>
+        </section>
+
+        <!-- 2. Sur place ou à emporter -->
+        <section class="ecran mode" data-ecran="mode">
+          <h2>Vous mangez<br>sur place&nbsp;?</h2>
+          <div class="mode__choix">
+            <button type="button" class="mode__btn" data-mode="place" data-focus>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 3v8a3 3 0 0 0 3 3v7M7 3v6M10 3v6M17 3c-1.5 2-2 4-2 6s.5 3 2 3v9"/></svg>
+              <b>Sur place</b><span>TVA 10 %</span>
+            </button>
+            <button type="button" class="mode__btn" data-mode="emporter">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8zM8.5 8V6a3.5 3.5 0 0 1 7 0v2"/></svg>
+              <b>À emporter</b><span>TVA 5,5 %</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 3. La carte -->
+        <section class="ecran" data-ecran="carte">
+          <div class="kbar">
+            <span class="kbar__marque">Smash Avenue</span>
+            <span class="kbar__mode" id="k-mode">Sur place</span>
+          </div>
+          <div class="carte-k">
+            <div class="rail" id="k-rail" role="tablist" aria-label="Catégories"></div>
+            <div class="grille-k">
+              <h3 id="k-titre">Smash burger</h3>
+              <div class="produits-k" id="k-produits"></div>
+            </div>
+          </div>
+          <div class="panier-barre">
+            <span class="pastille-k" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12zM6 6L5 2H2M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+              <i id="k-nb">0</i>
+            </span>
+            <span class="panier-barre__info"><b id="k-total">0,00 €</b><span>Votre commande</span></span>
+            <button type="button" class="kbtn" id="k-voir" data-aller="panier" disabled>Voir le panier</button>
+          </div>
+        </section>
+
+        <!-- 4. Fiche produit -->
+        <section class="ecran fiche" data-ecran="fiche">
+          <div class="kbar">
+            <button type="button" class="kretour" data-aller="carte" data-focus>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+              Retour
+            </button>
+            <span class="kbar__mode" id="k-mode2">Sur place</span>
+          </div>
+          <div class="fiche__corps">
+            <figure class="fiche__photo"><img id="f-photo" src="" alt=""></figure>
+            <div class="fiche__tete">
+              <h2 id="f-nom"></h2>
+              <p class="fiche__ing" id="f-ing"></p>
+              <p class="fiche__prix" id="f-prix"></p>
+            </div>
+            <div id="f-groupes"></div>
+          </div>
+          <div class="fiche__pied">
+            <div class="qte">
+              <button type="button" data-q="-1" aria-label="Retirer un">−</button>
+              <output id="f-qte" aria-live="polite">1</output>
+              <button type="button" data-q="1" aria-label="Ajouter un">+</button>
+            </div>
+            <button type="button" class="kbtn" id="f-ajouter">Ajouter</button>
+          </div>
+        </section>
+
+        <!-- 5. Panier -->
+        <section class="ecran" data-ecran="panier">
+          <div class="kbar">
+            <button type="button" class="kretour" data-aller="carte" data-focus>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+              Continuer
+            </button>
+            <span class="kbar__mode">Votre commande</span>
+          </div>
+          <div class="lignes-k" id="p-lignes"></div>
+          <div class="total-k">
+            <div class="total-k__l"><span>Total hors taxes</span><span id="p-ht">0,00 €</span></div>
+            <div class="total-k__l"><span id="p-tauxl">TVA</span><span id="p-tva">0,00 €</span></div>
+            <div class="total-k__g"><span>À payer</span><b id="p-total">0,00 €</b></div>
+            <button type="button" class="kbtn" id="p-payer" style="width:100%;margin-top:.9em">Payer par carte</button>
+          </div>
+        </section>
+
+        <!-- 6. Paiement simulé -->
+        <section class="ecran paie" data-ecran="paiement">
+          <span class="paie__cb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 15h4"/></svg>
+          </span>
+          <h2>Présentez votre carte</h2>
+          <p class="paie__montant" id="paie-montant">0,00 €</p>
+          <div class="paie__barre"><i id="paie-barre"></i></div>
+          <p style="font-size:.82em;color:var(--craie-2);max-width:26ch">Simulation. Aucun paiement réel n’est effectué sur cette démonstration.</p>
+        </section>
+
+        <!-- 7. Ticket -->
+        <section class="ecran fin" data-ecran="ticket">
+          <span class="fin__ok" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+          </span>
+          <h2 style="font-size:1.3em;text-transform:uppercase;letter-spacing:-.02em">Commande enregistrée</h2>
+          <div class="recu-k">
+            <p class="recu-k__et">Votre numéro</p>
+            <p class="recu-k__num" id="t-num">B-214</p>
+            <p class="recu-k__et" id="t-mode">Sur place</p>
+            <hr>
+            <div id="t-lignes"></div>
+            <div class="recu-k__t"><span>Total</span><span id="t-total">0,00 €</span></div>
+            <hr>
+            <p class="recu-k__et">Smash Avenue · Merci</p>
+          </div>
+          <p class="fin__compte" id="t-compte"></p>
+          <button type="button" class="kbtn kbtn--fant" id="t-fin" style="flex:0 0 auto">Nouvelle commande</button>
+        </section>
+      </div>
+
+      <p class="note mt-1" style="text-align:center">
+        <button type="button" class="btn btn--secondaire btn--petit" id="k-plein">Afficher en plein écran</button>
+      </p>
+    </div>
+
+    <!-- ================= Colonne d'explication ================= -->
+    <aside>
+      <div class="carte">
+        <p class="surtitre">Ce que vous regardez</p>
+        <ul class="demo-aide mt-1" role="list">
+          <li><b>01</b><span>La carte réelle d’un restaurant : 39 produits, leurs prix, leurs ingrédients, leurs suppléments.</span></li>
+          <li><b>02</b><span>Les formules et les options sont calculées : menu à +3 €, patate douce à +1 €, toppings du bubble waffle à +1 €.</span></li>
+          <li><b>03</b><span><strong>La TVA change avec le mode</strong> : 10 % sur place, 5,5 % à emporter. Essayez les deux, le ticket n’est pas le même.</span></li>
+          <li><b>04</b><span>Le ticket sort avec un numéro d’appel, et la borne revient en veille toute seule.</span></li>
+        </ul>
+        <p class="note mt-2">Au bout d’une minute sans geste, la borne se remet à zéro. C’est ce qui évite qu’un client trouve le panier du précédent.</p>
+      </div>
+
+      <div class="carte mt-2">
+        <p class="surtitre">Votre carte à la place</p>
+        <p class="note mt-1">C’est exactement ce que nous montons pour vous, avec vos produits, vos photos et vos couleurs. Vous la construisez vous-même dans le configurateur, gratuitement et sans compte.</p>
+        <p class="mt-1"><a class="btn" href="commander.html" style="width:100%">Construire ma borne</a></p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="pied">
+  <div class="env cols">
+    <div>
+      <h2>Bornéa</h2>
+      <p>Bornes de commande tactiles pour la restauration. Vente et assistance depuis Saint-Brieuc.</p>
+    </div>
+    <div>
+      <h2>Le produit</h2>
+      <ul role="list">
+        <li><a href="index.html">La borne à 600 € HT</a></li>
+        <li><a href="demo-borne-de-commande.html">Démonstration jouable</a></li>
+        <li><a href="commander.html">Commander</a></li>
+        <li><a href="guide-borne-de-commande-restaurant.html">Guide d’achat</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Commande</h2>
+      <ul role="list">
+        <li><a href="livraison-et-retours.html">Livraison et retours</a></li>
+        <li><a href="cgv.html">Conditions générales de vente</a></li>
+        <li><a href="contact.html">Nous écrire</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Le site</h2>
+      <ul role="list">
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+        <li><a href="confidentialite.html">Données personnelles</a></li>
+        <li><a data-tel href="tel:+33756939700">07 56 93 97 00</a></li>
+        <li><a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="env pied__bas">
+    <p>© <span data-annee>2026</span> Bornéa. Prix hors taxes, destinés aux professionnels.</p>
+    <p>Paiement par carte sécurisé par Stripe.</p>
+  </div>
+</footer>
+<script>
+/* =========================================================================
+   LE SEUL FICHIER À MODIFIER POUR METTRE LE SITE EN PRODUCTION.
+   Tout le reste du site lit ces valeurs. Ne mettez jamais de clé secrète
+   Stripe ici : ce fichier est téléchargé par le navigateur du visiteur.
+   Une clé secrète commence par sk_ ou rk_. Si vous en voyez une, retirez-la.
+   ========================================================================= */
+
+window.CONFIG = {
+
+  /* ---- Identité ------------------------------------------------------ */
+  marque:    "Bornéa",
+  domaine:   "https://borne-restaurants.fr",         /* sans barre oblique finale */
+  telephone: "+33756939700",
+  telAffiche:"07 56 93 97 00",
+  email:     "infos@borne-restaurants.fr",
+  ville:     "Saint-Brieuc",
+
+  /* ---- Tarifs, en euros hors taxes ----------------------------------- */
+  tva: 0.20,
+  paliers: [                                   /* à partir de N unités, prix unitaire HT */
+    { aPartirDe: 1, prixHT: 600 },
+    { aPartirDe: 2, prixHT: 570 },
+    { aPartirDe: 3, prixHT: 540 }
+  ],
+  options: {
+    miseEnService: { libelle: "Mise en service à distance",  prixHT: 149, parUnite: false },
+    garantie:      { libelle: "Extension de garantie 3 ans", prixHT: 79,  parUnite: true  }
+  },
+  livraisonHT: 0,                              /* 0 = offerte en France métropolitaine */
+
+  /* ---- Paiement ------------------------------------------------------
+     Trois modes possibles. Le mode actif est celui de modePaiement.
+
+     "woocommerce" : la commande part sur une boutique WooCommerce que vous
+               possédez déjà, et c'est elle qui encaisse. Rien à créer chez
+               Stripe, aucune clé à manipuler, aucun PHP à installer ici :
+               la passerelle bancaire, le certificat, les e-mails de
+               confirmation et les factures existent déjà là-bas et ont
+               tourné sur des dizaines de milliers de commandes. Mode
+               fonctionnel, gardé en secours.
+
+               En contrepartie, le panier de la boutique ne connaît qu'un
+               seul article à un seul prix. Les paliers dégressifs et les
+               deux options sont donc retirés du formulaire dans ce mode,
+               et traités par devis. C'est volontaire : il vaut mieux une
+               ligne de panier exacte qu'une remise promise à l'écran et
+               absente au moment de débiter.
+
+     "lien"  : Stripe Payment Links. Aucun serveur, aucune clé. Vous créez
+               trois liens dans le tableau de bord Stripe (un par palier de
+               quantité) et vous collez les URL ci-dessous.
+
+     "php"   : le fichier paiement/creer-session.php crée une session Stripe
+               Checkout avec le total exact calculé par le configurateur.
+               Demande un hébergement qui exécute PHP (o2switch le fait) et
+               une clé secrète placée dans paiement/config.php, jamais ici.
+               C'EST LE MODE ACTIF, et il est réglé en autorisation seule :
+               la carte du client est bloquée, et c'est vous qui déclenchez
+               le débit depuis le tableau de bord Stripe. Voyez
+               capture_manuelle dans paiement/config.php.
+     ------------------------------------------------------------------- */
+  modePaiement: "php",
+
+  /* ---- La boutique qui encaisse (mode "woocommerce") ------------------
+     idProduit est l'identifiant WooCommerce de la fiche borne. Il ne change
+     jamais, même si vous renommez le produit ou son adresse : c'est pour ça
+     qu'on s'appuie dessus plutôt que sur l'URL de la fiche.
+
+     nomAffiche et hote servent à prévenir le client de la redirection, sur
+     la page de commande et dans les conditions de vente. Ne les retirez
+     pas : un acheteur qui atterrit sans prévenir sur un autre nom de
+     domaine au moment de sortir sa carte referme l'onglet.
+     ------------------------------------------------------------------- */
+  boutique: {
+    base:         "https://epicerie-saintbrieuc.fr",
+    pageCommande: "/commander/",
+    idProduit:    7910,
+    nomAffiche:   "Épicerie Saint-Brieuc",
+    hote:         "epicerie-saintbrieuc.fr"
+  },
+
+  liensStripe: {
+    "1": "https://buy.stripe.com/REMPLACER_LIEN_1_BORNE",
+    "2": "https://buy.stripe.com/REMPLACER_LIEN_2_BORNES",
+    "3": "https://buy.stripe.com/REMPLACER_LIEN_3_BORNES_ET_PLUS"
+  },
+
+  cheminPhp: "paiement/creer-session.php",
+
+  /* true : le site annonce au client que sa carte est seulement autorisée et
+     qu'elle sera débitée à la confirmation de commande. Doit rester aligné
+     sur capture_manuelle dans paiement/config.php : si les deux divergent,
+     vous promettez à l'écran l'inverse de ce que fait la banque. */
+  captureManuelle: true,
+
+  /* ---- Récitation du Coran sur la page de commande --------------------
+     Déposez votre fichier dans audio/ et indiquez son nom ci-dessous.
+     Format : MP3 ou M4A. Visez moins de 8 Mo, sinon la page met trop
+     longtemps à se charger sur un téléphone en 4G.
+
+     Le son ne peut pas démarrer tout seul : Chrome, Safari et Firefox
+     l'interdisent tant que le visiteur n'a pas cliqué sur la page. La
+     lecture démarre donc au premier clic, quel qu'il soit.
+
+     Mettez fichier à "" pour retirer complètement le lecteur.
+     ------------------------------------------------------------------- */
+  audio: {
+    fichier: "audio/coran.mp3",
+    titre:   "Récitation du Coran",
+    volume:  0.35,          /* entre 0 et 1 */
+    demarrerSeul: true      /* false : le visiteur doit cliquer sur le bouton */
+  },
+
+  /* ---- Délais annoncés ----------------------------------------------- */
+  delaiExpedition: "4 à 7 jours ouvrés",
+  garantieMois: 24
+};
+
+/* ---------------------------------------------------------------- */
+
+/* =========================================================================
+   Bornéa — comportements du site.
+   Vanilla, sans dépendance. Chaque bloc se désactive tout seul si son
+   markup est absent de la page, ce qui permet de charger ce fichier partout.
+   ========================================================================= */
+(() => {
+  "use strict";
+  const C = window.CONFIG || {};
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  const euros = n => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const ttc   = ht => ht * (1 + (C.tva ?? 0.2));
+
+  /** Prix unitaire hors taxes applicable à une quantité, selon les paliers. */
+  const prixUnitaire = (q) => {
+    const p = (C.paliers || []).filter(p => q >= p.aPartirDe).pop();
+    return p ? p.prixHT : 0;
+  };
+
+  const init = () => {
+
+    /* ---- Valeurs de config injectées dans le HTML ---------------------
+       Tout élément portant data-config="chemin.dans.CONFIG" reçoit la
+       valeur correspondante. Évite d'avoir le téléphone en dur dans dix
+       fichiers. */
+    $$("[data-config]").forEach(el => {
+      const v = el.dataset.config.split(".").reduce((o, k) => (o || {})[k], C);
+      if (v === undefined || v === null) return;
+      if (el.tagName === "A" && el.dataset.configHref) el.setAttribute("href", el.dataset.configHref.replace("{v}", v));
+      else el.textContent = v;
+    });
+    $$("[data-tel]").forEach(a => { a.href = "tel:" + (C.telephone || ""); if (!a.textContent.trim()) a.textContent = C.telAffiche || ""; });
+    $$("[data-mail]").forEach(a => { a.href = "mailto:" + (C.email || ""); if (!a.textContent.trim()) a.textContent = C.email || ""; });
+    $$("[data-annee]").forEach(el => { el.textContent = new Date().getFullYear(); });
+
+    /* ---- Prix affichés un peu partout --------------------------------- */
+    $$("[data-prix-ht]").forEach(el => { el.textContent = euros(prixUnitaire(+el.dataset.prixHt || 1)) + " HT"; });
+    $$("[data-prix-ttc]").forEach(el => { el.textContent = euros(ttc(prixUnitaire(+el.dataset.prixTtc || 1))) + " TTC"; });
+
+    /* ---- Lien courant dans la navigation ------------------------------ */
+    const ici = location.pathname.split("/").pop() || "index.html";
+    $$(".nav a, .pied a").forEach(a => {
+      const href = a.getAttribute("href");
+      if (href && href.split("/").pop() === ici && !href.startsWith("#")) a.setAttribute("aria-current", "page");
+    });
+
+    /* ---- Configurateur ------------------------------------------------ */
+    const form = $("#configurateur");
+    if (form) {
+      const sortieQte = $("#qte-valeur", form);
+      const lignes    = $("#recap-lignes");
+      const totalHT   = $("#recap-total-ht");
+      const totalTTC  = $("#recap-total-ttc");
+      const bouton    = $("#aller-au-paiement");
+      const barrePrix = $("#barre-prix");
+      const scene     = $("#scene-bornes");
+      let quantite = 1;
+
+      const etat = () => ({
+        quantite,
+        miseEnService: $("#opt-mise-en-service")?.checked || false,
+        garantie:      $("#opt-garantie")?.checked || false
+      });
+
+      const detail = () => {
+        const e = etat();
+        const pu = prixUnitaire(e.quantite);
+        const l = [{ libelle: `Borne tactile sur pied × ${e.quantite}`, montant: pu * e.quantite, detail: euros(pu) + " l’unité" }];
+        if (e.miseEnService) l.push({ libelle: C.options.miseEnService.libelle, montant: C.options.miseEnService.prixHT });
+        if (e.garantie)      l.push({ libelle: C.options.garantie.libelle + ` × ${e.quantite}`, montant: C.options.garantie.prixHT * e.quantite });
+        l.push({ libelle: "Livraison en France métropolitaine", montant: C.livraisonHT || 0, gratuit: !C.livraisonHT });
+        return l;
+      };
+
+      const dessinerScene = () => {
+        if (!scene) return;
+        const bornes = $$(".borne", scene);
+        const visibles = Math.min(quantite, bornes.length);
+        bornes.forEach((b, i) => {
+          /* hidden est une propriété de HTMLElement, pas de SVGElement :
+             sur un <svg> il faut passer par l'attribut, sinon on ne fait
+             qu'ajouter une propriété inerte à l'objet. */
+          const cache = b.hasAttribute("hidden");
+          const doitVoir = i < visibles;
+          if (doitVoir && cache) {
+            b.removeAttribute("hidden");
+            b.dataset.entrant = "1";
+            setTimeout(() => delete b.dataset.entrant, 320);
+          } else if (!doitVoir && !cache) {
+            b.setAttribute("hidden", "");
+          }
+        });
+        const surplus = $("#scene-surplus");
+        if (surplus) {
+          const reste = quantite - bornes.length;
+          surplus.hidden = reste <= 0;
+          if (reste > 0) surplus.textContent = "+ " + reste + " autre" + (reste > 1 ? "s" : "");
+        }
+      };
+
+      const rendre = () => {
+        const l = detail();
+        const ht = l.reduce((s, x) => s + x.montant, 0);
+        if (sortieQte) sortieQte.textContent = quantite;
+        if (lignes) {
+          lignes.innerHTML = "";
+          l.forEach(x => {
+            const d = document.createElement("div");
+            const g = document.createElement("span");
+            g.textContent = x.libelle;
+            if (x.detail) { const s = document.createElement("span"); s.className = "note"; s.textContent = " " + x.detail; g.append(s); }
+            const p = document.createElement("span");
+            p.className = "prix";
+            p.textContent = x.gratuit ? "Offerte" : euros(x.montant);
+            d.append(g, p);
+            lignes.append(d);
+          });
+        }
+        const cgv = $("#accepte-cgv");
+        if (bouton) bouton.disabled = cgv ? !cgv.checked : false;
+        if (totalHT)  totalHT.textContent  = euros(ht);
+        if (totalTTC) totalTTC.textContent = euros(ttc(ht));
+        if (barrePrix) barrePrix.textContent = euros(ttc(ht)) + " TTC";
+        dessinerScene();
+      };
+
+      /* ---- Adaptation au mode boutique ------------------------------
+         Le panier WooCommerce ne porte qu'un article à un prix fixe. Tant
+         qu'il encaisse, le formulaire ne doit donc afficher ni palier
+         dégressif ni option payante : ce qui est à l'écran est ce qui sera
+         débité, sans exception à expliquer après coup. */
+      if (C.modePaiement === "woocommerce") {
+        C.paliers = [{ aPartirDe: 1, prixHT: (C.paliers && C.paliers[0] ? C.paliers[0].prixHT : 600) }];
+        C.options = {};
+        const champsOpt = $("#opt-mise-en-service")?.closest("fieldset");
+        if (champsOpt) champsOpt.hidden = true;
+        const noteB = $("#note-paiement");
+        const bq = C.boutique || {};
+        if (noteB && bq.nomAffiche && bq.hote) {
+          noteB.innerHTML = "Le paiement est encaiss\u00e9 par notre boutique <strong>" + bq.nomAffiche +
+            "</strong>\u00a0: en validant, vous passez sur <strong>" + bq.hote +
+            "</strong>, qui porte la passerelle bancaire du groupe et \u00e9met la facture. M\u00eame vendeur, page de paiement d\u00e9j\u00e0 rod\u00e9e.";
+        }
+        const noteQte = $("#qte-valeur")?.closest("fieldset")?.querySelector(".note");
+        if (noteQte) noteQte.textContent = "600 \u20ac HT l\u2019unit\u00e9, livraison offerte. \u00c0 partir de deux bornes, appelez-nous : la remise se fait sur devis.";
+      }
+
+      $$("[data-qte]", form).forEach(b => b.addEventListener("click", () => {
+        quantite = Math.min(20, Math.max(1, quantite + (+b.dataset.qte)));
+        rendre();
+      }));
+      $$("input[type=checkbox]", form).forEach(i => i.addEventListener("change", rendre));
+      $("#accepte-cgv")?.addEventListener("change", rendre);
+
+      /* ---- Départ vers Stripe ---------------------------------------- */
+      if (bouton) bouton.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const e = etat();
+        const email = $("#client-email")?.value.trim() || "";
+        const ref   = $("#client-etablissement")?.value.trim() || "";
+        /* La configuration de borne voyage avec la commande : elle reste en
+           local pour survivre à l'aller-retour vers Stripe, et part au
+           serveur quand il y en a un. */
+        try {
+          const cfg = typeof window.CONFIG_BORNE === "function" ? window.CONFIG_BORNE() : null;
+          if (cfg) localStorage.setItem("borne-commande-en-cours", JSON.stringify({ quand: Date.now(), etab: ref, email, config: cfg }));
+        } catch (err) { /* mode privé : la configuration sera redemandée par e-mail */ }
+
+        /* Mode boutique : la commande rejoint le panier d'une boutique
+           WooCommerce qui porte déjà sa passerelle bancaire. On ne transmet
+           que la référence du produit et la quantité ; le reste, adresse et
+           coordonnées, est demandé là-bas. */
+        if (C.modePaiement === "woocommerce") {
+          const b = C.boutique || {};
+          if (!b.base || !b.idProduit) {
+            const zone = $("#erreur-paiement");
+            if (zone) {
+              zone.hidden = false;
+              zone.textContent = "La boutique de paiement n\u2019est pas configur\u00e9e. Renseignez boutique dans assets/config.js, ou passez commande au " + (C.telAffiche || "") + ".";
+            }
+            return;
+          }
+          const u = new URL(b.pageCommande || "/panier/", b.base);
+          u.searchParams.set("add-to-cart", String(b.idProduit));
+          u.searchParams.set("quantity", String(e.quantite));
+          bouton.disabled = true;
+          bouton.textContent = "Ouverture du paiement\u2026";
+          location.href = u.toString();
+          return;
+        }
+
+        if (C.modePaiement === "php") {
+          bouton.disabled = true;
+          bouton.textContent = "Ouverture du paiement…";
+          try {
+            const r = await fetch(C.cheminPhp, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...e, email, reference: ref })
+            });
+            const data = await r.json();
+            if (!r.ok || !data.url) throw new Error(data.erreur || "réponse inattendue du serveur");
+            location.href = data.url;
+            return;
+          } catch (err) {
+            bouton.disabled = false;
+            bouton.textContent = C.captureManuelle === false ? "Payer par carte" : "Autoriser le paiement";
+            const zone = $("#erreur-paiement");
+            if (zone) {
+              zone.hidden = false;
+              zone.textContent = "Le paiement n’a pas pu s’ouvrir (" + err.message + "). Appelez le " +
+                (C.telAffiche || "") + " ou écrivez à " + (C.email || "") + ", la commande sera prise à la main.";
+            }
+            return;
+          }
+        }
+
+        /* Mode Payment Links : un lien par palier de quantité. */
+        const cle = e.quantite >= 3 ? "3" : String(e.quantite);
+        const base = (C.liensStripe || {})[cle] || "";
+        if (!base || base.includes("REMPLACER")) {
+          const zone = $("#erreur-paiement");
+          if (zone) {
+            zone.hidden = false;
+            zone.textContent = "Le lien de paiement n’est pas encore configuré. Renseignez liensStripe dans assets/config.js, ou passez commande au " + (C.telAffiche || "") + ".";
+          }
+          return;
+        }
+        const u = new URL(base);
+        if (email) u.searchParams.set("prefilled_email", email);
+        if (ref)   u.searchParams.set("client_reference_id", ref.replace(/[^\w\-]+/g, "-").slice(0, 190));
+        location.href = u.toString();
+      });
+
+      rendre();
+    }
+
+    /* ---- Formulaires sans serveur : ouverture de la messagerie -------- */
+    $$("form[data-mailto]").forEach(f => {
+      f.addEventListener("submit", ev => {
+        ev.preventDefault();
+        const d = new FormData(f);
+        const corps = [...d.entries()].map(([k, v]) => k + " : " + v).join("\n");
+        location.href = "mailto:" + (C.email || "") +
+          "?subject=" + encodeURIComponent(f.dataset.mailto) +
+          "&body=" + encodeURIComponent(corps);
+        const secours = $(".secours", f);
+        if (secours) {
+          secours.hidden = false;
+          secours.innerHTML = "Si votre messagerie ne s’ouvre pas, appelez le <a href=\"tel:" + (C.telephone || "") +
+            "\">" + (C.telAffiche || "") + "</a> ou écrivez à <a href=\"mailto:" + (C.email || "") + "\">" + (C.email || "") + "</a>.";
+        }
+      });
+    });
+
+    /* ---- Vidéo de présentation ----
+       L'affiche sert de bouton : la vidéo ne se télécharge qu'au clic. */
+    const film = $("#film"), filmPlay = $("#film-play");
+    if (film && filmPlay) {
+      filmPlay.addEventListener("click", () => {
+        filmPlay.hidden = true;
+        film.setAttribute("preload", "auto");
+        film.play().catch(() => { filmPlay.hidden = false; });
+      });
+      film.addEventListener("pause", () => { if (film.currentTime === 0) filmPlay.hidden = false; });
+    }
+
+    /* ---- Révélation au défilement --------------------------------------
+       Un seul effet sur tout le site. Sans IntersectionObserver ou avec
+       prefers-reduced-motion, tout s'affiche immédiatement : la classe js
+       est retirée et le CSS reprend son état neutre. */
+    const aReveler = $$("[data-reveal]");
+    if (aReveler.length) {
+      const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduit || !("IntersectionObserver" in window)) {
+        document.documentElement.classList.remove("js");
+      } else {
+        const io = new IntersectionObserver((entrees) => {
+          entrees.forEach(e => {
+            if (e.isIntersecting) { e.target.dataset.vu = "1"; io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+        aReveler.forEach(el => io.observe(el));
+        /* Filet : si quelque chose empeche l'observateur de se declencher,
+           tout redevient visible au bout de deux secondes. */
+        setTimeout(function () { aReveler.forEach(function (el) { el.dataset.vu = "1"; }); }, 2000);
+      }
+    }
+
+    /* ---- Récitation du Coran ------------------------------------------
+       Les navigateurs refusent de lancer un son tant que le visiteur n'a
+       pas interagi avec la page : play() renvoie une promesse rejetée.
+       On tente quand même, et si c'est refusé on réessaie au premier clic
+       ou à la première touche. Le bouton reste là dans tous les cas, parce
+       qu'un son qui dure doit pouvoir être coupé (WCAG 1.4.2). */
+    const ecoute = $("#ecoute");
+    if (ecoute && C.audio && C.audio.fichier) {
+      const son    = $("#ecoute-audio");
+      const bouton = $("#ecoute-btn");
+      const CLE    = "coran-coupe";
+
+      let coupeParChoix = false;
+      try { coupeParChoix = localStorage.getItem(CLE) === "1"; } catch (e) { /* navigation privée */ }
+
+      son.src = C.audio.fichier;
+      son.loop = true;
+      son.volume = typeof C.audio.volume === "number" ? C.audio.volume : 0.35;
+
+      /* Fichier absent ou format refusé : on retire le lecteur au lieu
+         de laisser un bouton qui ne produit rien. */
+      son.addEventListener("error", () => { ecoute.hidden = true; }, { once: true });
+      ecoute.hidden = false;
+
+      const afficher = (joue) => {
+        ecoute.dataset.actif = joue ? "1" : "0";
+        bouton.setAttribute("aria-pressed", joue ? "true" : "false");
+        bouton.setAttribute("aria-label", joue ? "Couper la récitation" : "Écouter la récitation");
+        $("#ecoute-icone").setAttribute("href", joue ? "#i-son" : "#i-son-coupe");
+      };
+
+      let enAttenteDeClic = false;
+      const armerPremierGeste = () => {
+        if (enAttenteDeClic) return;
+        enAttenteDeClic = true;
+        const demarrer = () => {
+          enAttenteDeClic = false;
+          ["pointerdown", "keydown", "touchstart"].forEach(e => document.removeEventListener(e, demarrer));
+          son.play().then(() => afficher(true)).catch(() => afficher(false));
+        };
+        ["pointerdown", "keydown", "touchstart"].forEach(e =>
+          document.addEventListener(e, demarrer, { once: true, passive: true }));
+      };
+
+      son.addEventListener("play", () => afficher(true));
+      son.addEventListener("pause", () => afficher(false));
+      afficher(false);
+
+      if (C.audio.demarrerSeul !== false && !coupeParChoix) {
+        son.play().then(() => afficher(true)).catch(armerPremierGeste);
+      }
+
+      bouton.addEventListener("click", () => {
+        if (son.paused) {
+          son.play().catch(() => afficher(false));
+          try { localStorage.removeItem(CLE); } catch (e) { /* ignoré */ }
+        } else {
+          son.pause();
+          try { localStorage.setItem(CLE, "1"); } catch (e) { /* ignoré */ }
+        }
+      });
+    }
+
+    /* ---- Page de confirmation : rappel de la référence Stripe --------- */
+    const ref = $("#ref-commande");
+    if (ref) {
+      const id = new URLSearchParams(location.search).get("session_id");
+      if (id) { ref.hidden = false; $("#ref-valeur").textContent = id; }
+    }
+  };
+
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", init, { once: true })
+    : init();
+})();
+</script>
+<script>/* =========================================================================
+   BORNE DE DÉMONSTRATION — Smash Avenue
+
+   Borne de commande complète et jouable : veille, mode de consommation,
+   carte, fiche produit avec options, panier, paiement simulé, ticket,
+   retour à la veille. C'est la démonstration qu'on montre au restaurateur,
+   donc elle tourne sur une vraie carte et de vrais prix, relevés sur les
+   planches menu du client.
+
+   LA TVA EST CALCULÉE POUR DE VRAI, parce que c'est précisément le point
+   que les restaurateurs vérifient : 10 % sur place, 5,5 % à emporter. Une
+   borne qui affiche le même total dans les deux cas se fait repérer en
+   trente secondes.
+
+   Aucun paiement réel n'a lieu : l'écran de paiement est une simulation,
+   et il le dit.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  var racine = document.getElementById("borne-demo");
+  if (!racine) return;
+
+  /* ====================================================================
+     LA CARTE
+     Relevée sur les planches menu fournies par le client. Les libellés
+     d'ingrédients sont repris tels quels ; là où la planche était
+     illisible, le texte est volontairement court plutôt qu'inventé.
+     ==================================================================== */
+  var E = "img/menu/";
+
+  function formule(sup) {           /* la formule menu des burgers */
+    return { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+      { id: "seul", nom: "Le burger seul", prix: 0 },
+      { id: "menu", nom: "Menu : frite + boisson 33 cl", prix: 3.00 },
+      { id: "menupd", nom: "Menu : frites patate douce + boisson", prix: 4.00 }
+    ] };
+  }
+  var FRITE_CHOIX = { id: "fr", nom: "Votre frite", type: "unique", requis: true, choix: [
+    { id: "crinkle", nom: "Frites crinkle", prix: 0 },
+    { id: "douce", nom: "Frites patate douce", prix: 1.00 }
+  ] };
+  var SIDE_ASIA = { id: "sa", nom: "Votre side asiatique", type: "unique", requis: true, choix: [
+    { id: "cd", nom: "Chicken dynamite", prix: 0 },
+    { id: "crd", nom: "Crevette dynamite", prix: 0 },
+    { id: "nem", nom: "Nems poulet", prix: 0 },
+    { id: "yp", nom: "Yakitori poulet", prix: 0 },
+    { id: "yb", nom: "Yakitori bœuf", prix: 0 },
+    { id: "ct", nom: "Crevette tempura", prix: 0 }
+  ] };
+
+  var CARTE = [
+    { id: "burgers", nom: "Smash burger", ic: "bacon-bomb", produits: [
+      { id: "original-smash", nom: "Original Smash", prix: 6.90, ing: "1 steak smash, cheddar, salade, tomates, oignons, sauce smash", opts: [formule()] },
+      { id: "double-smash", nom: "Double Smash", prix: 8.50, ing: "2 steaks smash, cheddar, salade, tomates, oignons rouges, sauce smash", opts: [formule()] },
+      { id: "bacon-bomb", nom: "Bacon Bomb", prix: 8.90, ing: "2 steaks smash, cheddar, salade, tomates, oignons rouges, bacon, sauce creamy BBQ", opts: [formule()] },
+      { id: "nash-smash", nom: "Nash’n Smash", prix: 8.50, ing: "2 steaks smash, cheddar, oignons rouges, salade, jalapeños, sauce Nashville", opts: [formule()] },
+      { id: "chevre-miel", nom: "Chèvre Miel", prix: 8.90, ing: "2 steaks smash, chèvre, miel, oignons frits, noix, sauce maison", opts: [formule()] },
+      { id: "smash-truffle", nom: "Smash Truffle", prix: 8.90, ing: "2 steaks smash, emmental, champignons, salade, oignon rouge, sauce creamy truffe", opts: [formule()] },
+      { id: "melty-smash", nom: "Melty Smash", prix: 8.90, ing: "2 steaks smash, salade, lardons, oignons, sauce moutarde et poivre", opts: [formule()] },
+      { id: "smash-mountain", nom: "Smash Mountain", prix: 9.90, ing: "2 steaks smash, raclette, rösti, bacon, oignons confits, sauce creamy pepper", opts: [formule()] },
+      { id: "green-chicken", nom: "Green Chicken", prix: 9.00, ing: "Poulet frit, cheddar, salade, oignons rouges, guacamole, sauce verte", opts: [formule()] },
+      { id: "nash-chicken", nom: "Nash’n Chicken", prix: 8.90, ing: "Poulet frit, cheddar, salade, oignons rouges, jalapeños, sauce Nashville", opts: [formule()] },
+      { id: "smoky-chicken", nom: "Smoky Chicken", prix: 8.50, ing: "Poulet frit, cheddar, oignons rouges, bacon, sauce Nashville", opts: [formule()] },
+      { id: "chicken-smash", nom: "Chicken Smash", prix: 7.90, ing: "Poulet frit, cheddar, salade, cornichons, sauce smash", opts: [formule()] }
+    ] },
+
+    { id: "box", nom: "Les box", ic: "good-deal", produits: [
+      { id: "good-deal", nom: "Good Deal", prix: 16.90, ing: "1 Bacon Bomb, 1 Double Smash, 1 frite au choix, 1 boisson 33 cl", opts: [FRITE_CHOIX] },
+      { id: "family", nom: "Family", prix: 29.90, ing: "3 smashs au choix, 3 frites au choix, 1 bouteille au choix", opts: [FRITE_CHOIX] },
+      { id: "combo-fusion", nom: "Combo Fusion", prix: 14.90, ing: "1 smash au choix, 1 side asiatique au choix, 1 frite au choix, 1 boisson 33 cl", opts: [SIDE_ASIA, FRITE_CHOIX] },
+      { id: "full-up", nom: "Full Up", prix: 14.90, ing: "1 smash au choix, 3 tenders, 1 frite, 1 boisson au choix", opts: [FRITE_CHOIX] },
+      { id: "asian-box", nom: "Asian Box", prix: 15.90, ing: "1 bao au choix, 1 side asiatique au choix, 1 frite au choix, 1 boisson 33 cl", opts: [SIDE_ASIA, FRITE_CHOIX] }
+    ] },
+
+    { id: "salades", nom: "Salades", ic: "salade-cesar", produits: [
+      { id: "salade-cesar", nom: "Salade César", prix: 8.90, ing: "Mélange patty (katsu), mélange de salade, tomates cerises, grana padano, croûtons ail, sauce césar", opts: [
+        { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+          { id: "seule", nom: "La salade seule", prix: 0 },
+          { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] },
+      { id: "salade-fromagere", nom: "Salade Fromagère", prix: 8.00, ing: "Mélange patty (katsu), bacon, mélange de salade, tomates cerises, cornichons, emmental, féta, noix, croûtons ail, sauce fines herbes", opts: [
+        { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+          { id: "seule", nom: "La salade seule", prix: 0 },
+          { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] },
+      { id: "salade-new-york", nom: "Salade New York", prix: 8.50, ing: "Mélange patty (katsu), bacon, mélange de salade, tomates cerises, cornichons, grana padano, croûtons ail, emmental, cheddar, oignons frits, sauce miel moutarde", opts: [
+        { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+          { id: "seule", nom: "La salade seule", prix: 0 },
+          { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] }
+    ] },
+
+    { id: "frites", nom: "Frites", ic: "frites-cheddar", produits: [
+      { id: "frites-natures", nom: "Frites natures", prix: 3.00, ing: "Crinkle", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
+      { id: "frites-patates-douces", nom: "Frites patates douces", prix: 3.50, ing: "", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
+      { id: "frites-cheddar", nom: "Frites cheddar", prix: 4.00, ing: "Crinkle, sauce cheddar", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
+      { id: "frites-cheddar-bacon", nom: "Frites cheddar bacon", prix: 5.50, ing: "Crinkle, sauce cheddar, bacon", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] }
+    ] },
+
+    { id: "sides", nom: "À côté", ic: "tenders", produits: [
+      { id: "tenders", nom: "Tenders", prix: 5.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 5.90 }, { id: "x6", nom: "× 6", prix: 9.90 } ] } ] },
+      { id: "wings", nom: "Wings", prix: 3.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 3.90 }, { id: "x6", nom: "× 6", prix: 6.90 } ] } ] },
+      { id: "nuggets", nom: "Nuggets", prix: 3.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x5", nom: "× 5", prix: 3.90 }, { id: "x10", nom: "× 10", prix: 6.90 } ] } ] },
+      { id: "mozza-stick", nom: "Mozza stick", prix: 3.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 3.90 }, { id: "x6", nom: "× 6", prix: 6.90 } ] } ] }
+    ] },
+
+    { id: "asiatique", nom: "Asiatique", ic: "chicken-dynamite", produits: [
+      { id: "chicken-dynamite", nom: "Chicken Dynamite", prix: 5.90, ing: "", opts: [] },
+      { id: "crevette-dynamite", nom: "Crevette Dynamite", prix: 5.90, ing: "", opts: [] },
+      { id: "nem-poulet", nom: "Nems poulet", prix: 5.00, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 5.00 }, { id: "x6", nom: "× 6", prix: 9.00 } ] } ] },
+      { id: "yakitori-poulet", nom: "Yakitori poulet", prix: 5.90, ing: "× 2", opts: [] },
+      { id: "yakitori-boeuf", nom: "Yakitori bœuf", prix: 5.90, ing: "× 3", opts: [] },
+      { id: "crevette-tempura", nom: "Crevette tempura", prix: 5.90, ing: "× 3", opts: [] }
+    ] },
+
+    { id: "menus", nom: "Menus", ic: "menu-enfant", produits: [
+      { id: "menu-enfant", nom: "Menu Enfant", prix: 6.90, ing: "1 frite, boisson et cadeau compris", opts: [
+        { id: "p", nom: "Le plat", type: "unique", requis: true, choix: [
+          { id: "little", nom: "Little Smash", prix: 0 }, { id: "nug", nom: "5 nuggets", prix: 0 } ] },
+        { id: "b", nom: "La boisson", type: "unique", requis: true, choix: [
+          { id: "capri", nom: "Capri-Sun", prix: 0 }, { id: "eau", nom: "Eau", prix: 0 } ] } ] },
+      { id: "menu-etudiant", nom: "Menu Étudiant", prix: 6.90, ing: "Original Smash, 1 frite, 1 boisson", opts: [FRITE_CHOIX] }
+    ] },
+
+    { id: "desserts", nom: "Desserts", ic: "milkshake", produits: [
+      { id: "tiramisu", nom: "Tiramisu", prix: 3.90, ing: "", opts: [
+        { id: "p", nom: "Le parfum", type: "unique", requis: true, choix: [
+          { id: "pis", nom: "Pistache", prix: 0 }, { id: "oreo", nom: "Oréo", prix: 0 },
+          { id: "man", nom: "Mangue", prix: 0 }, { id: "fra", nom: "Fraise", prix: 0 },
+          { id: "nut", nom: "Nutella", prix: 0 }, { id: "car", nom: "Caramel", prix: 0 },
+          { id: "pb", nom: "Paris-Brest", prix: 0 } ] } ] },
+      { id: "bubble-waffle", nom: "Bubble Waffle", prix: 5.00, ing: "", opts: [
+        { id: "b", nom: "La base", type: "unique", requis: true, choix: [
+          { id: "nut", nom: "Nutella", prix: 0 }, { id: "cb", nom: "Chocolat blanc", prix: 0 },
+          { id: "bue", nom: "Bueno", prix: 0 }, { id: "fr", nom: "Fruits rouges", prix: 0 },
+          { id: "spe", nom: "Spéculos", prix: 0 } ] },
+        { id: "t", nom: "Topping", type: "multi", choix: [
+          { id: "kb", nom: "Kinder Bueno", prix: 1.00 }, { id: "kc", nom: "Kinder Country", prix: 1.00 },
+          { id: "spe", nom: "Spéculos", prix: 1.00 }, { id: "oreo", nom: "Oréo", prix: 1.00 },
+          { id: "sni", nom: "Snickers", prix: 1.00 }, { id: "ban", nom: "Banane", prix: 1.00 },
+          { id: "fra", nom: "Fraise", prix: 1.00 } ] },
+        { id: "g", nom: "Glace et coulis", type: "multi", choix: [
+          { id: "gv", nom: "Glace vanille", prix: 0.50 }, { id: "gf", nom: "Glace fraise", prix: 0.50 },
+          { id: "cc", nom: "Coulis caramel", prix: 0.50 }, { id: "cfr", nom: "Coulis fruits rouges", prix: 0.50 },
+          { id: "cch", nom: "Coulis chocolat", prix: 0.50 }, { id: "cha", nom: "Chantilly", prix: 0.50 } ] } ] },
+      { id: "milkshake", nom: "Milkshake", prix: 5.90, ing: "", opts: [
+        { id: "p", nom: "Le parfum", type: "unique", requis: true, choix: [
+          { id: "van", nom: "Vanille", prix: 0 }, { id: "fra", nom: "Fraise", prix: 0 },
+          { id: "coco", nom: "Coco-ananas", prix: 0 }, { id: "oreo", nom: "Oréo", prix: 0 },
+          { id: "kb", nom: "Kinder Bueno", prix: 0 }, { id: "fr", nom: "Fruits rouges", prix: 0 },
+          { id: "cho", nom: "Chocolat", prix: 0 } ] } ] }
+    ] }
+  ];
+
+  /* ==================================================================== */
+  var $  = function (s, r) { return (r || racine).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || racine).querySelectorAll(s)); };
+  var eur = function (n) { return n.toFixed(2).replace(".", ",") + " €"; };
+
+  var etat = {
+    mode: null,          /* "place" | "emporter" */
+    panier: [],
+    cat: "burgers",
+    prod: null,
+    choix: {},
+    qte: 1,
+    numero: 213
+  };
+
+  /* La TVA d'un ticket de restauration rapide : 10 % sur place, 5,5 % à
+     emporter. C'est le premier calcul qu'un restaurateur vérifie. */
+  function taux() { return etat.mode === "emporter" ? 0.055 : 0.10; }
+
+  function ecran(nom) {
+    $$(".ecran").forEach(function (e) { e.removeAttribute("data-actif"); });
+    var c = $('[data-ecran="' + nom + '"]');
+    if (c) c.setAttribute("data-actif", "");
+    var def = $(".ecran[data-actif] [data-focus]");
+    if (def) def.focus({ preventScroll: true });
+    repousserVeille();
+  }
+
+  /* ---- Veille automatique ---------------------------------------------
+     Une borne laissée sur un panier à moitié rempli bloque la suivante.
+     Au bout de soixante secondes sans geste, tout repart à zéro. */
+  var minuteur = null;
+  function repousserVeille() {
+    clearTimeout(minuteur);
+    if ($('[data-ecran="veille"][data-actif]')) return;
+    minuteur = setTimeout(reinitialiser, 60000);
+  }
+  racine.addEventListener("pointerdown", repousserVeille);
+
+  function reinitialiser() {
+    etat.mode = null; etat.panier = []; etat.cat = "burgers";
+    etat.prod = null; etat.choix = {}; etat.qte = 1;
+    majPastille();
+    ecran("veille");
+  }
+
+  /* ---- Carte ----------------------------------------------------------- */
+  function rendreRail() {
+    $("#k-rail").innerHTML = CARTE.map(function (c) {
+      return '<button type="button" role="tab" data-cat="' + c.id + '" aria-selected="' +
+        (c.id === etat.cat) + '"><img src="' + E + c.ic + '.webp" alt="" loading="lazy" decoding="async">' +
+        c.nom + "</button>";
+    }).join("");
+  }
+
+  function rendreGrille() {
+    var c = CARTE.filter(function (x) { return x.id === etat.cat; })[0];
+    $("#k-titre").textContent = c.nom;
+    $("#k-produits").innerHTML = c.produits.map(function (p, i) {
+      return '<button type="button" class="pk" data-prod="' + p.id + '" style="animation-delay:' +
+        (i * 28) + 'ms">' +
+        '<img src="' + E + p.id + '.webp" alt="" loading="lazy" decoding="async">' +
+        '<span class="pk__txt">' +
+          '<span class="pk__nom">' + p.nom + "</span>" +
+          (p.ing ? '<span class="pk__ing">' + p.ing + "</span>" : "") +
+          '<span class="pk__prix">' + eur(p.prix) + "</span>" +
+        "</span></button>";
+    }).join("");
+  }
+
+  function trouver(id) {
+    for (var i = 0; i < CARTE.length; i++) {
+      var t = CARTE[i].produits.filter(function (p) { return p.id === id; });
+      if (t.length) return t[0];
+    }
+    return null;
+  }
+
+  /* ---- Fiche produit ---------------------------------------------------- */
+  function ouvrirFiche(id) {
+    var p = trouver(id);
+    if (!p) return;
+    etat.prod = p; etat.qte = 1; etat.choix = {};
+    /* Un groupe obligatoire part sur son premier choix : une borne qui
+       exige une sélection sans en proposer une par défaut fait reculer. */
+    p.opts.forEach(function (g) {
+      if (g.requis && (g.type === "unique" || g.type === "taille")) etat.choix[g.id] = [g.choix[0].id];
+      else etat.choix[g.id] = [];
+    });
+
+    $("#f-photo").src = E + p.id + ".webp";
+    $("#f-photo").alt = p.nom;
+    $("#f-photo").parentNode.style.backgroundImage = 'url("' + E + p.id + '.webp")';
+    $("#f-nom").textContent = p.nom;
+    $("#f-ing").textContent = p.ing || "";
+    $("#f-ing").hidden = !p.ing;
+
+    $("#f-groupes").innerHTML = p.opts.map(function (g) {
+      return '<div class="groupe" data-groupe="' + g.id + '">' +
+        '<div class="groupe__tete"><h4>' + g.nom + "</h4><span>" +
+          (g.type === "multi" ? "Plusieurs possibles" : "Un seul choix") + "</span></div>" +
+        '<div class="opts">' + g.choix.map(function (ch) {
+          return '<button type="button" class="opt" data-type="' + g.type + '" data-g="' + g.id + '" data-c="' + ch.id + '" aria-pressed="false">' +
+            '<span class="opt__coche"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/></svg></span>' +
+            '<span class="opt__nom">' + ch.nom + "</span>" +
+            '<span class="opt__prix">' + (g.type === "taille" ? eur(ch.prix) : (ch.prix ? "+ " + eur(ch.prix) : "Inclus")) + "</span>" +
+          "</button>";
+        }).join("") + "</div></div>";
+    }).join("");
+
+    majFiche();
+    ecran("fiche");
+  }
+
+  function prixUnite() {
+    var p = etat.prod, base = p.prix, sup = 0;
+    p.opts.forEach(function (g) {
+      (etat.choix[g.id] || []).forEach(function (cid) {
+        var ch = g.choix.filter(function (c) { return c.id === cid; })[0];
+        if (!ch) return;
+        if (g.type === "taille") base = ch.prix; else sup += ch.prix;
+      });
+    });
+    return base + sup;
+  }
+
+  function majFiche() {
+    $$(".opt").forEach(function (b) {
+      var sel = (etat.choix[b.dataset.g] || []).indexOf(b.dataset.c) >= 0;
+      b.setAttribute("aria-pressed", sel ? "true" : "false");
+    });
+    $("#f-prix").textContent = eur(prixUnite());
+    $("#f-qte").textContent = etat.qte;
+    $("#f-ajouter").textContent = "Ajouter · " + eur(prixUnite() * etat.qte);
+  }
+
+  function libelleChoix() {
+    var out = [];
+    etat.prod.opts.forEach(function (g) {
+      (etat.choix[g.id] || []).forEach(function (cid) {
+        var ch = g.choix.filter(function (c) { return c.id === cid; })[0];
+        if (ch && !(g.type === "unique" && ch.prix === 0 && /seul/.test(ch.id))) out.push(ch.nom);
+      });
+    });
+    return out.join(" · ");
+  }
+
+  /* ---- Panier ------------------------------------------------------------ */
+  function ajouter() {
+    etat.panier.push({
+      id: etat.prod.id, nom: etat.prod.nom, det: libelleChoix(),
+      pu: prixUnite(), qte: etat.qte
+    });
+    majPastille(true);
+    ecran("carte");
+  }
+
+  function majPastille(anime) {
+    var n = etat.panier.reduce(function (s, l) { return s + l.qte; }, 0);
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    $("#k-nb").textContent = n;
+    $("#k-total").textContent = eur(tot);
+    $("#k-voir").disabled = n === 0;
+    if (anime) {
+      var b = $("#k-nb");
+      b.classList.remove("saute"); void b.offsetWidth; b.classList.add("saute");
+    }
+  }
+
+  function rendrePanier() {
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    $("#p-lignes").innerHTML = etat.panier.map(function (l, i) {
+      return '<div class="lk">' +
+        '<img src="' + E + l.id + '.webp" alt="" loading="lazy">' +
+        "<div><div class=\"lk__nom\">" + l.nom + "</div>" +
+        (l.det ? '<div class="lk__det">' + l.det + "</div>" : "") +
+        '<div class="qte" style="margin-top:.4em">' +
+          '<button type="button" data-ligne="' + i + '" data-d="-1" aria-label="Retirer un">−</button>' +
+          "<output>" + l.qte + "</output>" +
+          '<button type="button" data-ligne="' + i + '" data-d="1" aria-label="Ajouter un">+</button>' +
+        "</div></div>" +
+        '<div class="lk__prix">' + eur(l.pu * l.qte) + "</div></div>";
+    }).join("");
+
+    var ht = tot / (1 + taux());
+    $("#p-ht").textContent = eur(ht);
+    $("#p-tva").textContent = eur(tot - ht);
+    $("#p-tauxl").textContent = "TVA " + (taux() * 100).toFixed(1).replace(".0", "").replace(".", ",") + " %" +
+      (etat.mode === "emporter" ? " (à emporter)" : " (sur place)");
+    $("#p-total").textContent = eur(tot);
+    $("#p-payer").disabled = etat.panier.length === 0;
+  }
+
+  /* ---- Paiement et ticket ------------------------------------------------ */
+  function payer() {
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    $("#paie-montant").textContent = eur(tot);
+    ecran("paiement");
+    var barre = $("#paie-barre");
+    barre.classList.remove("court"); void barre.offsetWidth; barre.classList.add("court");
+    setTimeout(terminer, 2800);
+  }
+
+  function terminer() {
+    if (!$('[data-ecran="paiement"][data-actif]')) return;   /* annulé entre-temps */
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    var ht = tot / (1 + taux());
+    etat.numero += 1;
+    $("#t-num").textContent = "B-" + etat.numero;
+    $("#t-mode").textContent = etat.mode === "emporter" ? "À emporter" : "Sur place";
+    $("#t-lignes").innerHTML = etat.panier.map(function (l) {
+      return '<div class="recu-k__l"><span>' + l.qte + " × " + l.nom + "</span><span>" + eur(l.pu * l.qte) + "</span></div>";
+    }).join("") +
+      '<div class="recu-k__l"><span>dont TVA ' + (taux() * 100).toFixed(1).replace(".0", "").replace(".", ",") +
+      " %</span><span>" + eur(tot - ht) + "</span></div>";
+    $("#t-total").textContent = eur(tot);
+    ecran("ticket");
+
+    var reste = 9;
+    $("#t-compte").textContent = "Nouvelle commande dans " + reste + " s";
+    var tic = setInterval(function () {
+      reste -= 1;
+      if (!$('[data-ecran="ticket"][data-actif]')) { clearInterval(tic); return; }
+      if (reste <= 0) { clearInterval(tic); reinitialiser(); return; }
+      $("#t-compte").textContent = "Nouvelle commande dans " + reste + " s";
+    }, 1000);
+  }
+
+  /* ---- Branchements ------------------------------------------------------ */
+  racine.addEventListener("click", function (ev) {
+    var t = ev.target.closest("button, [data-aller]");
+    if (!t || !racine.contains(t)) return;
+
+    if (t.dataset.aller) {
+      if (t.dataset.aller === "carte" && !etat.mode) { ecran("mode"); return; }
+      if (t.dataset.aller === "panier") rendrePanier();
+      ecran(t.dataset.aller);
+      return;
+    }
+    if (t.dataset.mode) {
+      etat.mode = t.dataset.mode;
+      $("#k-mode").textContent = etat.mode === "emporter" ? "À emporter" : "Sur place";
+      $("#k-mode2").textContent = $("#k-mode").textContent;
+      rendreRail(); rendreGrille(); majPastille();
+      ecran("carte");
+      return;
+    }
+    if (t.dataset.cat) { etat.cat = t.dataset.cat; rendreRail(); rendreGrille(); return; }
+    if (t.dataset.prod) { ouvrirFiche(t.dataset.prod); return; }
+
+    if (t.dataset.g) {
+      var g = etat.prod.opts.filter(function (x) { return x.id === t.dataset.g; })[0];
+      var sel = etat.choix[g.id] || [];
+      if (g.type === "multi") {
+        var i = sel.indexOf(t.dataset.c);
+        if (i >= 0) sel.splice(i, 1); else sel.push(t.dataset.c);
+      } else {
+        etat.choix[g.id] = [t.dataset.c];
+      }
+      majFiche();
+      return;
+    }
+    if (t.dataset.q) { etat.qte = Math.min(20, Math.max(1, etat.qte + (+t.dataset.q))); majFiche(); return; }
+    if (t.id === "f-ajouter") { ajouter(); return; }
+
+    if (t.dataset.ligne !== undefined) {
+      var l = etat.panier[+t.dataset.ligne];
+      l.qte += (+t.dataset.d);
+      if (l.qte <= 0) etat.panier.splice(+t.dataset.ligne, 1);
+      majPastille(); rendrePanier();
+      return;
+    }
+    if (t.id === "p-payer") { payer(); return; }
+    if (t.id === "t-fin") { reinitialiser(); return; }
+    if (t.id === "k-plein") {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (racine.requestFullscreen) racine.requestFullscreen();
+      return;
+    }
+  });
+
+  /* Images de veille : trois produits qui dérivent, décalés dans le temps. */
+  var veilleFond = $("#veille-fond");
+  if (veilleFond) {
+    ["bacon-bomb", "frites-cheddar", "milkshake", "chicken-dynamite"].forEach(function (id, i) {
+      var im = new Image();
+      im.src = E + id + ".webp"; im.alt = ""; im.loading = "lazy";
+      im.style.left = [4, 33, 60, 78][i] + "cqw";
+      im.style.animationDelay = (i * 5.5) + "s";
+      veilleFond.appendChild(im);
+    });
+  }
+
+  rendreRail(); rendreGrille(); majPastille();
+  ecran("veille");
+})();</script>
+</body>
+</html>
