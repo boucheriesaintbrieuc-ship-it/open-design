@@ -307,6 +307,122 @@ Elles doivent y être avant la première vente.
 
 ---
 
+## La scène 3D et le passage en sombre
+
+Le site est passé sur surface sombre et la page d'accueil s'ouvre sur une
+scène en trois dimensions.
+
+### Le parti : le film tourne dans l'écran de la borne
+
+La vidéo de motion design ne joue pas à côté du produit, elle joue **dans
+l'écran de la borne**, qui tourne en volume au milieu de la scène. C'est ce
+que fait une vraie borne en mode veille, donc le hero montre le produit en
+service au lieu d'en montrer une photo.
+
+Autour gravitent les deux objets que produit une borne : des tuiles de carte
+avec leur prix, et des tickets de commande numérotés. Ce ne sont pas des
+formes décoratives, et c'est volontaire : sur la référence que vous avez
+envoyée, les objets qui flottent sont des grains de café parce que le site
+vend du café.
+
+### Comment c'est fait
+
+Tout est en CSS 3D : des plans réels dans un espace en perspective, avec le
+caisson d'écran à six faces, ses tranches, le mât et le socle. Aucune
+bibliothèque 3D n'est chargée. Deux raisons, et les deux comptent : une
+bibliothèque en CDN pèse plus lourd que la page entière, et elle enverrait
+l'adresse IP de vos visiteurs chez un tiers, ce qui est exactement le
+reproche fait à Google Fonts.
+
+Le mouvement est piloté par `assets/scene3d.js`, en une seule boucle qui
+anime la borne, les objets, la réaction au pointeur et au défilement. La
+boucle s'arrête dès que la scène sort du champ : une animation qui continue
+dix écrans plus bas vide la batterie sans rien montrer.
+
+La feuille et le script ne sont intégrés qu'à `index.html`. Les
+vingt-neuf autres pages ne les portent pas.
+
+### Ce que vous devez savoir sur la lecture automatique
+
+**Un navigateur n'autorise la lecture automatique que si la vidéo est
+muette.** C'est une règle de Chrome, Safari et Firefox, pas un réglage qu'on
+peut contourner. Le film démarre donc sans son, et le bouton **Activer le
+son** en bas à droite le rend au premier clic, qui est le geste que les
+navigateurs attendent.
+
+Trois cas où le film ne démarre pas tout seul, et c'est voulu :
+
+- le visiteur a demandé moins d'animations dans son système ;
+- son téléphone est en mode économie de données ;
+- sa connexion est annoncée en 2G ou 3G.
+
+Dans ces cas l'affiche reste, et le bouton lance la lecture. Imposer 2,6 Mo
+à quelqu'un en 3G, c'est une page qu'il quitte avant de l'avoir vue.
+
+Vérifié au navigateur : en mouvement réduit la vidéo ne démarre pas et son
+préchargement passe à `none` ; le bouton de son coupe et rend le son et met
+à jour son libellé ; la scène répond au pointeur par une vraie
+transformation 3D.
+
+### Le passage en sombre
+
+Toute la page est sombre, comme la référence. La profondeur se lit par
+empilement : plus une surface est proche du visiteur, plus elle est claire.
+
+| Niveau | Jeton | Valeur | Où |
+|---|---|---|---|
+| le plus profond | `--encre` | `#05070B` | scène 3D, bandeau du haut, barre mobile |
+| la page | `--console` | `#0B0F17` | fond général |
+| surélevé | `--carte` | `#151D2B` | cartes, champs, accordéons |
+
+Le jeton `--noir` a été renommé `--texte` : sur fond sombre il vaut
+`#EDF1F7`, et un jeton nommé « noir » contenant du blanc cassé est un piège
+pour la prochaine modification.
+
+**Le ticket reste du papier blanc.** C'est tout son intérêt : un reçu blanc
+sur une page sombre se voit de loin, et c'est bien un objet physique qu'on
+représente. Il porte donc ses propres couleurs, fixées en dur, sans quoi il
+hériterait du texte clair de la page et deviendrait illisible.
+
+Une chose a dû être dédoublée : **le bleu**. En lien sur fond sombre il doit
+être clair pour se détacher, mais cette même valeur claire sous un texte
+blanc de bouton ne donne que 3,3:1. Le bouton garde donc un bleu plus dense
+(`#2B57F0`) et le lien le bleu clair (`#5B86FF`). Un seul jeton ne pouvait
+pas satisfaire les deux mesures.
+
+### La révélation au défilement
+
+Elle n'est plus un simple fondu vers le haut : chaque bloc arrive de
+l'arrière en pivotant légèrement, `translate3d(0, 20px, -60px) rotateX(6deg)`.
+C'est ce qui donne le mouvement 3D sur les trente pages et pas seulement sur
+l'accueil. Entièrement désactivé sous `prefers-reduced-motion`.
+
+### Contrôles après bascule
+
+| Contrôle | Résultat |
+|---|---|
+| Contraste, mesuré sur six pages | tous les textes au-dessus du seuil applicable |
+| Rendu à 375, 768 et 1440 px | aucun débordement horizontal |
+| Erreurs JavaScript | aucune |
+| JSON-LD | 68 blocs, 0 invalide |
+| Ancres internes | aucune orpheline |
+| Dépendances externes | aucune |
+| Duplication | 3,7 % au pire |
+| Poids | accueil 131 ko, commande 127 ko, article 83 ko |
+
+La bascule a révélé trois défauts, tous corrigés : le bleu des boutons, le
+numéro d'étape du configurateur en blanc sur bleu clair, et le « livraison
+offerte » du ticket qui passait au vert vif sur papier blanc.
+
+### Un point à trancher
+
+Les dix-huit articles sont maintenant en texte clair sur fond sombre. C'est
+cohérent avec le reste et le contraste est bon, mais la lecture longue sur
+fond sombre ne plaît pas à tout le monde. Si vous préférez les repasser sur
+fond clair, c'est une seule règle à ajouter : dites-le.
+
+---
+
 ## Le système visuel
 
 Le site est passé en design de type SaaS. La direction n'est pas une tendance
@@ -737,7 +853,7 @@ ne lancez pas la vente : vous vendez un prix tout compris que vous ne tenez pas.
 
 ### Bloquant, sous peine d’infraction ou de site qui ment
 
-1. **Identité.** « Bornéa », `bornea.fr`, `contact@bornea.fr` et le `02 96 00 00 00`
+1. **Identité.** « Bornéa », `bornea.fr`, `infos@borne-restaurants.fr` et le `07 56 93 97 00`
    sont des valeurs de remplacement. Tout se change dans `assets/config.js`, sauf le
    domaine des balises canoniques et du sitemap qui se change dans `outils/construire.py`,
    ligne `DOMAINE`.

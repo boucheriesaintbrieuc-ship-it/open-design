@@ -17,9 +17,9 @@ from articles import ARTICLES
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 DOMAINE = "https://borne-restaurants.fr"
 MARQUE = "Bornéa"
-TEL_AFF = "02 96 00 00 00"
-TEL = "+33296000000"
-MAIL = "contact@bornea.fr"
+TEL_AFF = "07 56 93 97 00"
+TEL = "+33756939700"
+MAIL = "infos@borne-restaurants.fr"
 
 # --------------------------------------------------------------------------
 # Sprite du produit. Dessiné d'après les photos fournisseur : caisson noir mat,
@@ -252,9 +252,9 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body="", 
 <meta property="og:url" content="{canon}">
 <meta property="og:image" content="{DOMAINE}/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
-<meta name="theme-color" content="#F6F7F9">
+<meta name="theme-color" content="#0B0F17">
 <script>document.documentElement.className+=" js"</script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%231B4DF5'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%235B86FF'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 {{CSS_ICI}}
 {style_page or ""}
@@ -285,7 +285,113 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body="", 
 CORPS_INDEX = """
 <main id="contenu">
 
-<section class="env vitrine">
+<section class="stage" id="stage">
+  <div class="stage__lumiere" aria-hidden="true"></div>
+  <div class="stage__sol" aria-hidden="true"></div>
+
+  <div class="stage__monde">
+    <div class="stage__pivot" data-pivot>
+      <div class="objet objet--garde" data-objet data-x="-330" data-y="-210" data-z="-190" aria-hidden="true">
+        <div class="tuile">
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#C98B3A,#7A4A14)"></div>
+          <p class="tuile__nom">Menu kebab</p>
+          <p class="tuile__prix">9,90 €</p>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="-300" data-y="170" data-z="-150" aria-hidden="true">
+        <div class="tuile">
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#4C7BFF,#1E2F8E)"></div>
+          <p class="tuile__nom">Tacos poulet</p>
+          <p class="tuile__prix">8,50 €</p>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="-210" data-y="300" data-z="30" aria-hidden="true">
+        <div class="tuile">
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#FFB020,#B06A05)"></div>
+          <p class="tuile__nom">Frites maison</p>
+          <p class="tuile__prix">3,20 €</p>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="300" data-y="240" data-z="-130" aria-hidden="true">
+        <div class="tuile">
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#39C98A,#0D6A47)"></div>
+          <p class="tuile__nom">Boisson 33 cl</p>
+          <p class="tuile__prix">2,00 €</p>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="320" data-y="-180" data-z="-30" aria-hidden="true">
+        <div class="tuile">
+          <div class="tuile__img" style="--t:linear-gradient(145deg,#E86A9A,#8A2A52)"></div>
+          <p class="tuile__nom">Tiramisu</p>
+          <p class="tuile__prix">4,50 €</p>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="-330" data-y="250" data-z="130" aria-hidden="true">
+        <div class="recu">
+          <b>B-214</b>
+          <span>Sur place</span>
+          <hr>
+          <span>Commande prête</span>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="250" data-y="-250" data-z="80" aria-hidden="true">
+        <div class="recu">
+          <b>B-215</b>
+          <span>À emporter</span>
+          <hr>
+          <span>Commande prête</span>
+        </div>
+      </div>
+      <div class="objet" data-objet data-x="350" data-y="60" data-z="-240" aria-hidden="true">
+        <div class="recu">
+          <b>B-216</b>
+          <span>Sur place</span>
+          <hr>
+          <span>Commande prête</span>
+        </div>
+      </div>
+
+      <div class="borne3d" data-borne>
+        <div class="borne3d__tr borne3d__tr--h" aria-hidden="true"></div>
+        <div class="borne3d__tr borne3d__tr--b" aria-hidden="true"></div>
+        <div class="borne3d__tr borne3d__tr--g" aria-hidden="true"></div>
+        <div class="borne3d__tr borne3d__tr--d" aria-hidden="true"></div>
+        <div class="borne3d__dos" aria-hidden="true"></div>
+        <div class="borne3d__face">
+          <div class="borne3d__ecran">
+            <video id="film-borne" autoplay muted loop playsinline preload="metadata"
+                   width="1280" height="720"
+                   poster="video/borne-de-commande-restaurant-poster.webp"
+                   aria-label="Film de présentation de la borne de commande, en lecture sur son écran">
+              <source src="video/borne-de-commande-restaurant.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="borne3d__mat" aria-hidden="true"></div>
+        <div class="borne3d__socle" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="env stage__texte">
+    <p class="surtitre">Restauration rapide · brasserie · kebab · boulangerie</p>
+    <h1>Borne de commande pour restaurant</h1>
+    <p class="chapo">Un écran tactile sur pied, posé à l’entrée de votre salle. Vos clients composent leur commande pendant que votre équipe reste en cuisine. Vendu une fois, sans abonnement.</p>
+    <div class="stage__cta">
+      <a class="btn btn--large" href="commander.html" style="width:auto">Construire ma borne</a>
+      <a class="btn btn--secondaire btn--large" href="#comment" style="width:auto">Comment ça se passe</a>
+    </div>
+    <p class="note mt-1">Le film tourne sur l’écran de la borne, comme chez vous en mode veille.</p>
+  </div>
+
+  <button type="button" class="stage__son" id="stage-son" aria-pressed="false">
+    <svg aria-hidden="true"><use href="#i-son-coupe"/></svg>
+    <span data-libelle>Activer le son</span>
+  </button>
+</section>
+
+<section class="sec">
+  <div class="env vitrine">
   <div class="vitrine__objet">
     <figure class="photo">
       <img src="img/borne-de-commande-restaurant-ecran-paysage-1000.webp"
@@ -300,13 +406,13 @@ CORPS_INDEX = """
         <span class="montant prix">720 €</span>
         <span class="ttc">TTC, TVA 20 % comprise</span>
       </p>
-      <p class="note" style="margin-top:.2rem">600 € HT · <strong style="color:var(--valide)">livraison offerte</strong> · payé une fois, aucun abonnement</p>
+      <p class="note" style="margin-top:.2rem">600 € HT · <strong>livraison offerte</strong> · payé une fois, aucun abonnement</p>
       <a class="btn btn--large" href="commander.html">Commander une borne</a>
       <ul class="garanties mt-1" role="list">
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>0 € par mois, à vie</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Garantie 2 ans, pièces et main-d’œuvre</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Paiement par carte sécurisé par Stripe</span></li>
-        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Assistance par téléphone au <a data-tel href="tel:+33296000000">02 96 00 00 00</a></span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Assistance par téléphone au <a data-tel href="tel:+33756939700">07 56 93 97 00</a></span></li>
       </ul>
     </div>
   </div>
@@ -318,8 +424,7 @@ CORPS_INDEX = """
 
     <div class="actions mt-2">
       <a class="btn" href="commander.html">Construire ma borne</a>
-      <a class="btn btn--secondaire" href="#video">Voir la borne en service</a>
-    </div>
+          </div>
     <p class="note mt-1">Le configurateur est gratuit et sans compte à créer. Vous repartez avec le fichier de votre borne, que vous payiez ou non.</p>
 
     <dl class="chiffres-cle mt-2">
@@ -364,26 +469,6 @@ CORPS_INDEX = """
       </div>
     </div>
   </div>
-</section>
-
-<section class="sec sec--alt" id="video">
-  <div class="env">
-    <p class="surtitre">En une minute</p>
-    <h2 style="font-size:var(--t-xl)">À quoi sert une borne de commande</h2>
-    <p class="prose mt-1">Si vous hésitez encore sur le principe, regardez. C’est plus rapide que de lire la page.</p>
-    <figure class="video mt-2" data-reveal>
-      <video id="film" controls preload="none" playsinline
-             poster="video/borne-de-commande-restaurant-poster.webp"
-             width="1280" height="720">
-        <source src="video/borne-de-commande-restaurant.mp4" type="video/mp4">
-        <p>Votre navigateur ne lit pas cette vidéo. <a href="video/borne-de-commande-restaurant.mp4">Téléchargez-la</a> pour la regarder.</p>
-      </video>
-      <button type="button" class="video__play" id="film-play" aria-label="Lire la vidéo de présentation">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
-        <span>Lire la présentation · 1 min 13</span>
-      </button>
-      <figcaption>La vidéo ne se télécharge qu’au moment où vous appuyez sur lecture.</figcaption>
-    </figure>
   </div>
 </section>
 
@@ -857,7 +942,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
           <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Facture envoyée par e-mail après le prélèvement</span></li>
         </ul>
 
-        <p class="note mt-1">Vous préférez payer par virement, ou vous avez besoin d’un devis pour votre comptable&nbsp;? Écrivez à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a> ou appelez le <a data-tel href="tel:+33296000000">02 96 00 00 00</a>.</p>
+        <p class="note mt-1">Vous préférez payer par virement, ou vous avez besoin d’un devis pour votre comptable&nbsp;? Écrivez à <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a> ou appelez le <a data-tel href="tel:+33756939700">07 56 93 97 00</a>.</p>
       </div>
     </aside>
   </form>
@@ -895,7 +980,7 @@ CORPS_MERCI = """
     </ol>
   </div>
 
-  <p class="mt-2">Une question sur la commande&nbsp;? Appelez le <a data-tel href="tel:+33296000000">02 96 00 00 00</a> ou écrivez à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>.</p>
+  <p class="mt-2">Une question sur la commande&nbsp;? Appelez le <a data-tel href="tel:+33756939700">07 56 93 97 00</a> ou écrivez à <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a>.</p>
   <p class="mt-1"><a class="btn btn--secondaire" href="index.html">Revenir à l’accueil</a></p>
 </main>
 """
@@ -909,7 +994,7 @@ CORPS_ANNULE = """
   </p>
   <div class="carte mt-2" style="text-align:left">
     <h2 style="font-size:var(--t-lg)">Si quelque chose a coincé</h2>
-    <p class="note mt-1">Une carte refusée vient le plus souvent du plafond de paiement de la carte professionnelle. Votre banque peut le relever pour la journée. Nous acceptons aussi le virement : demandez la facture proforma à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a> et la borne part dès réception des fonds.</p>
+    <p class="note mt-1">Une carte refusée vient le plus souvent du plafond de paiement de la carte professionnelle. Votre banque peut le relever pour la journée. Nous acceptons aussi le virement : demandez la facture proforma à <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a> et la borne part dès réception des fonds.</p>
   </div>
 </main>
 """
@@ -1038,17 +1123,17 @@ CORPS_CONTACT = fil([("Accueil", "index.html"), ("Contact", None)]) + """
         <label class="champ"><span>Logiciel de caisse utilisé</span><input type="text" name="Caisse" placeholder="Zelty, Tiller, aucun…"></label>
         <label class="champ"><span>Votre question</span><textarea name="Message" required placeholder="Ce que vous voulez savoir"></textarea></label>
         <button class="btn" type="submit">Envoyer</button>
-        <p class="note">Ce formulaire ouvre votre messagerie avec le message déjà écrit. Les informations servent uniquement à vous répondre, sont conservées douze mois et ne sont ni revendues ni utilisées pour de la prospection. Accès et effacement : <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>.</p>
+        <p class="note">Ce formulaire ouvre votre messagerie avec le message déjà écrit. Les informations servent uniquement à vous répondre, sont conservées douze mois et ne sont ni revendues ni utilisées pour de la prospection. Accès et effacement : <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a>.</p>
         <p class="note secours" hidden></p>
       </form>
     </div>
     <div>
       <div class="carte">
         <h2 style="font-size:var(--t-lg)">Par téléphone</h2>
-        <p class="prix mt-1" style="font-size:1.5rem;font-weight:700"><a data-tel href="tel:+33296000000">02 96 00 00 00</a></p>
+        <p class="prix mt-1" style="font-size:1.5rem;font-weight:700"><a data-tel href="tel:+33756939700">07 56 93 97 00</a></p>
         <p class="note mt-1">Du lundi au vendredi, 9 h à 18 h. En dehors de ces horaires, laissez un message, on rappelle le jour ouvré suivant.</p>
         <h2 style="font-size:var(--t-lg)" class="mt-2">Par e-mail</h2>
-        <p class="mt-1"><a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a></p>
+        <p class="mt-1"><a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a></p>
         <h2 style="font-size:var(--t-lg)" class="mt-2">Adresse</h2>
         <p class="note mt-1">ADRESSE POSTALE À COMPLÉTER<br>22000 Saint-Brieuc</p>
         <p class="note mt-1">Les visites se font sur rendez-vous. Nous n’avons pas de magasin ouvert au public.</p>
@@ -1151,7 +1236,7 @@ CORPS_MENTIONS = fil([("Accueil", "index.html"), ("Mentions légales", None)]) +
       Siège social : ADRESSE COMPLÈTE À COMPLÉTER.<br>
       Immatriculée au registre du commerce et des sociétés de VILLE sous le numéro SIREN À COMPLÉTER.<br>
       Numéro de TVA intracommunautaire : FR À COMPLÉTER.<br>
-      Téléphone : <a data-tel href="tel:+33296000000">02 96 00 00 00</a>. Courriel : <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>.</p>
+      Téléphone : <a data-tel href="tel:+33756939700">07 56 93 97 00</a>. Courriel : <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a>.</p>
 
       <h2>Directeur de la publication</h2>
       <p>NOM ET PRÉNOM À COMPLÉTER, en qualité de représentant légal.</p>
@@ -1167,7 +1252,7 @@ CORPS_MENTIONS = fil([("Accueil", "index.html"), ("Mentions légales", None)]) +
       <p>L’éditeur déclare les équipements électriques et électroniques qu’il met sur le marché au titre de la responsabilité élargie du producteur. Identifiant unique : NUMÉRO ADEME À COMPLÉTER.</p>
 
       <h2>Signalement</h2>
-      <p>Pour signaler un contenu illicite ou une erreur sur ce site, écrivez à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>.</p>
+      <p>Pour signaler un contenu illicite ou une erreur sur ce site, écrivez à <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a>.</p>
     </div>
   </div>
 </main>
@@ -1187,7 +1272,7 @@ CORPS_CONFID = fil([("Accueil", "index.html"), ("Données personnelles", None)])
       <p>Votre carte étant autorisée avant d’être débitée, Stripe conserve l’autorisation jusqu’au prélèvement ou jusqu’à sa caducité. Nous recevons de Stripe le détail de la commande et l’identité de l’acheteur, que nous conservons dix ans au titre des obligations comptables.</p>
 
       <h2>Vos droits</h2>
-      <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement ou la limitation de leur traitement en écrivant à <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>. Une réponse vous est adressée dans un délai d’un mois. En cas de désaccord, vous pouvez saisir la Commission nationale de l’informatique et des libertés, 3 place de Fontenoy, 75007 Paris.</p>
+      <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement ou la limitation de leur traitement en écrivant à <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a>. Une réponse vous est adressée dans un délai d’un mois. En cas de désaccord, vous pouvez saisir la Commission nationale de l’informatique et des libertés, 3 place de Fontenoy, 75007 Paris.</p>
 
       <h2>Si vous ajoutez un outil de mesure</h2>
       <p class="note">Cette page décrit le site tel qu’il est livré. L’ajout d’un outil de statistiques, d’un pixel publicitaire ou d’une police hébergée chez un tiers change la situation et impose de mettre cette page à jour, et le plus souvent d’ajouter un bandeau de consentement conforme, où refuser est aussi simple qu’accepter.</p>
@@ -1318,7 +1403,9 @@ FICHIERS.append(page(
     "index.html",
     "Borne de commande restaurant à 600 € HT, sans abonnement | " + MARQUE,
     "Borne de commande tactile pour restaurant : écran vertical sur pied, 600 € HT, sans abonnement ni logiciel imposé. Livraison offerte, garantie 2 ans.",
-    CORPS_INDEX, ld=[ORG, PRODUIT, FAQ_INDEX]))
+    CORPS_INDEX, ld=[ORG, PRODUIT, FAQ_INDEX],
+    style_page=_lire("assets/scene3d.css"),
+    script_page=_lire("assets/scene3d.js")))
 
 FICHIERS.append(page(
     "guide-borne-de-commande-restaurant.html",

@@ -10,9 +10,9 @@ window.CONFIG = {
   /* ---- Identité ------------------------------------------------------ */
   marque:    "Bornéa",
   domaine:   "https://borne-restaurants.fr",         /* sans barre oblique finale */
-  telephone: "+33296000000",
-  telAffiche:"02 96 00 00 00",
-  email:     "contact@bornea.fr",
+  telephone: "+33756939700",
+  telAffiche:"07 56 93 97 00",
+  email:     "infos@borne-restaurants.fr",
   ville:     "Saint-Brieuc",
 
   /* ---- Tarifs, en euros hors taxes ----------------------------------- */

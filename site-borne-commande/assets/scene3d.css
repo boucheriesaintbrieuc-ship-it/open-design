@@ -1,0 +1,261 @@
+/* =========================================================================
+   LA SCÈNE 3D — intégrée uniquement à la page d'accueil.
+
+   Tout est en CSS 3D : des plans réels dans un espace en perspective, pas
+   des images en fausse perspective. Aucune bibliothèque n'est chargée, ce
+   qui compte pour deux raisons : le site doit rester autonome fichier par
+   fichier, et une bibliothèque 3D en CDN pèse plus lourd que la page
+   entière tout en envoyant l'adresse IP du visiteur chez un tiers.
+
+   Ce qui flotte autour de la borne n'est pas décoratif : ce sont les deux
+   objets que produit une borne de commande, une tuile de carte et un
+   ticket. Des grains de café ou des formes abstraites auraient fait joli
+   sans rien dire du produit.
+
+   Le mouvement est piloté par scene3d.js en une seule boucle, et il
+   s'arrête entièrement sous prefers-reduced-motion.
+   ========================================================================= */
+
+.stage {
+  position: relative;
+  min-height: min(92vh, 56rem);
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  background: var(--encre);
+  isolation: isolate;
+}
+
+/* ---- Lumière et sol -------------------------------------------------- */
+.stage__lumiere {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 62% 34%, rgb(76 123 255 / .34), transparent 70%),
+    radial-gradient(42% 38% at 24% 72%, rgb(255 176 32 / .16), transparent 72%),
+    radial-gradient(90% 70% at 50% 120%, rgb(11 14 20 / .9), transparent 60%);
+}
+
+/* Le sol : un plan couché en 3D. C'est lui qui donne l'assise, sans quoi
+   les objets ont l'air collés sur l'image au lieu d'être posés dedans. */
+.stage__sol {
+  position: absolute; left: 50%; bottom: -12%; z-index: 0;
+  width: 220%; height: 70%; transform: translateX(-50%) perspective(900px) rotateX(74deg);
+  transform-origin: 50% 100%; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgb(120 150 220 / .13) 0 1px, transparent 1px 86px),
+    repeating-linear-gradient(0deg,  rgb(120 150 220 / .13) 0 1px, transparent 1px 86px);
+  -webkit-mask: radial-gradient(60% 72% at 50% 100%, #000 10%, transparent 72%);
+  mask: radial-gradient(60% 72% at 50% 100%, #000 10%, transparent 72%);
+}
+
+/* ---- Le monde en perspective ----------------------------------------- */
+.stage__monde {
+  position: absolute; inset: 0; z-index: 1;
+  perspective: 1400px; perspective-origin: 50% 46%;
+  pointer-events: none;
+}
+@media (min-width: 62rem) {
+  /* La scène occupe la moitié droite, le texte garde la gauche pour lui
+     seul. Aucun objet ne doit jamais passer au-dessus d'une phrase. */
+  .stage__monde { left: 44%; }
+}
+.stage__pivot {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--mx, 0deg)) rotateY(var(--my, 0deg));
+  transition: transform 420ms var(--courbe);
+}
+
+/* ---- La borne, en volume ---------------------------------------------
+   Caisson d'écran à six faces, mât, socle. Les tranches comptent : sans
+   elles, l'écran est une vignette plate qui tourne, et l'œil le voit. */
+.borne3d {
+  position: absolute; left: 50%; top: 50%;
+  width: 430px; height: 269px;           /* 16:10, la diagonale du modèle */
+  margin: -200px 0 0 -215px;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--ry, -18deg)) rotateX(var(--rx, 4deg)) translateZ(var(--tz, 0px));
+}
+.borne3d__face {
+  position: absolute; inset: 0; border-radius: 12px;
+  background: #0E1219; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .07);
+  transform: translateZ(9px); overflow: hidden;
+}
+.borne3d__dos {
+  position: absolute; inset: 0; border-radius: 12px;
+  background: linear-gradient(160deg, #E8EAEE, #B9BEC7 60%, #8D939E);
+  transform: translateZ(-9px) rotateY(180deg);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .35);
+}
+/* Les quatre tranches du caisson. */
+.borne3d__tr {
+  position: absolute; background: linear-gradient(#DFE2E7, #A9AFB9);
+}
+.borne3d__tr--h { left: 0; top: 0; width: 100%; height: 18px; transform: rotateX(90deg) translateZ(9px); transform-origin: 50% 0; }
+.borne3d__tr--b { left: 0; bottom: 0; width: 100%; height: 18px; transform: rotateX(-90deg) translateZ(9px); transform-origin: 50% 100%; }
+.borne3d__tr--g { left: 0; top: 0; width: 18px; height: 100%; transform: rotateY(-90deg) translateZ(9px); transform-origin: 0 50%; }
+.borne3d__tr--d { right: 0; top: 0; width: 18px; height: 100%; transform: rotateY(90deg) translateZ(9px); transform-origin: 100% 50%; }
+
+/* La vidéo de motion design occupe l'écran. C'est le produit qui travaille,
+   pas une vidéo posée à côté du produit. */
+.borne3d__ecran {
+  position: absolute; inset: 10px; border-radius: 6px; overflow: hidden;
+  background: #05070B;
+}
+.borne3d__ecran video, .borne3d__ecran img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+/* Reflet de dalle : une bande diagonale très faible. Au-delà, l'écran
+   cesse de ressembler à du verre et commence à ressembler à un filtre. */
+.borne3d__ecran::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(118deg, rgb(255 255 255 / .13) 0 18%, transparent 38%);
+}
+
+.borne3d__mat {
+  position: absolute; left: 50%; top: 100%; width: 16px; height: 190px;
+  margin-left: -8px; transform-style: preserve-3d;
+  background: linear-gradient(90deg, #9AA0AA, #EDEFF2 38%, #B6BBC4);
+  border-radius: 2px;
+}
+.borne3d__socle {
+  position: absolute; left: 50%; top: calc(100% + 182px);
+  width: 168px; height: 168px; margin-left: -84px;
+  transform: rotateX(82deg); transform-origin: 50% 0;
+  border-radius: 50%;
+  background: radial-gradient(58% 58% at 42% 34%, #F2F4F7, #BFC5CE 54%, #6E747E);
+  box-shadow: 0 0 60px 16px rgb(76 123 255 / .10), inset 0 0 0 1px rgb(255 255 255 / .35);
+}
+
+/* ---- Les objets qui orbitent ------------------------------------------
+   Une tuile de carte et un ticket, les deux sorties d'une borne. Chacun
+   porte ses propres --x/--y/--z de départ, que le script anime. */
+.objet {
+  position: absolute; left: 50%; top: 50%;
+  transform-style: preserve-3d;
+  transform:
+    translate3d(calc(var(--x) * 1px - 50%), calc(var(--y) * 1px - 50%), calc(var(--z) * 1px))
+    rotateX(var(--ox, 0deg)) rotateY(var(--oy, 0deg)) rotateZ(var(--oz, 0deg));
+  filter: drop-shadow(0 26px 32px rgb(0 0 0 / .5));
+}
+
+/* La tuile : exactement ce que la borne affiche, carré photo, nom, prix. */
+.tuile {
+  width: 150px; border-radius: 14px; padding: 10px;
+  background: linear-gradient(165deg, #1B2231, #10151E);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .10);
+}
+.tuile__img {
+  height: 88px; border-radius: 9px;
+  background: var(--t, linear-gradient(140deg, #4C7BFF, #2B3FA8));
+  box-shadow: inset 0 -18px 28px rgb(0 0 0 / .25);
+}
+.tuile__nom { margin-top: 8px; font-size: 12px; font-weight: 650; color: #EEF1F6; letter-spacing: -.01em; }
+.tuile__prix {
+  margin-top: 2px; font-family: var(--f-data); font-variant-numeric: tabular-nums;
+  font-size: 12px; font-weight: 700; color: var(--lampe-vif);
+}
+
+/* Le ticket, en volume : même objet que la signature de la page de vente. */
+.recu {
+  --dent: 9px;
+  width: 128px; padding: 11px 11px calc(11px + var(--dent));
+  background: #FBFBFC; color: #11151C;
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2)) bottom / var(--dent) var(--dent) repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2)) bottom / var(--dent) var(--dent) repeat-x;
+}
+.recu b {
+  display: block; font-family: var(--f-data); font-variant-numeric: tabular-nums;
+  font-size: 23px; font-weight: 700; letter-spacing: -.04em; line-height: 1;
+}
+.recu span {
+  display: block; margin-top: 3px; font-family: var(--f-etiq);
+  text-transform: uppercase; letter-spacing: .12em; font-size: 9px;
+  font-weight: 700; color: #6A7384;
+}
+.recu hr { border: 0; border-top: 1px dashed #C8CDD6; margin: 8px 0 6px; }
+
+/* ---- Le texte, devant la scène --------------------------------------- */
+.stage__texte {
+  position: relative; z-index: 2;
+  padding-block: clamp(3rem, 2rem + 6vw, 6rem);
+}
+@media (min-width: 62rem) {
+  .stage__texte > * { max-width: min(38rem, 42vw); }
+}
+.stage__texte .surtitre { color: var(--lampe-vif); }
+.stage__texte .surtitre::before { background: var(--lampe-vif); }
+
+/* Le titre surdimensionné. L'épaisseur vient d'un empilement d'ombres, pas
+   d'une image : il reste sélectionnable, traduisible et indexable. */
+.stage h1 {
+  margin-top: 1rem;
+  font-size: clamp(2.5rem, 1.1rem + 4.9vw, 5rem);
+  line-height: .94; letter-spacing: -.05em; color: #fff;
+  max-width: 11ch;
+  text-shadow:
+    0 1px 0 #AEBBDA, 0 2px 0 #8C9AC0, 0 3px 0 #6E7CA6,
+    0 4px 0 #56638C, 0 5px 0 #414D74,
+    0 16px 34px rgb(0 0 0 / .55), 0 0 64px rgb(76 123 255 / .34);
+}
+.stage .chapo { color: #B7C0D1; max-width: 34ch; }
+.stage .note { color: #8E99AC; }
+
+.stage__cta { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: var(--gout); }
+.stage .btn--secondaire {
+  background: rgb(255 255 255 / .07); color: #fff; border-color: rgb(255 255 255 / .22);
+  backdrop-filter: blur(6px); box-shadow: none;
+}
+.stage .btn--secondaire:hover { background: rgb(255 255 255 / .14); color: #fff; border-color: #fff; }
+
+/* Le bandeau de commande du son, posé sous la borne. */
+.stage__son {
+  position: absolute; z-index: 3; right: clamp(1rem, 4vw, 3rem); bottom: clamp(1rem, 4vw, 2.5rem);
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: rgb(10 13 19 / .72); color: #fff; backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / .18); border-radius: 999px;
+  padding: .5rem .95rem; min-height: 44px; cursor: pointer;
+  font-size: var(--t-sm); font-weight: 600;
+}
+.stage__son:hover { border-color: #fff; }
+.stage__son svg { width: 18px; height: 18px; }
+
+/* ---- Écrans étroits ---------------------------------------------------
+   Sous 62 rem la borne passe derrière le texte et se réduit : un objet de
+   430 px de large dans un écran de 375 px écrase le titre. */
+@media (max-width: 62rem) {
+  /* La scène quitte le positionnement absolu et reprend sa place dans le
+     flux, au-dessus du texte. Superposer les deux sur un écran étroit
+     revient à faire passer un mât blanc au milieu d'un paragraphe. */
+  .stage { display: block; min-height: auto; }
+  .stage__monde {
+    position: relative; inset: auto; left: auto;
+    height: clamp(17rem, 58vw, 23rem);
+    perspective: 1000px; perspective-origin: 50% 42%;
+  }
+  .stage__pivot { position: absolute; inset: 0; }
+  .borne3d {
+    left: 50%; top: 6%; margin: 0 0 0 -215px;
+    transform-origin: 50% 0;
+    transform: scale(.46) rotateY(var(--ry, -14deg)) rotateX(var(--rx, 3deg));
+  }
+  .stage__texte { padding-block: var(--gout) var(--section); }
+  .stage__texte > * { max-width: 100%; }
+  .stage h1 { max-width: 100%; }
+  .stage__sol { bottom: auto; top: 2rem; height: 46%; }
+  .objet { display: none; }            /* les orbites n'ont pas la place */
+  .stage__son { position: static; margin-top: var(--pas); }
+}
+@media (max-width: 40rem) {
+  .borne3d { transform: scale(.42) rotateY(var(--ry, -12deg)); }
+}
+
+/* ---- Mouvement réduit --------------------------------------------------
+   Tout s'immobilise, et la vidéo ne démarre pas d'elle-même. */
+@media (prefers-reduced-motion: reduce) {
+  .stage__pivot, .objet, .borne3d { transition: none !important; animation: none !important; }
+}

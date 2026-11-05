@@ -13,9 +13,9 @@
 <meta property="og:url" content="https://borne-restaurants.fr/contact.html">
 <meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
-<meta name="theme-color" content="#F6F7F9">
+<meta name="theme-color" content="#0B0F17">
 <script>document.documentElement.className+=" js"</script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%231B4DF5'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%230B0E14'/><rect x='7' y='4' width='10' height='12' rx='1.5' fill='%235B86FF'/><rect x='11' y='16' width='2' height='3' fill='%23fff'/><rect x='6' y='19' width='12' height='2' rx='1' fill='%23fff'/></svg>">
 <style>
 /* =========================================================================
    Bornéa — feuille de style unique du site
@@ -54,36 +54,39 @@
 
 @layer tokens {
   :root {
-    /* ---- Surfaces ---- */
-    --encre:     #0B0E14;   /* le produit : tout panneau qui montre un écran */
-    --encre-2:   #141A24;   /* panneau surélevé posé sur l'encre */
-    --encre-3:   #1F2733;   /* filet et séparation sur fond encre */
-    --console:   #F6F7F9;   /* la page */
-    --console-2: #ECEEF2;   /* bandes alternées, fonds de panneau */
-    --carte:     #FFFFFF;
-    --trait:     #DDE1E8;
-    --trait-f:   #C5CBD6;   /* filet appuyé : bord de tableau, séparateur fort */
+    /* ---- Surfaces ----
+       Le site est sombre. La profondeur se lit donc par empilement : plus
+       une surface est proche du visiteur, plus elle est claire. L'encre
+       reste le niveau le plus bas, réservé au produit et aux barres. */
+    --encre:     #05070B;   /* le plus profond : scène 3D, bandeau, barre mobile */
+    --encre-2:   #0E131C;   /* panneau surélevé posé sur l'encre */
+    --encre-3:   #1E2735;   /* filet et séparation sur fond encre */
+    --console:   #0B0F17;   /* la page */
+    --console-2: #111826;   /* bandes alternées, fonds de panneau */
+    --carte:     #151D2B;   /* carte : un cran au-dessus de la page */
+    --trait:     #232D3F;
+    --trait-f:   #35415698;  /* filet appuyé : bord de tableau, séparateur fort */
 
     /* ---- Texte ---- */
-    --noir:      #0B0E14;   /* titres et texte courant */
-    --gris:      #555E6D;   /* texte secondaire — 6,2:1 sur console */
-    --gris-clair:#656F7E;   /* texte tertiaire — 5,1:1 sur console, tient à 12 px */
-    --sur-encre: #E7EAEF;   /* texte courant sur fond encre */
-    --sur-encre-2:#9AA4B4;  /* texte secondaire sur fond encre — 5,4:1 */
+    --texte:     #EDF1F7;   /* titres et texte courant — 15,8:1 sur la page */
+    --gris:      #A3ADBD;   /* texte secondaire — 8,3:1 */
+    --gris-clair:#8B95A6;   /* texte tertiaire — 6,2:1, tient à 12 px */
+    --sur-encre: #E7EAEF;
+    --sur-encre-2:#9AA4B4;
 
     /* ---- Action ---- */
-    --action:    #1B4DF5;   /* boutons, liens, focus */
-    --action-f:  #1438C9;   /* survol */
-    --action-pale:#E8EDFF;  /* fond de pastille, surlignage */
-    --action-vif:#6E92FF;   /* liens sur fond encre */
+    --action:    #5B86FF;   /* boutons, liens, focus */
+    --action-f:  #89A8FF;   /* survol */
+    --action-pale:#15203A;  /* fond de pastille, surlignage */
+    --action-vif:#89A8FF;
 
     /* ---- Signalisation ---- */
-    --lampe:     #9A4A06;   /* l'ambre du passe : motif ticket, donnée à surveiller */
-    --lampe-vif: #FFB020;   /* la même, uniquement sur fond encre */
-    --lampe-pale:#FFF4E2;
-    --valide:    #0A6B41;   /* confirmation, réassurance */
-    --valide-clair:#5CD6A0; /* confirmation sur fond encre */
-    --attente:   #A32E06;   /* erreur, refus */
+    --lampe:     #FFB020;   /* l'ambre du passe : motif ticket, donnée à surveiller */
+    --lampe-vif: #FFB020;
+    --lampe-pale:#2A1E08;
+    --valide:    #46D5A2;   /* confirmation, réassurance */
+    --valide-clair:#46D5A2;
+    --attente:   #FF8E72;   /* erreur, refus */
 
     /* ---- Fontes ----
        Aucune webfont : une police en CDN transfère l'IP du visiteur hors UE.
@@ -116,15 +119,15 @@
     --r-l:     18px;
     --duree:   180ms;
     --courbe:  cubic-bezier(.2,.7,.3,1);
-    --ombre:   0 1px 2px rgb(11 14 20 / .05), 0 4px 14px -6px rgb(11 14 20 / .10);
-    --ombre-f: 0 2px 4px rgb(11 14 20 / .07), 0 18px 40px -16px rgb(11 14 20 / .22);
+    --ombre:   0 1px 2px rgb(0 0 0 / .40), 0 6px 18px -8px rgb(0 0 0 / .55);
+    --ombre-f: 0 2px 6px rgb(0 0 0 / .45), 0 22px 48px -18px rgb(0 0 0 / .75);
   }
 }
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 6.5rem; }
   body {
-    background: var(--console); color: var(--noir);
+    background: var(--console); color: var(--texte);
     font-family: var(--f-ui); font-size: var(--t-md); line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
@@ -210,7 +213,7 @@
   .marque {
     display: inline-flex; align-items: center; gap: .55rem;
     font-family: var(--f-titre); font-weight: 700; letter-spacing: -.04em;
-    font-size: 1.15rem; color: var(--noir); text-decoration: none;
+    font-size: 1.15rem; color: var(--texte); text-decoration: none;
   }
   .marque svg { width: 22px; height: 22px; color: var(--action); }
   .nav { margin-left: auto; display: flex; align-items: center; gap: clamp(.5rem, .2rem + 1vw, 1.3rem); }
@@ -222,8 +225,8 @@
     display: inline-flex; align-items: center; min-height: 36px; padding-inline: .15rem;
     position: relative;
   }
-  .nav a:not(.btn):hover { color: var(--noir); }
-  .nav a:not(.btn)[aria-current="page"] { color: var(--noir); font-weight: 650; }
+  .nav a:not(.btn):hover { color: var(--texte); }
+  .nav a:not(.btn)[aria-current="page"] { color: var(--texte); font-weight: 650; }
   .nav a:not(.btn)[aria-current="page"]::after {
     content: ""; position: absolute; left: 0; right: 0; bottom: -1px;
     height: 2px; background: var(--action);
@@ -245,7 +248,7 @@
   .btn:active { transform: translateY(0); }
   .btn[disabled] { background: #E6E9EE; border-color: var(--trait); color: var(--gris); cursor: not-allowed; box-shadow: none; transform: none; }
   .btn--secondaire {
-    background: var(--carte); color: var(--noir); border-color: var(--trait-f);
+    background: var(--carte); color: var(--texte); border-color: var(--trait-f);
     box-shadow: var(--ombre);
   }
   .btn--secondaire:hover { background: var(--carte); color: var(--action); border-color: var(--action); }
@@ -290,7 +293,7 @@
      qui est la raison pour laquelle il est posé sur l'encre. */
   .ticket {
     --dent: 11px;
-    background: var(--carte); color: var(--noir);
+    background: var(--carte); color: var(--texte);
     padding: var(--pas) var(--pas) calc(var(--pas) + var(--dent));
     -webkit-mask:
       linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
@@ -442,7 +445,7 @@
   }
   .compteur button {
     width: 46px; height: 46px; background: transparent; border: 0; cursor: pointer;
-    font-size: 1.25rem; color: var(--noir); line-height: 1;
+    font-size: 1.25rem; color: var(--texte); line-height: 1;
   }
   .compteur button:hover { background: var(--console-2); color: var(--action); }
   .compteur output {
@@ -468,7 +471,7 @@
   .fil li + li::before { content: "/"; margin-right: .4rem; color: var(--trait-f); }
   .fil a { color: var(--gris); text-decoration: none; }
   .fil a:hover { color: var(--action); }
-  .fil [aria-current="page"] { color: var(--noir); font-weight: 600; }
+  .fil [aria-current="page"] { color: var(--texte); font-weight: 600; }
 
   /* ================= Pied ================= */
   .pied {
@@ -574,7 +577,7 @@
   .avantages > div { background: var(--carte); padding: var(--pas); }
   .avantages b {
     display: block; font-family: var(--f-data); font-size: var(--t-lg);
-    font-weight: 700; letter-spacing: -.03em; color: var(--noir);
+    font-weight: 700; letter-spacing: -.03em; color: var(--texte);
   }
   .avantages span { display: block; margin-top: .3rem; font-size: var(--t-sm); color: var(--gris); }
 
@@ -721,7 +724,7 @@
   }
   .blog-carte:hover { transform: translateY(-2px); box-shadow: var(--ombre-f); border-color: var(--trait-f); }
   .blog-carte h2, .blog-carte h3 { font-size: var(--t-lg); }
-  .blog-carte h2 a, .blog-carte h3 a { color: var(--noir); text-decoration: none; }
+  .blog-carte h2 a, .blog-carte h3 a { color: var(--texte); text-decoration: none; }
   .blog-carte h2 a::after, .blog-carte h3 a::after { content: ""; position: absolute; inset: 0; }
   .blog-carte:hover h2 a, .blog-carte:hover h3 a { color: var(--action); }
   .blog-carte h2 a:focus-visible, .blog-carte h3 a:focus-visible { outline-offset: 4px; }
@@ -751,7 +754,7 @@
     margin-top: var(--gout); padding: var(--pas) var(--pas) var(--pas) calc(var(--pas) + 3px);
     background: var(--carte); border: 1px solid var(--trait);
     border-left: 3px solid var(--action); border-radius: var(--r-s);
-    font-size: var(--t-md); color: var(--noir); box-shadow: var(--ombre);
+    font-size: var(--t-md); color: var(--texte); box-shadow: var(--ombre);
   }
   .art-corps { margin-top: var(--gout); max-width: var(--mesure); font-family: var(--f-prose); font-size: 1.09rem; line-height: 1.7; }
   .art-corps > * + * { margin-top: 1em; }
@@ -820,10 +823,13 @@
      document. Sans JavaScript la classe est absente et tout reste visible ;
      avec prefers-reduced-motion, site.js la retire. */
   [data-reveal] { opacity: 1; }
-  html.js [data-reveal] { opacity: 0; transform: translateY(12px); }
+  html.js [data-reveal] {
+    opacity: 0;
+    transform: perspective(1000px) translate3d(0, 20px, -60px) rotateX(6deg);
+  }
   html.js [data-reveal][data-vu] {
-    opacity: 1; transform: none;
-    transition: opacity 480ms var(--courbe), transform 480ms var(--courbe);
+    opacity: 1; transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0deg);
+    transition: opacity 560ms var(--courbe), transform 620ms var(--courbe);
   }
   @media (prefers-reduced-motion: reduce) {
     html.js [data-reveal] { opacity: 1; transform: none; }
@@ -907,6 +913,112 @@
   .recap__lignes > div > :first-child { min-width: 0; }
   .recap__lignes > div > :last-child { white-space: nowrap; flex: none; }
   .recap__total > :last-child { white-space: nowrap; }
+}
+
+/* =========================================================================
+   AJUSTEMENTS DE LA SURFACE SOMBRE
+
+   Tout ce qui, dans les couches précédentes, supposait une page claire.
+   Déclaré en dernier dans les mêmes couches : à spécificité égale, c'est
+   cette version qui l'emporte, sans avoir à réécrire quarante règles.
+   ========================================================================= */
+@layer composants {
+
+  /* Le bandeau et la barre mobile sont le niveau le plus profond : ils
+     doivent se détacher de la page, qui est déjà sombre. */
+  .bandeau { border-bottom: 1px solid var(--encre-3); }
+  .barre-mobile { border-top: 1px solid var(--encre-3); }
+
+  /* Le bouton secondaire en verre, au lieu du bouton blanc. */
+  .btn--secondaire {
+    background: rgb(255 255 255 / .06); color: var(--texte);
+    border-color: var(--trait-f); backdrop-filter: blur(6px); box-shadow: none;
+  }
+  .btn--secondaire:hover {
+    background: rgb(255 255 255 / .12); color: #fff; border-color: var(--action);
+  }
+  .btn[disabled] { background: #1A2231; border-color: var(--trait); color: var(--gris-clair); }
+
+  /* LE TICKET RESTE DU PAPIER. C'est tout l'intérêt : un reçu blanc sur une
+     page sombre se voit de loin, et c'est bien un objet physique qu'on
+     représente. Il faut donc lui fixer ses couleurs, sans quoi il hérite du
+     texte clair de la page et devient illisible. */
+  .ticket { background: #FBFBFC; color: #0E1219; }
+  .ticket__fil { border-top-color: #C8CDD6; }
+  .ticket__ligne span:first-child { color: #5A6372; }
+  .ticket__ligne span:first-child::after { border-bottom-color: #C8CDD6; }
+
+  /* Champs de formulaire : un champ doit rester visiblement creusé. */
+  .champ input, .champ textarea, .champ select,
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    background: #0D131E; color: var(--texte);
+  }
+  .champ input::placeholder, textarea::placeholder { color: #6B7586; }
+
+  /* Les cartes gagnent un filet de lumière sur l'arête haute. C'est ce
+     détail qui distingue une interface sombre soignée d'un simple fond
+     noir : sans lui, les cartes paraissent découpées au cutter. */
+  .carte, .encadre-cle, details, .option, .cadre-defil, .blog-carte, .ecoute {
+    box-shadow: var(--ombre), inset 0 1px 0 rgb(255 255 255 / .05);
+  }
+
+  .erreur { background: #2A1310; border-color: #6B2A1C; color: #FFB4A1; }
+
+  .pied { border-top: 1px solid var(--encre-3); }
+}
+
+@layer pages {
+  /* La carte d'achat est un ticket : mêmes couleurs de papier. */
+  .achat { background: #FBFBFC; color: #0E1219; }
+  .achat .note, .achat__prix .ttc { color: #5A6372; }
+  .achat .garanties { border-top-color: #C8CDD6; }
+  .achat .garanties svg { color: #0A6B41; }
+  .achat .garanties a { color: #1B4DF5; }
+  .achat .surtitre { color: #9A4A06; }
+  .achat .surtitre::before { background: #9A4A06; }
+
+  /* Le récit se distingue de la page par sa lumière, plus par sa teinte. */
+  .recit {
+    background: var(--encre);
+    background-image:
+      radial-gradient(70% 60% at 18% 0%, rgb(91 134 255 / .16), transparent 62%),
+      radial-gradient(60% 50% at 92% 100%, rgb(255 176 32 / .09), transparent 60%);
+    border-block: 1px solid var(--encre-3);
+  }
+
+  .art-resume { background: var(--carte); color: var(--texte); }
+
+  /* Corps d'article sur fond sombre : on remonte le corps et l'interligne,
+     parce qu'un texte clair sur fond sombre paraît toujours plus maigre. */
+  .art-corps { color: #D6DDE7; font-size: 1.12rem; line-height: 1.78; }
+  .art-corps strong { color: #fff; }
+
+  /* La grande coche de confirmation : fond vif, signe sombre. */
+  .confirme .pastille { background: var(--valide); color: #04210F; }
+
+  .photo { background: var(--console-2); }
+  .vitrine__objet .photo { background: transparent; }
+}
+
+/* =========================================================================
+   Le bleu a deux emplois qui ne demandent pas la même valeur.
+
+   En lien sur fond sombre, il doit être clair pour se détacher de la page.
+   En fond de bouton sous un texte blanc, cette même valeur claire ne donne
+   que 3,3:1. Le bouton garde donc un bleu plus dense, et le lien le bleu
+   clair : un seul jeton ne peut pas satisfaire les deux mesures.
+   ========================================================================= */
+@layer composants {
+  .btn { background: #2B57F0; border-color: #2B57F0; }
+  .btn:hover { background: #1B4DF5; border-color: #1B4DF5; }
+  .btn--secondaire { background: rgb(255 255 255 / .06); border-color: var(--trait-f); }
+  .btn--secondaire:hover { background: rgb(255 255 255 / .12); border-color: var(--action); }
+  .btn[disabled] { background: #1A2231; border-color: var(--trait); }
+}
+@layer pages {
+  /* Le « livraison offerte » du ticket est sur papier blanc : il lui faut
+     le vert sombre, pas le vert vif réservé aux fonds sombres. */
+  .achat .note strong { color: #0A6B41; }
 }
 
 </style>
@@ -1024,17 +1136,17 @@
         <label class="champ"><span>Logiciel de caisse utilisé</span><input type="text" name="Caisse" placeholder="Zelty, Tiller, aucun…"></label>
         <label class="champ"><span>Votre question</span><textarea name="Message" required placeholder="Ce que vous voulez savoir"></textarea></label>
         <button class="btn" type="submit">Envoyer</button>
-        <p class="note">Ce formulaire ouvre votre messagerie avec le message déjà écrit. Les informations servent uniquement à vous répondre, sont conservées douze mois et ne sont ni revendues ni utilisées pour de la prospection. Accès et effacement : <a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a>.</p>
+        <p class="note">Ce formulaire ouvre votre messagerie avec le message déjà écrit. Les informations servent uniquement à vous répondre, sont conservées douze mois et ne sont ni revendues ni utilisées pour de la prospection. Accès et effacement : <a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a>.</p>
         <p class="note secours" hidden></p>
       </form>
     </div>
     <div>
       <div class="carte">
         <h2 style="font-size:var(--t-lg)">Par téléphone</h2>
-        <p class="prix mt-1" style="font-size:1.5rem;font-weight:700"><a data-tel href="tel:+33296000000">02 96 00 00 00</a></p>
+        <p class="prix mt-1" style="font-size:1.5rem;font-weight:700"><a data-tel href="tel:+33756939700">07 56 93 97 00</a></p>
         <p class="note mt-1">Du lundi au vendredi, 9 h à 18 h. En dehors de ces horaires, laissez un message, on rappelle le jour ouvré suivant.</p>
         <h2 style="font-size:var(--t-lg)" class="mt-2">Par e-mail</h2>
-        <p class="mt-1"><a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a></p>
+        <p class="mt-1"><a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a></p>
         <h2 style="font-size:var(--t-lg)" class="mt-2">Adresse</h2>
         <p class="note mt-1">ADRESSE POSTALE À COMPLÉTER<br>22000 Saint-Brieuc</p>
         <p class="note mt-1">Les visites se font sur rendez-vous. Nous n’avons pas de magasin ouvert au public.</p>
@@ -1071,8 +1183,8 @@
       <ul role="list">
         <li><a href="mentions-legales.html">Mentions légales</a></li>
         <li><a href="confidentialite.html">Données personnelles</a></li>
-        <li><a data-tel href="tel:+33296000000">02 96 00 00 00</a></li>
-        <li><a data-mail href="mailto:contact@bornea.fr">contact@bornea.fr</a></li>
+        <li><a data-tel href="tel:+33756939700">07 56 93 97 00</a></li>
+        <li><a data-mail href="mailto:infos@borne-restaurants.fr">infos@borne-restaurants.fr</a></li>
       </ul>
     </div>
   </div>
@@ -1094,9 +1206,9 @@ window.CONFIG = {
   /* ---- Identité ------------------------------------------------------ */
   marque:    "Bornéa",
   domaine:   "https://borne-restaurants.fr",         /* sans barre oblique finale */
-  telephone: "+33296000000",
-  telAffiche:"02 96 00 00 00",
-  email:     "contact@bornea.fr",
+  telephone: "+33756939700",
+  telAffiche:"07 56 93 97 00",
+  email:     "infos@borne-restaurants.fr",
   ville:     "Saint-Brieuc",
 
   /* ---- Tarifs, en euros hors taxes ----------------------------------- */

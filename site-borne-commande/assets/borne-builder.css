@@ -8,7 +8,7 @@
 .etape:first-of-type { border-top: 0; margin-top: var(--gout); padding-top: 0; }
 .etape__num {
   display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%;
-  background: var(--action); color: #fff; font-family: var(--f-data); font-size: .8rem; font-weight: 700;
+  background: #2B57F0; color: #fff; font-family: var(--f-data); font-size: .8rem; font-weight: 700;
 }
 .etape__tete { display: flex; align-items: center; gap: .8rem; }
 .etape__tete h2 { font-size: var(--t-lg); }
@@ -22,7 +22,7 @@
   font-size: var(--t-xs); font-weight: 700;
 }
 .onglets button[aria-selected="true"] { color: var(--action); border-bottom-color: var(--action); }
-.onglets button:hover { color: var(--noir); }
+.onglets button:hover { color: var(--texte); }
 [data-panneau] { padding-top: var(--pas); }
 
 /* ---- Enseigne ---- */
@@ -51,7 +51,7 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
 .prod__prix { font-size: var(--t-sm); display: flex; align-items: center; gap: .3rem; }
 .prod__prix input { text-align: right; font-family: var(--f-data); }
 .lien-sup { background: none; border: 0; color: var(--gris); cursor: pointer; font-size: var(--t-sm); padding: .4rem; min-height: 40px; min-width: 40px; }
-.lien-sup:hover { color: #A03007; }
+.lien-sup:hover { color: var(--attente); }
 .supp { display: grid; grid-template-columns: 1fr 7rem auto; gap: .5rem; align-items: center; margin-bottom: .4rem; }
 .supp input[type="number"] { text-align: right; font-family: var(--f-data); }
 
@@ -67,13 +67,13 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
 .dom-ligne .champ { flex: 1; min-width: 14rem; }
 .dom-rep { font-size: var(--t-sm); color: var(--gris); margin-top: .5rem; min-height: 1.4em; }
 .dom-rep--oui { color: var(--valide); font-weight: 600; }
-.dom-rep--non { color: #A03007; font-weight: 600; }
+.dom-rep--non { color: var(--attente); font-weight: 600; }
 
 /* ---- Aperçu ---- */
 #apercu-cadre { width: 100%; height: 34rem; border: 0; border-radius: var(--r-l); background: var(--encre); margin-top: var(--pas); box-shadow: var(--ombre-f); }
 .generer-ligne { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; margin-top: var(--pas); }
 #generer-ok { font-size: var(--t-sm); color: var(--valide); font-weight: 600; }
-#cfg-erreur { background: #FDECEA; border: 1px solid #F0B4AC; color: #8A2412; border-radius: var(--r); padding: .7rem 1rem; font-size: var(--t-sm); margin-top: .7rem; }
+#cfg-erreur { background: #2A1310; border: 1px solid #6B2A1C; color: #FFB4A1; border-radius: var(--r); padding: .7rem 1rem; font-size: var(--t-sm); margin-top: .7rem; }
 #cfg-compte { font-family: var(--f-data); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--gris); }
 #resume-borne { font-size: var(--t-sm); color: var(--gris); }
 
