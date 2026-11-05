@@ -280,26 +280,32 @@ def page(slug, titre, description, corps, ld=None, robots=None, classe_body="", 
     (RACINE / slug).write_text(html, encoding="utf-8")
     return slug
 
-CORPS_DEMO = fil([("Accueil", "index.html"), ("Démonstration", None)]) + """
-<main id="contenu" class="env" style="padding-bottom:var(--section)">
-
-  <div class="blog-tete">
-    <p class="surtitre">Démonstration jouable</p>
-    <h1 style="font-size:var(--t-2xl)">Essayez une borne, maintenant</h1>
-    <p class="chapo">Voici une borne montée sur la carte d’un vrai restaurant, Smash Avenue. Commandez comme le ferait votre client : choisissez, composez, payez. Rien n’est débité, c’est une simulation.</p>
-  </div>
-
-  <div class="demo-cadre mt-2">
-    <div>
-      <!-- ================= LA BORNE ================= -->
-      <div class="borne-demo" id="borne-demo" role="application" aria-label="Borne de commande de démonstration">
+# La borne de démonstration est posée à deux endroits : sur sa page
+# dédiée et sur l'accueil. Une seule source, sinon les deux copies
+# divergent dès la première retouche.
+BORNE_DEMO = """      <div class="borne-demo" id="borne-demo" role="application" aria-label="Borne de commande de démonstration">
 
         <!-- 1. Veille -->
         <section class="ecran veille" data-ecran="veille" data-aller="carte" tabindex="0">
           <div class="veille__fond" id="veille-fond" aria-hidden="true"></div>
-          <p class="veille__logo">Smash Avenue</p>
-          <h2>Commandez<br>ici</h2>
-          <p>Composez votre commande sur l’écran, réglez, et récupérez-la au comptoir avec votre numéro.</p>
+          <p class="veille__marque"><b>SMASH</b><span>Avenue</span></p>
+          <i class="veille__chev" aria-hidden="true"></i>
+
+          <div class="veille__scene">
+            <span class="fumee" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="monte monte--boucle" role="img" aria-label="Un smash burger se monte, couche après couche">
+              <img class="monte__c" data-c="1" style="--i:0" src="img/menu/couche-c1.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="2" style="--i:1" src="img/menu/couche-c2.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="3" style="--i:2" src="img/menu/couche-c3.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="4" style="--i:3" src="img/menu/couche-c4.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="5" style="--i:4" src="img/menu/couche-c5.webp" alt="" decoding="async">
+            </div>
+          </div>
+
+          <div class="veille__invite">
+            <b>Composez votre burger</b>
+            <span>Touchez l’écran, choisissez, payez. Votre commande part en cuisine et vous recevez un numéro d’appel.</span>
+          </div>
           <span class="veille__touche" data-focus>Touchez pour commander</span>
         </section>
 
@@ -321,13 +327,14 @@ CORPS_DEMO = fil([("Accueil", "index.html"), ("Démonstration", None)]) + """
         <!-- 3. La carte -->
         <section class="ecran" data-ecran="carte">
           <div class="kbar">
-            <span class="kbar__marque">Smash Avenue</span>
+            <span class="kbar__marque"><b>SMASH</b><i>Avenue</i></span>
             <span class="kbar__mode" id="k-mode">Sur place</span>
           </div>
+          <div class="chevron" aria-hidden="true"></div>
           <div class="carte-k">
             <div class="rail" id="k-rail" role="tablist" aria-label="Catégories"></div>
             <div class="grille-k">
-              <h3 id="k-titre">Smash burger</h3>
+              <div class="grille-k__tete"><h3 class="kraft" id="k-titre">Smash burger</h3></div>
               <div class="produits-k" id="k-produits"></div>
             </div>
           </div>
@@ -350,6 +357,7 @@ CORPS_DEMO = fil([("Accueil", "index.html"), ("Démonstration", None)]) + """
             </button>
             <span class="kbar__mode" id="k-mode2">Sur place</span>
           </div>
+          <div class="chevron" aria-hidden="true"></div>
           <div class="fiche__corps">
             <figure class="fiche__photo"><img id="f-photo" src="" alt=""></figure>
             <div class="fiche__tete">
@@ -378,6 +386,7 @@ CORPS_DEMO = fil([("Accueil", "index.html"), ("Démonstration", None)]) + """
             </button>
             <span class="kbar__mode">Votre commande</span>
           </div>
+          <div class="chevron" aria-hidden="true"></div>
           <div class="lignes-k" id="p-lignes"></div>
           <div class="total-k">
             <div class="total-k__l"><span>Total hors taxes</span><span id="p-ht">0,00 €</span></div>
@@ -418,7 +427,21 @@ CORPS_DEMO = fil([("Accueil", "index.html"), ("Démonstration", None)]) + """
           <button type="button" class="kbtn kbtn--fant" id="t-fin" style="flex:0 0 auto">Nouvelle commande</button>
         </section>
       </div>
+"""
 
+CORPS_DEMO = fil([("Accueil", "index.html"), ("Démonstration", None)]) + """
+<main id="contenu" class="env" style="padding-bottom:var(--section)">
+
+  <div class="blog-tete">
+    <p class="surtitre">Démonstration jouable</p>
+    <h1 style="font-size:var(--t-2xl)">Essayez une borne, maintenant</h1>
+    <p class="chapo">Voici une borne montée sur la carte d’un vrai restaurant, Smash Avenue. Commandez comme le ferait votre client : choisissez, composez, payez. Rien n’est débité, c’est une simulation.</p>
+  </div>
+
+  <div class="demo-cadre mt-2">
+    <div>
+      <!-- ================= LA BORNE ================= -->
+""" + BORNE_DEMO + """
       <p class="note mt-1" style="text-align:center">
         <button type="button" class="btn btn--secondaire btn--petit" id="k-plein">Afficher en plein écran</button>
       </p>
@@ -557,6 +580,176 @@ CORPS_INDEX = """
     <svg aria-hidden="true"><use href="#i-son-coupe"/></svg>
     <span data-libelle>Activer le son</span>
   </button>
+</section>
+
+<section class="sec essayer" id="essayer">
+  <div class="env">
+    <p class="surtitre">Essayez tout de suite</p>
+    <h2 style="font-size:var(--t-xl)">La borne, montée sur une vraie carte</h2>
+    <p class="prose mt-1">Celle d’un restaurant qui tourne, avec ses trente-neuf produits, ses formules et ses prix. Commandez comme le ferait votre client : rien n’est débité, c’est une simulation.</p>
+
+    <div class="essayer__montage mt-2" data-montage>
+      <span class="fumee" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div class="monte" role="img" aria-label="Un smash burger se monte, couche après couche, au fil du défilement">
+        <img class="monte__c" data-c="1" src="img/menu/couche-c1.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="2" src="img/menu/couche-c2.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="3" src="img/menu/couche-c3.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="4" src="img/menu/couche-c4.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="5" src="img/menu/couche-c5.webp" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <div class="borne-demo" id="borne-demo" role="application" aria-label="Borne de commande de démonstration">
+
+        <!-- 1. Veille -->
+        <section class="ecran veille" data-ecran="veille" data-aller="carte" tabindex="0">
+          <div class="veille__fond" id="veille-fond" aria-hidden="true"></div>
+          <p class="veille__marque"><b>SMASH</b><span>Avenue</span></p>
+          <i class="veille__chev" aria-hidden="true"></i>
+
+          <div class="veille__scene">
+            <span class="fumee" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="monte monte--boucle" role="img" aria-label="Un smash burger se monte, couche après couche">
+              <img class="monte__c" data-c="1" style="--i:0" src="img/menu/couche-c1.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="2" style="--i:1" src="img/menu/couche-c2.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="3" style="--i:2" src="img/menu/couche-c3.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="4" style="--i:3" src="img/menu/couche-c4.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="5" style="--i:4" src="img/menu/couche-c5.webp" alt="" decoding="async">
+            </div>
+          </div>
+
+          <div class="veille__invite">
+            <b>Composez votre burger</b>
+            <span>Touchez l’écran, choisissez, payez. Votre commande part en cuisine et vous recevez un numéro d’appel.</span>
+          </div>
+          <span class="veille__touche" data-focus>Touchez pour commander</span>
+        </section>
+
+        <!-- 2. Sur place ou à emporter -->
+        <section class="ecran mode" data-ecran="mode">
+          <h2>Vous mangez<br>sur place&nbsp;?</h2>
+          <div class="mode__choix">
+            <button type="button" class="mode__btn" data-mode="place" data-focus>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 3v8a3 3 0 0 0 3 3v7M7 3v6M10 3v6M17 3c-1.5 2-2 4-2 6s.5 3 2 3v9"/></svg>
+              <b>Sur place</b><span>TVA 10 %</span>
+            </button>
+            <button type="button" class="mode__btn" data-mode="emporter">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8zM8.5 8V6a3.5 3.5 0 0 1 7 0v2"/></svg>
+              <b>À emporter</b><span>TVA 5,5 %</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 3. La carte -->
+        <section class="ecran" data-ecran="carte">
+          <div class="kbar">
+            <span class="kbar__marque"><b>SMASH</b><i>Avenue</i></span>
+            <span class="kbar__mode" id="k-mode">Sur place</span>
+          </div>
+          <div class="chevron" aria-hidden="true"></div>
+          <div class="carte-k">
+            <div class="rail" id="k-rail" role="tablist" aria-label="Catégories"></div>
+            <div class="grille-k">
+              <div class="grille-k__tete"><h3 class="kraft" id="k-titre">Smash burger</h3></div>
+              <div class="produits-k" id="k-produits"></div>
+            </div>
+          </div>
+          <div class="panier-barre">
+            <span class="pastille-k" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12zM6 6L5 2H2M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+              <i id="k-nb">0</i>
+            </span>
+            <span class="panier-barre__info"><b id="k-total">0,00 €</b><span>Votre commande</span></span>
+            <button type="button" class="kbtn" id="k-voir" data-aller="panier" disabled>Voir le panier</button>
+          </div>
+        </section>
+
+        <!-- 4. Fiche produit -->
+        <section class="ecran fiche" data-ecran="fiche">
+          <div class="kbar">
+            <button type="button" class="kretour" data-aller="carte" data-focus>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+              Retour
+            </button>
+            <span class="kbar__mode" id="k-mode2">Sur place</span>
+          </div>
+          <div class="chevron" aria-hidden="true"></div>
+          <div class="fiche__corps">
+            <figure class="fiche__photo"><img id="f-photo" src="" alt=""></figure>
+            <div class="fiche__tete">
+              <h2 id="f-nom"></h2>
+              <p class="fiche__ing" id="f-ing"></p>
+              <p class="fiche__prix" id="f-prix"></p>
+            </div>
+            <div id="f-groupes"></div>
+          </div>
+          <div class="fiche__pied">
+            <div class="qte">
+              <button type="button" data-q="-1" aria-label="Retirer un">−</button>
+              <output id="f-qte" aria-live="polite">1</output>
+              <button type="button" data-q="1" aria-label="Ajouter un">+</button>
+            </div>
+            <button type="button" class="kbtn" id="f-ajouter">Ajouter</button>
+          </div>
+        </section>
+
+        <!-- 5. Panier -->
+        <section class="ecran" data-ecran="panier">
+          <div class="kbar">
+            <button type="button" class="kretour" data-aller="carte" data-focus>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+              Continuer
+            </button>
+            <span class="kbar__mode">Votre commande</span>
+          </div>
+          <div class="chevron" aria-hidden="true"></div>
+          <div class="lignes-k" id="p-lignes"></div>
+          <div class="total-k">
+            <div class="total-k__l"><span>Total hors taxes</span><span id="p-ht">0,00 €</span></div>
+            <div class="total-k__l"><span id="p-tauxl">TVA</span><span id="p-tva">0,00 €</span></div>
+            <div class="total-k__g"><span>À payer</span><b id="p-total">0,00 €</b></div>
+            <button type="button" class="kbtn" id="p-payer" style="width:100%;margin-top:.9em">Payer par carte</button>
+          </div>
+        </section>
+
+        <!-- 6. Paiement simulé -->
+        <section class="ecran paie" data-ecran="paiement">
+          <span class="paie__cb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 15h4"/></svg>
+          </span>
+          <h2>Présentez votre carte</h2>
+          <p class="paie__montant" id="paie-montant">0,00 €</p>
+          <div class="paie__barre"><i id="paie-barre"></i></div>
+          <p style="font-size:.82em;color:var(--craie-2);max-width:26ch">Simulation. Aucun paiement réel n’est effectué sur cette démonstration.</p>
+        </section>
+
+        <!-- 7. Ticket -->
+        <section class="ecran fin" data-ecran="ticket">
+          <span class="fin__ok" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+          </span>
+          <h2 style="font-size:1.3em;text-transform:uppercase;letter-spacing:-.02em">Commande enregistrée</h2>
+          <div class="recu-k">
+            <p class="recu-k__et">Votre numéro</p>
+            <p class="recu-k__num" id="t-num">B-214</p>
+            <p class="recu-k__et" id="t-mode">Sur place</p>
+            <hr>
+            <div id="t-lignes"></div>
+            <div class="recu-k__t"><span>Total</span><span id="t-total">0,00 €</span></div>
+            <hr>
+            <p class="recu-k__et">Smash Avenue · Merci</p>
+          </div>
+          <p class="fin__compte" id="t-compte"></p>
+          <button type="button" class="kbtn kbtn--fant" id="t-fin" style="flex:0 0 auto">Nouvelle commande</button>
+        </section>
+      </div>
+    </div>
+
+    <p class="note mt-1" style="text-align:center">
+      <a class="btn btn--secondaire btn--petit" href="demo-borne-de-commande.html">Ouvrir la démonstration en grand</a>
+    </p>
+  </div>
 </section>
 
 <section class="sec">
@@ -1573,8 +1766,9 @@ FICHIERS.append(page(
     "Borne de commande restaurant à 600 € HT, sans abonnement | " + MARQUE,
     "Borne de commande tactile pour restaurant : écran vertical sur pied, 600 € HT, sans abonnement ni logiciel imposé. Livraison offerte, garantie 2 ans.",
     CORPS_INDEX, ld=[ORG, PRODUIT, FAQ_INDEX],
-    style_page=_lire("assets/scene3d.css"),
-    script_page=_lire("assets/scene3d.js")))
+    style_page=_lire("assets/scene3d.css") + "\n" + _lire("assets/demo-borne.css"),
+    script_page=_lire("assets/scene3d.js") + "\n" + _lire("assets/demo-borne.js")
+                + "\n" + _lire("assets/montage.js")))
 
 FICHIERS.append(page(
     "demo-borne-de-commande.html",
@@ -1582,7 +1776,7 @@ FICHIERS.append(page(
     "Essayez une vraie borne de commande dans votre navigateur : carte complète, options, TVA sur place ou à emporter, ticket avec numéro d’appel.",
     CORPS_DEMO,
     style_page=_lire("assets/demo-borne.css"),
-    script_page=_lire("assets/demo-borne.js")))
+    script_page=_lire("assets/demo-borne.js") + "\n" + _lire("assets/montage.js")))
 
 FICHIERS.append(page(
     "guide-borne-de-commande-restaurant.html",

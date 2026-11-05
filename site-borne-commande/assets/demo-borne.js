@@ -29,6 +29,24 @@
      ==================================================================== */
   var E = "img/menu/";
 
+  /* Les deux univers de couleur des planches : orange pour le salé chaud,
+     violet pour l'asiatique et le sucré. Le halo derrière chaque produit
+     en vient, ce qui fait que la carte se lit par zones avant même d'être
+     lue par les mots. */
+  var HALO = {
+    orange: "rgb(242 144 27 / .55)",
+    violet: "rgb(150 108 232 / .62)"
+  };
+
+  /* Huit produits n'ont pas de visuel détouré : leur tuile devient une
+     composition typographique. Un emplacement vide se voit, une tuile
+     dessinée se lit comme un choix. */
+  var SANS_PHOTO = {
+    "tenders": 1, "wings": 1, "nuggets": 1, "mozza-stick": 1,
+    "nem-poulet": 1, "yakitori-poulet": 1, "yakitori-boeuf": 1,
+    "crevette-tempura": 1, "menu-etudiant": 1
+  };
+
   function formule(sup) {           /* la formule menu des burgers */
     return { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
       { id: "seul", nom: "Le burger seul", prix: 0 },
@@ -50,7 +68,7 @@
   ] };
 
   var CARTE = [
-    { id: "burgers", nom: "Smash burger", ic: "bacon-bomb", produits: [
+    { id: "burgers", u: "orange", nom: "Smash burger", ic: "bacon-bomb", produits: [
       { id: "original-smash", nom: "Original Smash", prix: 6.90, ing: "1 steak smash, cheddar, salade, tomates, oignons, sauce smash", opts: [formule()] },
       { id: "double-smash", nom: "Double Smash", prix: 8.50, ing: "2 steaks smash, cheddar, salade, tomates, oignons rouges, sauce smash", opts: [formule()] },
       { id: "bacon-bomb", nom: "Bacon Bomb", prix: 8.90, ing: "2 steaks smash, cheddar, salade, tomates, oignons rouges, bacon, sauce creamy BBQ", opts: [formule()] },
@@ -65,7 +83,7 @@
       { id: "chicken-smash", nom: "Chicken Smash", prix: 7.90, ing: "Poulet frit, cheddar, salade, cornichons, sauce smash", opts: [formule()] }
     ] },
 
-    { id: "box", nom: "Les box", ic: "good-deal", produits: [
+    { id: "box", u: "orange", nom: "Les box", ic: "good-deal", produits: [
       { id: "good-deal", nom: "Good Deal", prix: 16.90, ing: "1 Bacon Bomb, 1 Double Smash, 1 frite au choix, 1 boisson 33 cl", opts: [FRITE_CHOIX] },
       { id: "family", nom: "Family", prix: 29.90, ing: "3 smashs au choix, 3 frites au choix, 1 bouteille au choix", opts: [FRITE_CHOIX] },
       { id: "combo-fusion", nom: "Combo Fusion", prix: 14.90, ing: "1 smash au choix, 1 side asiatique au choix, 1 frite au choix, 1 boisson 33 cl", opts: [SIDE_ASIA, FRITE_CHOIX] },
@@ -73,7 +91,7 @@
       { id: "asian-box", nom: "Asian Box", prix: 15.90, ing: "1 bao au choix, 1 side asiatique au choix, 1 frite au choix, 1 boisson 33 cl", opts: [SIDE_ASIA, FRITE_CHOIX] }
     ] },
 
-    { id: "salades", nom: "Salades", ic: "salade-cesar", produits: [
+    { id: "salades", u: "orange", nom: "Salades", ic: "salade-cesar", produits: [
       { id: "salade-cesar", nom: "Salade César", prix: 8.90, ing: "Mélange patty (katsu), mélange de salade, tomates cerises, grana padano, croûtons ail, sauce césar", opts: [
         { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
           { id: "seule", nom: "La salade seule", prix: 0 },
@@ -88,7 +106,7 @@
           { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] }
     ] },
 
-    { id: "frites", nom: "Frites", ic: "frites-cheddar", produits: [
+    { id: "frites", u: "orange", nom: "Frites", ic: "frites-cheddar", produits: [
       { id: "frites-natures", nom: "Frites natures", prix: 3.00, ing: "Crinkle", opts: [
         { id: "s", nom: "Suppléments", type: "multi", choix: [
           { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
@@ -103,7 +121,7 @@
           { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] }
     ] },
 
-    { id: "sides", nom: "À côté", ic: "tenders", produits: [
+    { id: "sides", u: "orange", nom: "À côté", ic: "full-up", produits: [
       { id: "tenders", nom: "Tenders", prix: 5.90, ing: "", opts: [
         { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
           { id: "x3", nom: "× 3", prix: 5.90 }, { id: "x6", nom: "× 6", prix: 9.90 } ] } ] },
@@ -118,7 +136,7 @@
           { id: "x3", nom: "× 3", prix: 3.90 }, { id: "x6", nom: "× 6", prix: 6.90 } ] } ] }
     ] },
 
-    { id: "asiatique", nom: "Asiatique", ic: "chicken-dynamite", produits: [
+    { id: "asiatique", u: "violet", nom: "Asiatique", ic: "chicken-dynamite", produits: [
       { id: "chicken-dynamite", nom: "Chicken Dynamite", prix: 5.90, ing: "", opts: [] },
       { id: "crevette-dynamite", nom: "Crevette Dynamite", prix: 5.90, ing: "", opts: [] },
       { id: "nem-poulet", nom: "Nems poulet", prix: 5.00, ing: "", opts: [
@@ -129,7 +147,7 @@
       { id: "crevette-tempura", nom: "Crevette tempura", prix: 5.90, ing: "× 3", opts: [] }
     ] },
 
-    { id: "menus", nom: "Menus", ic: "menu-enfant", produits: [
+    { id: "menus", u: "violet", nom: "Menus", ic: "menu-enfant", produits: [
       { id: "menu-enfant", nom: "Menu Enfant", prix: 6.90, ing: "1 frite, boisson et cadeau compris", opts: [
         { id: "p", nom: "Le plat", type: "unique", requis: true, choix: [
           { id: "little", nom: "Little Smash", prix: 0 }, { id: "nug", nom: "5 nuggets", prix: 0 } ] },
@@ -138,7 +156,7 @@
       { id: "menu-etudiant", nom: "Menu Étudiant", prix: 6.90, ing: "Original Smash, 1 frite, 1 boisson", opts: [FRITE_CHOIX] }
     ] },
 
-    { id: "desserts", nom: "Desserts", ic: "milkshake", produits: [
+    { id: "desserts", u: "violet", nom: "Desserts", ic: "milkshake", produits: [
       { id: "tiramisu", nom: "Tiramisu", prix: 3.90, ing: "", opts: [
         { id: "p", nom: "Le parfum", type: "unique", requis: true, choix: [
           { id: "pis", nom: "Pistache", prix: 0 }, { id: "oreo", nom: "Oréo", prix: 0 },
@@ -226,15 +244,20 @@
   function rendreGrille() {
     var c = CARTE.filter(function (x) { return x.id === etat.cat; })[0];
     $("#k-titre").textContent = c.nom;
+    var halo = HALO[c.u || "orange"];
     $("#k-produits").innerHTML = c.produits.map(function (p, i) {
-      return '<button type="button" class="pk" data-prod="' + p.id + '" style="animation-delay:' +
-        (i * 28) + 'ms">' +
-        '<img src="' + E + p.id + '.webp" alt="" loading="lazy" decoding="async">' +
+      var vis = SANS_PHOTO[p.id]
+        ? '<span class="pk__typo">' + p.nom + "</span>"
+        : '<span class="pk__vis"><img src="' + E + p.id + '.webp" alt="" loading="lazy" decoding="async"></span>';
+      return '<button type="button" class="pk" data-prod="' + p.id +
+        '" style="--halo:' + halo + ';animation-delay:' + (i * 34) + 'ms">' +
+        vis +
         '<span class="pk__txt">' +
           '<span class="pk__nom">' + p.nom + "</span>" +
           (p.ing ? '<span class="pk__ing">' + p.ing + "</span>" : "") +
-          '<span class="pk__prix">' + eur(p.prix) + "</span>" +
-        "</span></button>";
+        "</span>" +
+        '<span class="tag">' + eur(p.prix) + "</span>" +
+      "</button>";
     }).join("");
   }
 
@@ -258,16 +281,27 @@
       else etat.choix[g.id] = [];
     });
 
-    $("#f-photo").src = E + p.id + ".webp";
-    $("#f-photo").alt = p.nom;
-    $("#f-photo").parentNode.style.backgroundImage = 'url("' + E + p.id + '.webp")';
+    var cat = CARTE.filter(function (x) {
+      return x.produits.indexOf(p) >= 0;
+    })[0];
+    var cadre = $("#f-photo").parentNode;
+    cadre.style.setProperty("--halo", HALO[(cat && cat.u) || "orange"]);
+    if (SANS_PHOTO[p.id]) {
+      $("#f-photo").hidden = true;
+      cadre.dataset.typo = p.nom;
+    } else {
+      $("#f-photo").hidden = false;
+      delete cadre.dataset.typo;
+      $("#f-photo").src = E + p.id + ".webp";
+      $("#f-photo").alt = p.nom;
+    }
     $("#f-nom").textContent = p.nom;
     $("#f-ing").textContent = p.ing || "";
     $("#f-ing").hidden = !p.ing;
 
     $("#f-groupes").innerHTML = p.opts.map(function (g) {
       return '<div class="groupe" data-groupe="' + g.id + '">' +
-        '<div class="groupe__tete"><h4>' + g.nom + "</h4><span>" +
+        '<div class="groupe__tete"><h4 class="kraft">' + g.nom + "</h4><span>" +
           (g.type === "multi" ? "Plusieurs possibles" : "Un seul choix") + "</span></div>" +
         '<div class="opts">' + g.choix.map(function (ch) {
           return '<button type="button" class="opt" data-type="' + g.type + '" data-g="' + g.id + '" data-c="' + ch.id + '" aria-pressed="false">' +
@@ -299,7 +333,7 @@
       var sel = (etat.choix[b.dataset.g] || []).indexOf(b.dataset.c) >= 0;
       b.setAttribute("aria-pressed", sel ? "true" : "false");
     });
-    $("#f-prix").textContent = eur(prixUnite());
+    $("#f-prix").innerHTML = '<span class="tag">' + eur(prixUnite()) + "</span>";
     $("#f-qte").textContent = etat.qte;
     $("#f-ajouter").textContent = "Ajouter · " + eur(prixUnite() * etat.qte);
   }
@@ -317,12 +351,36 @@
 
   /* ---- Panier ------------------------------------------------------------ */
   function ajouter() {
+    var cat = CARTE.filter(function (x) { return x.produits.indexOf(etat.prod) >= 0; })[0];
     etat.panier.push({
       id: etat.prod.id, nom: etat.prod.nom, det: libelleChoix(),
-      pu: prixUnite(), qte: etat.qte
+      pu: prixUnite(), qte: etat.qte, halo: HALO[(cat && cat.u) || "orange"]
     });
+    volerVersPanier();
     majPastille(true);
     ecran("carte");
+  }
+
+  /* Le produit vole de la fiche jusqu'au panier. C'est l'animation qui dit
+     « c'est pris en compte » sans écrire un mot, et elle remplace le
+     message de confirmation que personne ne lit sur une borne. */
+  function volerVersPanier() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var src = $("#f-photo");
+    var cible = $(".pastille-k");
+    if (!src || src.hidden || !cible || !src.getBoundingClientRect().width) return;
+    var a = src.getBoundingClientRect(), b = cible.getBoundingClientRect();
+    var vol = document.createElement("img");
+    vol.className = "vol"; vol.src = src.src; vol.alt = "";
+    vol.style.left = (a.left + a.width / 2 - 45) + "px";
+    vol.style.top  = (a.top + a.height / 2 - 45) + "px";
+    document.body.appendChild(vol);
+    requestAnimationFrame(function () {
+      vol.style.transform = "translate(" + (b.left + b.width / 2 - a.left - a.width / 2) +
+        "px," + (b.top + b.height / 2 - a.top - a.height / 2) + "px) scale(.18) rotate(22deg)";
+      vol.style.opacity = "0.2";
+    });
+    setTimeout(function () { vol.remove(); }, 680);
   }
 
   function majPastille(anime) {
@@ -340,8 +398,9 @@
   function rendrePanier() {
     var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
     $("#p-lignes").innerHTML = etat.panier.map(function (l, i) {
-      return '<div class="lk">' +
-        '<img src="' + E + l.id + '.webp" alt="" loading="lazy">' +
+      return '<div class="lk" style="--halo:' + (l.halo || HALO.orange) + '">' +
+        '<span class="lk__vis">' + (SANS_PHOTO[l.id] ? "" :
+          '<img src="' + E + l.id + '.webp" alt="" loading="lazy">') + "</span>" +
         "<div><div class=\"lk__nom\">" + l.nom + "</div>" +
         (l.det ? '<div class="lk__det">' + l.det + "</div>" : "") +
         '<div class="qte" style="margin-top:.4em">' +

@@ -1281,6 +1281,614 @@
 @media (prefers-reduced-motion: reduce) {
   .stage__pivot, .objet, .borne3d { transition: none !important; animation: none !important; }
 }
+/* =========================================================================
+   BORNE DE DÉMONSTRATION — SMASH AVENUE
+   Système de marque, pas habillage de page.
+
+   Cette feuille n'habille pas le site : elle habille la borne. C'est tout
+   l'argument de la démonstration — le restaurateur doit voir SA carte et
+   SES couleurs, pas les nôtres.
+
+   L'identité n'est pas inventée, elle est relevée sur les planches menu du
+   client. Trois éléments en viennent directement :
+
+   1. L'ORANGE ET LE VIOLET, qui séparent déjà ses univers sur ses planches :
+      orange pour le salé chaud, violet pour l'asiatique et le sucré.
+   2. L'ÉTIQUETTE KRAFT DÉCHIRÉE, qui porte tous ses titres de section.
+      Reproduite en CSS : fond papier, bord irrégulier, légère rotation.
+   3. LE CHEVRON noir et blanc de ses barquettes de frites, repris en bande
+      fine sous l'en-tête et dans l'écran de veille.
+
+   Contraintes d'un écran de borne, qui ne sont pas celles d'un site :
+   format portrait, cible tactile de 64 px, aucun état de survol, rien
+   sous 15 px — on lit debout, à cinquante centimètres, dans un hall.
+   ========================================================================= */
+
+.borne-demo {
+  /* ---- Marque ---- */
+  --or:        #F2901B;
+  --or-2:      #FFB457;
+  --or-f:      #D97708;
+  --violet:    #B9A2E8;
+  --violet-f:  #6C4BB8;
+  --violet-nuit:#2A1E47;
+  --nuit:      #120E18;
+  --nuit-2:    #1C1526;
+  --nuit-3:    #2B2138;
+  --nuit-4:    #3C2F4E;
+  --craie:     #FFFFFF;
+  --craie-2:   #CFC4DF;
+  --kraft:     #E8DCC4;
+  --kraft-f:   #3A2E1C;
+  --vert:      #37C98A;
+  --r-k:       20px;
+
+  position: relative;
+  display: flex; flex-direction: column;
+  aspect-ratio: 9 / 16;
+  width: 100%; max-width: 520px; margin-inline: auto;
+  background: var(--nuit); color: var(--craie);
+  border-radius: var(--r-k); overflow: hidden;
+  font-family: var(--f-ui);
+  container-type: inline-size;
+  -webkit-user-select: none; user-select: none;
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / .85), 0 0 0 1px rgb(255 255 255 / .06);
+}
+.borne-demo *, .borne-demo *::before, .borne-demo *::after { box-sizing: border-box; }
+
+/* :where() met cette remise à zéro à une spécificité nulle. Sans lui, le
+   sélecteur « .borne-demo button » vaut (0,1,1) et écrase « .kbtn » (0,1,0) :
+   le bouton de paiement perdait son fond orange sans qu'aucune erreur ne
+   soit levée. C'est le piège de spécificité classique entre une règle de
+   contexte et une règle de composant. */
+.borne-demo :where(button) { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+
+/* Tout le texte grandit avec la borne : la même composition en vignette et
+   en plein écran, donc des unités de conteneur et pas de pixels. */
+.borne-demo { font-size: clamp(13px, 3.1cqw, 17px); line-height: 1.45; }
+
+/* ---- Le chevron de marque, relevé sur les barquettes de frites -------- */
+.chevron {
+  flex: none; height: 9px;
+  background:
+    repeating-linear-gradient(115deg,
+      var(--craie) 0 7px, transparent 7px 14px);
+  opacity: .82;
+}
+
+/* ---- L'étiquette kraft déchirée, relevée sur les titres de planche ---- */
+.kraft {
+  display: inline-block; position: relative;
+  background: var(--kraft); color: var(--kraft-f);
+  font-family: var(--f-etiq); text-transform: uppercase;
+  letter-spacing: .1em; font-weight: 700; font-size: .84em;
+  padding: .45em 1.1em; transform: rotate(-1.1deg);
+  /* Bord irrégulier : deux découpes au masque, une en haut, une en bas. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) center / 100% calc(100% - 7px) no-repeat,
+    radial-gradient(circle at 50% 100%, #000 2.6px, #0000 3px) top / 9px 4px repeat-x,
+    radial-gradient(circle at 50% 0, #000 2.6px, #0000 3px) bottom / 9px 4px repeat-x;
+  mask:
+    linear-gradient(#000 0 0) center / 100% calc(100% - 7px) no-repeat,
+    radial-gradient(circle at 50% 100%, #000 2.6px, #0000 3px) top / 9px 4px repeat-x,
+    radial-gradient(circle at 50% 0, #000 2.6px, #0000 3px) bottom / 9px 4px repeat-x;
+}
+
+/* L'étiquette de prix : même papier, plus petite, penchée dans l'autre sens,
+   exactement comme sur les planches. */
+.tag {
+  display: inline-block; background: var(--kraft); color: var(--kraft-f);
+  font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -.02em;
+  padding: .18em .55em; transform: rotate(-1.6deg); white-space: nowrap;
+  -webkit-mask:
+    linear-gradient(#000 0 0) center / 100% calc(100% - 5px) no-repeat,
+    radial-gradient(circle at 50% 100%, #000 1.9px, #0000 2.2px) top / 7px 3px repeat-x,
+    radial-gradient(circle at 50% 0, #000 1.9px, #0000 2.2px) bottom / 7px 3px repeat-x;
+  mask:
+    linear-gradient(#000 0 0) center / 100% calc(100% - 5px) no-repeat,
+    radial-gradient(circle at 50% 100%, #000 1.9px, #0000 2.2px) top / 7px 3px repeat-x,
+    radial-gradient(circle at 50% 0, #000 1.9px, #0000 2.2px) bottom / 7px 3px repeat-x;
+}
+
+/* ---- Pile d'écrans ---------------------------------------------------- */
+.ecran { position: absolute; inset: 0; display: none; flex-direction: column; overflow: hidden; }
+.ecran[data-actif] { display: flex; animation: ecranEntre 420ms var(--courbe) both; }
+@keyframes ecranEntre {
+  from { opacity: 0; transform: perspective(1000px) translate3d(0, 16px, -80px) rotateX(4deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============ 1. Veille ============ */
+.veille {
+  justify-content: center; align-items: center; text-align: center;
+  padding: 8cqw; cursor: pointer;
+  background:
+    radial-gradient(72% 46% at 50% 16%, rgb(242 144 27 / .4), transparent 70%),
+    radial-gradient(64% 44% at 50% 100%, rgb(108 75 184 / .55), transparent 72%),
+    var(--nuit);
+}
+.veille__fond { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.veille__fond img {
+  position: absolute; width: 30cqw; opacity: .5;
+  filter: drop-shadow(0 18px 24px rgb(0 0 0 / .6));
+  animation: derive 22s linear infinite;
+}
+@keyframes derive {
+  from { transform: translate3d(0, 108cqh, 0) rotate(-9deg) scale(.82); opacity: 0; }
+  14%  { opacity: .5; }
+  86%  { opacity: .5; }
+  to   { transform: translate3d(0, -46cqh, 0) rotate(11deg) scale(1.06); opacity: 0; }
+}
+/* Voile : sans lui, un milkshake passe derrière le titre et le rend illisible. */
+.veille__fond::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(56% 38% at 50% 50%, rgb(18 14 24 / .95), rgb(18 14 24 / .52) 72%, transparent);
+}
+
+.veille__marque { position: relative; display: grid; gap: .1em; justify-items: center; }
+.veille__marque b {
+  font-family: var(--f-etiq); text-transform: uppercase; font-weight: 700;
+  font-size: clamp(2rem, 10cqw, 3.4rem); letter-spacing: -.01em; line-height: .9;
+  color: var(--craie);
+  text-shadow: 0 0 44px rgb(242 144 27 / .55);
+}
+.veille__marque span {
+  font-family: var(--f-etiq); text-transform: uppercase; font-weight: 700;
+  letter-spacing: .62em; font-size: clamp(.7rem, 2.9cqw, 1rem);
+  color: var(--or); padding-left: .62em;
+}
+.veille__chev { position: relative; width: 48cqw; height: 7px; margin-top: 1.1em;
+  background: repeating-linear-gradient(115deg, var(--or) 0 6px, transparent 6px 12px); }
+
+.veille h2 {
+  position: relative; margin: .8em 0 0;
+  font-size: clamp(1.9rem, 9.4cqw, 3.4rem); line-height: .94;
+  letter-spacing: -.045em; text-transform: uppercase; font-weight: 800;
+}
+.veille p { position: relative; margin-top: .7em; color: var(--craie-2); max-width: 26ch; font-size: .95em; }
+.veille__touche {
+  position: relative; margin-top: 1.9em;
+  display: inline-flex; align-items: center; gap: .7em;
+  background: var(--or); color: #1A1005; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 1.05em 2em; border-radius: 999px; font-size: 1.02em;
+  animation: battement 2.4s ease-in-out infinite;
+}
+@keyframes battement {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgb(242 144 27 / .5); }
+  50%      { transform: scale(1.035); box-shadow: 0 0 0 24px rgb(242 144 27 / 0); }
+}
+
+/* ============ Bandeau commun ============ */
+.kbar {
+  display: flex; align-items: center; gap: .7em;
+  padding: .8em 1em; background: var(--nuit-2); flex: none;
+}
+.kbar__marque { display: grid; line-height: .95; }
+.kbar__marque b {
+  font-family: var(--f-etiq); text-transform: uppercase; font-weight: 700;
+  font-size: 1.12em; letter-spacing: -.01em;
+}
+.kbar__marque i {
+  font-style: normal; font-family: var(--f-etiq); text-transform: uppercase;
+  font-weight: 700; letter-spacing: .34em; font-size: .62em; color: var(--or);
+}
+.kbar__mode {
+  margin-left: auto; font-size: .8em; font-weight: 650; color: var(--craie);
+  background: var(--violet-nuit); border: 1px solid var(--nuit-4);
+  padding: .4em .85em; border-radius: 999px;
+}
+.kretour {
+  display: inline-flex; align-items: center; gap: .4em;
+  min-height: 46px; padding: .4em .85em; margin: -.4em 0 -.4em -.65em;
+  border-radius: 12px; font-weight: 700; font-size: .92em;
+}
+.kretour:active { background: var(--nuit-3); }
+
+/* ============ 2. Mode de consommation ============ */
+.mode { justify-content: center; padding: 7cqw; gap: 4cqw; text-align: center; }
+.mode h2 { font-size: clamp(1.5rem, 6.6cqw, 2.4rem); text-transform: uppercase; letter-spacing: -.035em; }
+.mode__choix { display: grid; gap: 3cqw; }
+.mode__btn {
+  position: relative; display: grid; gap: .45em; place-items: center;
+  padding: 1.9em 1em; border-radius: var(--r-k); min-height: 96px;
+  background: linear-gradient(165deg, var(--nuit-2), var(--nuit));
+  border: 2px solid var(--nuit-3); overflow: hidden;
+  transition: transform 160ms var(--courbe), border-color 160ms var(--courbe);
+}
+.mode__btn::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 4px;
+  background: repeating-linear-gradient(115deg, var(--or) 0 6px, transparent 6px 12px);
+  opacity: 0; transition: opacity 160ms;
+}
+.mode__btn:active { transform: scale(.98); border-color: var(--or); }
+.mode__btn:active::after { opacity: 1; }
+.mode__btn b { font-size: 1.32em; text-transform: uppercase; letter-spacing: -.025em; }
+.mode__btn span { font-size: .84em; color: var(--craie-2); }
+.mode__btn svg { width: 38px; height: 38px; color: var(--or); }
+
+/* ============ 3. La carte ============ */
+.carte-k { display: grid; grid-template-columns: 27cqw 1fr; flex: 1; min-height: 0; }
+.rail {
+  background: var(--nuit-2); overflow-y: auto; padding: .5em 0;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail button {
+  position: relative; display: grid; gap: .3em; width: 100%; padding: .85em .5em;
+  text-align: center; font-size: .78em; font-weight: 700; color: var(--craie-2);
+  min-height: 78px; letter-spacing: -.01em;
+}
+.rail button::before {
+  content: ""; position: absolute; left: 0; top: 10%; bottom: 10%; width: 4px;
+  background: var(--or); border-radius: 0 3px 3px 0;
+  transform: scaleY(0); transition: transform 220ms var(--courbe);
+}
+.rail button[aria-selected="true"] { color: var(--craie); background: var(--nuit); }
+.rail button[aria-selected="true"]::before { transform: scaleY(1); }
+.rail img {
+  width: 46px; height: 46px; object-fit: contain; margin: 0 auto .1em; display: block;
+  filter: drop-shadow(0 4px 7px rgb(0 0 0 / .6));
+  transition: transform 260ms var(--courbe);
+}
+.rail button[aria-selected="true"] img { transform: scale(1.14) rotate(-4deg); }
+
+.grille-k { overflow-y: auto; padding: 1em; -webkit-overflow-scrolling: touch; }
+.grille-k__tete { display: flex; align-items: center; gap: .7em; margin-bottom: 1em; }
+.produits-k { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75em; }
+@container (min-width: 640px) { .produits-k { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---- La tuile produit ----
+   Le produit est détouré : il flotte au-dessus de la tuile au lieu d'y être
+   enfermé. C'est ce qui sépare une carte de borne d'un catalogue. */
+.pk {
+  position: relative; display: flex; flex-direction: column; text-align: left;
+  background: linear-gradient(168deg, var(--nuit-3), var(--nuit-2) 62%);
+  border-radius: 16px; min-height: 184px; padding-bottom: .7em;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .07);
+  animation: pkEntre 460ms var(--courbe) both;
+  transition: transform 160ms var(--courbe), box-shadow 160ms var(--courbe);
+}
+.pk:active { transform: scale(.965); box-shadow: inset 0 0 0 2px var(--or); }
+@keyframes pkEntre {
+  from { opacity: 0; transform: translateY(20px) scale(.93) rotate(-1.5deg); }
+  to   { opacity: 1; transform: none; }
+}
+/* Halo de catégorie derrière le produit : orange pour le salé chaud, violet
+   pour l'asiatique et le sucré, comme sur les planches. */
+.pk__vis {
+  position: relative; height: 96px; padding: 0;
+}
+.pk__vis::before {
+  content: ""; position: absolute; width: 78%; height: 62%; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--halo, rgb(242 144 27 / .5)), transparent);
+  filter: blur(9px);
+}
+.pk__vis img {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: .45em; object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / .65));
+  transition: transform 220ms var(--courbe);
+}
+.pk:active .pk__vis img { transform: scale(1.07) rotate(-2deg); }
+
+/* Tuile sans photo : le nom devient l'image. Un emplacement vide se voit,
+   une composition typographique se lit comme un choix. */
+.pk__typo {
+  position: relative; display: grid; place-items: center; text-align: center;
+  height: 96px; margin: .5em .5em 0; border-radius: 11px;
+  background:
+    repeating-linear-gradient(115deg, rgb(255 255 255 / .05) 0 8px, transparent 8px 16px),
+    linear-gradient(150deg, var(--halo, rgb(242 144 27 / .5)), transparent 78%);
+  font-family: var(--f-etiq); text-transform: uppercase; font-weight: 700;
+  letter-spacing: .02em; font-size: 1.5em; line-height: .95; color: var(--craie);
+  padding: .3em; text-shadow: 0 2px 10px rgb(0 0 0 / .5);
+}
+
+.pk__txt { padding: .55em .75em 0; display: flex; flex-direction: column; gap: .18em; flex: 1; }
+.pk__nom { font-weight: 800; font-size: .94em; line-height: 1.18; letter-spacing: -.02em; text-transform: uppercase; }
+.pk__ing {
+  font-size: .72em; color: var(--craie-2); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.pk .tag { align-self: flex-start; margin: .5em .75em 0; font-size: .92em; }
+
+/* ============ 4. Fiche produit ============ */
+.fiche__corps { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.fiche__photo {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  aspect-ratio: 16 / 11; padding: 1em;
+  background:
+    radial-gradient(60% 56% at 50% 44%, var(--halo, rgb(242 144 27 / .55)), transparent 72%),
+    repeating-linear-gradient(115deg, rgb(255 255 255 / .035) 0 10px, transparent 10px 20px),
+    var(--nuit-2);
+}
+.fiche__photo img {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: 1.4em; object-fit: contain;
+  filter: drop-shadow(0 22px 28px rgb(0 0 0 / .62));
+  animation: ficheEntre 520ms var(--courbe) both;
+}
+@keyframes ficheEntre {
+  from { opacity: 0; transform: translateY(22px) scale(.88) rotate(-3deg); }
+  to   { opacity: 1; transform: none; }
+}
+.fiche__tete { padding: 1em 1.1em .9em; position: relative; }
+.fiche h2 {
+  font-size: clamp(1.45rem, 6.6cqw, 2.2rem); text-transform: uppercase;
+  letter-spacing: -.04em; line-height: .98;
+}
+.fiche__ing { margin-top: .5em; color: var(--craie-2); font-size: .88em; }
+.fiche__prix { margin-top: .75em; }
+.fiche__prix .tag { font-size: 1.5em; }
+
+.groupe { padding: 1.1em; border-top: 1px solid var(--nuit-3); }
+.groupe__tete { display: flex; align-items: center; gap: .6em; margin-bottom: .8em; }
+.groupe__tete span { font-size: .74em; color: var(--craie-2); margin-left: auto; }
+.opts { display: grid; gap: .5em; }
+.opt {
+  display: flex; align-items: center; gap: .8em; width: 100%;
+  padding: .85em 1em; min-height: 62px; border-radius: 13px;
+  background: var(--nuit-2); border: 2px solid transparent; text-align: left;
+  transition: border-color 140ms, background 140ms;
+}
+.opt[aria-pressed="true"] { border-color: var(--or); background: #2E1F0C; }
+.opt__coche {
+  width: 25px; height: 25px; border-radius: 8px; flex: none;
+  border: 2px solid var(--nuit-4); display: grid; place-items: center;
+  transition: background 140ms, border-color 140ms;
+}
+.opt[data-type="unique"] .opt__coche, .opt[data-type="taille"] .opt__coche { border-radius: 50%; }
+.opt[aria-pressed="true"] .opt__coche { background: var(--or); border-color: var(--or); color: #1A1005; }
+.opt__coche svg { width: 15px; height: 15px; opacity: 0; transition: opacity 140ms var(--courbe); }
+.opt[aria-pressed="true"] .opt__coche svg { opacity: 1; }
+.opt__nom { flex: 1; font-weight: 650; font-size: .93em; }
+.opt__prix { font-variant-numeric: tabular-nums; font-weight: 700; font-size: .86em; color: var(--craie-2); }
+.opt[aria-pressed="true"] .opt__prix { color: var(--or-2); }
+
+.fiche__pied {
+  flex: none; display: flex; align-items: center; gap: .8em;
+  padding: .9em 1em calc(.9em + env(safe-area-inset-bottom));
+  background: var(--nuit-2); border-top: 1px solid var(--nuit-3);
+}
+.qte { display: flex; align-items: center; background: var(--nuit); border-radius: 13px; overflow: hidden; }
+.qte button { width: 54px; height: 58px; font-size: 1.45em; font-weight: 700; }
+.qte button:active { background: var(--nuit-3); color: var(--or); }
+.qte output { min-width: 2.2em; text-align: center; font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.1em; }
+
+.kbtn {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: .6em;
+  background: var(--or); color: #1A1005; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .03em; min-height: 62px; padding: 0 1.2em; border-radius: 13px;
+  font-size: 1em; box-shadow: 0 6px 0 -1px var(--or-f);
+  transition: transform 120ms var(--courbe), box-shadow 120ms var(--courbe);
+}
+.kbtn:active { transform: translateY(3px); box-shadow: 0 2px 0 -1px var(--or-f); }
+.kbtn--fant { background: var(--nuit-3); color: var(--craie); box-shadow: 0 6px 0 -1px #241B30; }
+.kbtn[disabled] { background: var(--nuit-3); color: #6C6382; box-shadow: none; transform: none; }
+
+/* ============ Panier ============ */
+.panier-barre {
+  flex: none; display: flex; align-items: center; gap: .8em;
+  padding: .8em 1em calc(.8em + env(safe-area-inset-bottom));
+  background: var(--nuit-2); border-top: 1px solid var(--nuit-3);
+}
+.panier-barre__info { display: grid; }
+.panier-barre b { font-variant-numeric: tabular-nums; font-size: 1.3em; font-weight: 800; letter-spacing: -.03em; }
+.panier-barre span { font-size: .74em; color: var(--craie-2); }
+.pastille-k {
+  position: relative; display: inline-grid; place-items: center;
+  width: 48px; height: 48px; border-radius: 13px; background: var(--nuit-3);
+}
+.pastille-k svg { width: 22px; height: 22px; }
+.pastille-k i {
+  position: absolute; top: -6px; right: -6px; min-width: 23px; height: 23px;
+  border-radius: 999px; background: var(--or); color: #1A1005;
+  font-style: normal; font-variant-numeric: tabular-nums; font-weight: 800; font-size: 12px;
+  display: grid; place-items: center; padding: 0 5px;
+}
+.pastille-k i.saute { animation: saute 460ms var(--courbe); }
+@keyframes saute {
+  0% { transform: scale(1); } 40% { transform: scale(1.6) rotate(-8deg); } 100% { transform: scale(1); }
+}
+
+/* Le produit vole jusqu'au panier quand on l'ajoute. C'est l'animation qui
+   dit « c'est pris en compte » sans écrire un mot. */
+.vol {
+  position: fixed; z-index: 9999; pointer-events: none; width: 90px; height: 90px;
+  object-fit: contain; filter: drop-shadow(0 10px 16px rgb(0 0 0 / .6));
+  transition: transform 620ms cubic-bezier(.5,-.3,.5,1), opacity 620ms ease-in;
+}
+
+.lignes-k { flex: 1; overflow-y: auto; padding: 1em; display: grid; gap: .65em; align-content: start; }
+.lk {
+  display: grid; grid-template-columns: 66px 1fr auto; gap: .8em; align-items: center;
+  background: var(--nuit-2); border-radius: 14px; padding: .7em;
+  animation: pkEntre 360ms var(--courbe) both;
+}
+.lk__vis { position: relative; width: 66px; height: 66px; display: grid; place-items: center; }
+.lk__vis::before {
+  content: ""; position: absolute; inset: 12%; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--halo, rgb(242 144 27 / .45)), transparent); filter: blur(6px);
+}
+.lk__vis img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 4px; object-fit: contain; filter: drop-shadow(0 5px 8px rgb(0 0 0 / .6)); }
+.lk__nom { font-weight: 700; font-size: .92em; text-transform: uppercase; letter-spacing: -.015em; }
+.lk__det { font-size: .75em; color: var(--craie-2); margin-top: .15em; }
+.lk__prix { font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -.02em; }
+.lk .qte button { width: 44px; height: 44px; font-size: 1.15em; }
+
+.total-k { flex: none; padding: 1em; border-top: 1px solid var(--nuit-3); background: var(--nuit-2); }
+.total-k__l { display: flex; justify-content: space-between; font-size: .84em; color: var(--craie-2); }
+.total-k__l + .total-k__l { margin-top: .28em; }
+.total-k__g {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: .7em; padding-top: .7em; border-top: 1px dashed var(--nuit-4);
+  font-weight: 800; text-transform: uppercase; letter-spacing: .02em;
+}
+.total-k__g b { font-variant-numeric: tabular-nums; font-size: 1.6em; letter-spacing: -.04em; }
+
+/* ============ Paiement ============ */
+.paie { justify-content: center; align-items: center; text-align: center; padding: 8cqw; gap: 1.3em; }
+.paie__cb {
+  width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--nuit-2); border: 3px solid var(--or);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.paie__cb svg { width: 42px; height: 42px; color: var(--or); }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(242 144 27 / .45); }
+  60%      { box-shadow: 0 0 0 28px rgb(242 144 27 / 0); }
+}
+.paie h2 { font-size: clamp(1.3rem, 5.6cqw, 1.9rem); text-transform: uppercase; letter-spacing: -.035em; }
+.paie__montant { font-variant-numeric: tabular-nums; font-size: clamp(2rem, 9cqw, 3rem); font-weight: 800; letter-spacing: -.045em; color: var(--or); }
+.paie__barre { width: 72%; height: 7px; border-radius: 999px; background: var(--nuit-3); overflow: hidden; }
+.paie__barre i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--or), var(--or-2)); border-radius: 999px; }
+.paie__barre i.court { animation: remplit 2.6s linear forwards; }
+@keyframes remplit { to { width: 100%; } }
+
+/* ============ Ticket ============ */
+.fin {
+  justify-content: flex-start; align-items: center; text-align: center;
+  padding: 5cqw 5cqw 7cqw; gap: .85em; overflow-y: auto;
+  background: radial-gradient(70% 45% at 50% 20%, rgb(55 201 138 / .2), transparent 70%), var(--nuit);
+}
+.fin__ok {
+  width: 62px; height: 62px; flex: none; border-radius: 50%; background: var(--vert); color: #04210F;
+  display: grid; place-items: center; animation: pop 460ms var(--courbe) both;
+}
+.fin__ok svg { width: 30px; height: 30px; }
+@keyframes pop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Le ticket sort de la borne : il se déroule, comme sur une imprimante. */
+.recu-k {
+  --dent: 10px;
+  width: min(72cqw, 286px); flex: none; background: #FBFBFC; color: #15121C;
+  padding: .95em 1em calc(.95em + var(--dent));
+  text-align: left; font-family: var(--f-data);
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2)) bottom / var(--dent) var(--dent) repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--dent)) no-repeat,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--dent) / 2 - .5px), #000 calc(var(--dent) / 2)) bottom / var(--dent) var(--dent) repeat-x;
+  animation: sort 820ms var(--courbe) both;
+  transform-origin: 50% 0;
+}
+@keyframes sort {
+  from { transform: scaleY(0) translateY(-14px); opacity: 0; }
+  70%  { transform: scaleY(1.03) translateY(0); opacity: 1; }
+  to   { transform: scaleY(1) translateY(0); opacity: 1; }
+}
+.recu-k__num { font-size: 2.1em; font-weight: 700; letter-spacing: -.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+.recu-k__et {
+  font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .14em;
+  font-size: .72em; font-weight: 700; color: #6A7384;
+}
+.recu-k hr { border: 0; border-top: 1px dashed #C8CDD6; margin: .8em 0; }
+.recu-k__l { display: flex; justify-content: space-between; gap: .8em; font-size: .78em; }
+.recu-k__l + .recu-k__l { margin-top: .25em; }
+.recu-k__t { display: flex; justify-content: space-between; font-weight: 700; margin-top: .6em; }
+.fin__compte { font-size: .82em; color: var(--craie-2); }
+
+/* ============ Cadre de la démonstration, sur le site ============ */
+.demo-cadre { display: grid; gap: var(--gout); align-items: start; }
+@media (min-width: 62rem) { .demo-cadre { grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); } }
+.demo-aide { display: grid; gap: .8rem; }
+.demo-aide li { display: grid; grid-template-columns: 1.6rem 1fr; gap: .6rem; font-size: var(--t-sm); }
+.demo-aide b { font-family: var(--f-data); color: var(--lampe); font-weight: 700; }
+
+.borne-demo:fullscreen { max-width: none; aspect-ratio: auto; height: 100%; border-radius: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .borne-demo *, .borne-demo *::before, .borne-demo *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .vol { display: none; }
+}
+
+/* ---- Fiche d'un produit sans visuel détouré --------------------------
+   Le cadre affiche alors le nom en grand, sur le motif de marque. */
+.fiche__photo[data-typo]::after {
+  content: attr(data-typo);
+  position: relative; max-width: 86%; text-align: center;
+  font-family: var(--f-etiq); text-transform: uppercase; font-weight: 700;
+  font-size: clamp(1.8rem, 9cqw, 3rem); line-height: .95; letter-spacing: -.01em;
+  color: var(--craie); text-shadow: 0 3px 18px rgb(0 0 0 / .55);
+}
+
+/* =========================================================================
+   LE SMASH BURGER QUI SE MONTE
+
+   Les couches sont découpées dans la photo du Bacon Bomb du client :
+   pain du haut, salade et oignon, bacon et cheddar, les deux steaks,
+   tomate et pain du bas. Elles arrivent une à une et se posent.
+
+   C'est volontairement fait avec SES photos et pas avec une vidéo trouvée
+   en ligne : une vidéo de banque d'images sur un site commercial appartient
+   à son auteur, et son burger vend mieux que celui d'un inconnu.
+   ========================================================================= */
+.monte {
+  position: relative; width: 100%; aspect-ratio: 300 / 250;
+  pointer-events: none;
+}
+.monte__c {
+  position: absolute; left: 0; width: 100%; height: auto;
+  filter: drop-shadow(0 3px 5px rgb(0 0 0 / .3));
+  will-change: transform;
+}
+.monte__c[data-c="5"] { filter: drop-shadow(0 16px 20px rgb(0 0 0 / .6)); }
+/* Position d'origine de chaque couche dans la photo, en pourcentage pour
+   que l'ensemble se redimensionne d'un bloc. */
+.monte__c[data-c="1"] { top: 0;     --d: 118; }
+.monte__c[data-c="2"] { top: 33.6%; --d: 86;  }
+.monte__c[data-c="3"] { top: 47.2%; --d: 58;  }
+.monte__c[data-c="4"] { top: 60%;   --d: 34;  }
+.monte__c[data-c="5"] { top: 74.4%; --d: 0;   }
+
+/* Boucle d'accueil : les couches descendent se poser, tiennent, repartent. */
+.monte--boucle .monte__c {
+  animation: monter 7s var(--courbe) infinite both;
+  animation-delay: calc(var(--i) * 170ms);
+}
+@keyframes monter {
+  0%        { transform: translateY(calc(var(--d) * -1%)) scale(1.04); opacity: 0; }
+  16%       { opacity: 1; }
+  38%, 76%  { transform: translateY(0) scale(1); opacity: 1; }
+  96%, 100% { transform: translateY(calc(var(--d) * -1%)) scale(1.04); opacity: 0; }
+}
+
+/* La vapeur : trois volutes qui montent, décalées. Dessinées, pas filmées. */
+.fumee { position: absolute; inset: -12% 0 auto 0; height: 70%; pointer-events: none; overflow: hidden; }
+.fumee i {
+  position: absolute; bottom: 0; width: 38%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 255 255 / .19), transparent 72%);
+  filter: blur(11px); animation: volute 7s ease-in-out infinite;
+}
+.fumee i:nth-child(1) { left: 12%; animation-delay: 0s; }
+.fumee i:nth-child(2) { left: 36%; animation-delay: 1.9s; width: 46%; }
+.fumee i:nth-child(3) { left: 60%; animation-delay: 3.7s; }
+@keyframes volute {
+  0%   { transform: translateY(26%) scale(.55); opacity: 0; }
+  28%  { opacity: .85; }
+  100% { transform: translateY(-110%) scale(1.5); opacity: 0; }
+}
+
+/* ---- L'écran de veille, remonté autour du burger --------------------- */
+.veille__scene { position: relative; width: min(62cqw, 300px); margin-inline: auto; }
+.veille__invite {
+  position: relative; margin-top: 1.1em; display: grid; gap: .45em; justify-items: center;
+}
+.veille__invite b {
+  font-family: var(--f-etiq); text-transform: uppercase; font-weight: 700;
+  font-size: clamp(1.5rem, 7.4cqw, 2.5rem); line-height: .96; letter-spacing: -.03em;
+}
+.veille__invite span { color: var(--craie-2); font-size: .95em; max-width: 28ch; }
+
+/* ---- La transition sur la page d'accueil ------------------------------ */
+.essayer { position: relative; overflow: hidden; }
+.essayer__montage {
+  width: min(23rem, 62vw); margin-inline: auto; position: relative;
+}
+.essayer__montage .monte__c { transition: none; }   /* piloté au défilement */
 </style>
 <script type="application/ld+json">{
  "@context": "https://schema.org",
@@ -1629,6 +2237,176 @@
     <svg aria-hidden="true"><use href="#i-son-coupe"/></svg>
     <span data-libelle>Activer le son</span>
   </button>
+</section>
+
+<section class="sec essayer" id="essayer">
+  <div class="env">
+    <p class="surtitre">Essayez tout de suite</p>
+    <h2 style="font-size:var(--t-xl)">La borne, montée sur une vraie carte</h2>
+    <p class="prose mt-1">Celle d’un restaurant qui tourne, avec ses trente-neuf produits, ses formules et ses prix. Commandez comme le ferait votre client : rien n’est débité, c’est une simulation.</p>
+
+    <div class="essayer__montage mt-2" data-montage>
+      <span class="fumee" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div class="monte" role="img" aria-label="Un smash burger se monte, couche après couche, au fil du défilement">
+        <img class="monte__c" data-c="1" src="img/menu/couche-c1.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="2" src="img/menu/couche-c2.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="3" src="img/menu/couche-c3.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="4" src="img/menu/couche-c4.webp" alt="" loading="lazy" decoding="async">
+        <img class="monte__c" data-c="5" src="img/menu/couche-c5.webp" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <div class="borne-demo" id="borne-demo" role="application" aria-label="Borne de commande de démonstration">
+
+        <!-- 1. Veille -->
+        <section class="ecran veille" data-ecran="veille" data-aller="carte" tabindex="0">
+          <div class="veille__fond" id="veille-fond" aria-hidden="true"></div>
+          <p class="veille__marque"><b>SMASH</b><span>Avenue</span></p>
+          <i class="veille__chev" aria-hidden="true"></i>
+
+          <div class="veille__scene">
+            <span class="fumee" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="monte monte--boucle" role="img" aria-label="Un smash burger se monte, couche après couche">
+              <img class="monte__c" data-c="1" style="--i:0" src="img/menu/couche-c1.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="2" style="--i:1" src="img/menu/couche-c2.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="3" style="--i:2" src="img/menu/couche-c3.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="4" style="--i:3" src="img/menu/couche-c4.webp" alt="" decoding="async">
+              <img class="monte__c" data-c="5" style="--i:4" src="img/menu/couche-c5.webp" alt="" decoding="async">
+            </div>
+          </div>
+
+          <div class="veille__invite">
+            <b>Composez votre burger</b>
+            <span>Touchez l’écran, choisissez, payez. Votre commande part en cuisine et vous recevez un numéro d’appel.</span>
+          </div>
+          <span class="veille__touche" data-focus>Touchez pour commander</span>
+        </section>
+
+        <!-- 2. Sur place ou à emporter -->
+        <section class="ecran mode" data-ecran="mode">
+          <h2>Vous mangez<br>sur place&nbsp;?</h2>
+          <div class="mode__choix">
+            <button type="button" class="mode__btn" data-mode="place" data-focus>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 3v8a3 3 0 0 0 3 3v7M7 3v6M10 3v6M17 3c-1.5 2-2 4-2 6s.5 3 2 3v9"/></svg>
+              <b>Sur place</b><span>TVA 10 %</span>
+            </button>
+            <button type="button" class="mode__btn" data-mode="emporter">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8zM8.5 8V6a3.5 3.5 0 0 1 7 0v2"/></svg>
+              <b>À emporter</b><span>TVA 5,5 %</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 3. La carte -->
+        <section class="ecran" data-ecran="carte">
+          <div class="kbar">
+            <span class="kbar__marque"><b>SMASH</b><i>Avenue</i></span>
+            <span class="kbar__mode" id="k-mode">Sur place</span>
+          </div>
+          <div class="chevron" aria-hidden="true"></div>
+          <div class="carte-k">
+            <div class="rail" id="k-rail" role="tablist" aria-label="Catégories"></div>
+            <div class="grille-k">
+              <div class="grille-k__tete"><h3 class="kraft" id="k-titre">Smash burger</h3></div>
+              <div class="produits-k" id="k-produits"></div>
+            </div>
+          </div>
+          <div class="panier-barre">
+            <span class="pastille-k" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12zM6 6L5 2H2M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+              <i id="k-nb">0</i>
+            </span>
+            <span class="panier-barre__info"><b id="k-total">0,00 €</b><span>Votre commande</span></span>
+            <button type="button" class="kbtn" id="k-voir" data-aller="panier" disabled>Voir le panier</button>
+          </div>
+        </section>
+
+        <!-- 4. Fiche produit -->
+        <section class="ecran fiche" data-ecran="fiche">
+          <div class="kbar">
+            <button type="button" class="kretour" data-aller="carte" data-focus>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+              Retour
+            </button>
+            <span class="kbar__mode" id="k-mode2">Sur place</span>
+          </div>
+          <div class="chevron" aria-hidden="true"></div>
+          <div class="fiche__corps">
+            <figure class="fiche__photo"><img id="f-photo" src="" alt=""></figure>
+            <div class="fiche__tete">
+              <h2 id="f-nom"></h2>
+              <p class="fiche__ing" id="f-ing"></p>
+              <p class="fiche__prix" id="f-prix"></p>
+            </div>
+            <div id="f-groupes"></div>
+          </div>
+          <div class="fiche__pied">
+            <div class="qte">
+              <button type="button" data-q="-1" aria-label="Retirer un">−</button>
+              <output id="f-qte" aria-live="polite">1</output>
+              <button type="button" data-q="1" aria-label="Ajouter un">+</button>
+            </div>
+            <button type="button" class="kbtn" id="f-ajouter">Ajouter</button>
+          </div>
+        </section>
+
+        <!-- 5. Panier -->
+        <section class="ecran" data-ecran="panier">
+          <div class="kbar">
+            <button type="button" class="kretour" data-aller="carte" data-focus>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+              Continuer
+            </button>
+            <span class="kbar__mode">Votre commande</span>
+          </div>
+          <div class="chevron" aria-hidden="true"></div>
+          <div class="lignes-k" id="p-lignes"></div>
+          <div class="total-k">
+            <div class="total-k__l"><span>Total hors taxes</span><span id="p-ht">0,00 €</span></div>
+            <div class="total-k__l"><span id="p-tauxl">TVA</span><span id="p-tva">0,00 €</span></div>
+            <div class="total-k__g"><span>À payer</span><b id="p-total">0,00 €</b></div>
+            <button type="button" class="kbtn" id="p-payer" style="width:100%;margin-top:.9em">Payer par carte</button>
+          </div>
+        </section>
+
+        <!-- 6. Paiement simulé -->
+        <section class="ecran paie" data-ecran="paiement">
+          <span class="paie__cb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 15h4"/></svg>
+          </span>
+          <h2>Présentez votre carte</h2>
+          <p class="paie__montant" id="paie-montant">0,00 €</p>
+          <div class="paie__barre"><i id="paie-barre"></i></div>
+          <p style="font-size:.82em;color:var(--craie-2);max-width:26ch">Simulation. Aucun paiement réel n’est effectué sur cette démonstration.</p>
+        </section>
+
+        <!-- 7. Ticket -->
+        <section class="ecran fin" data-ecran="ticket">
+          <span class="fin__ok" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+          </span>
+          <h2 style="font-size:1.3em;text-transform:uppercase;letter-spacing:-.02em">Commande enregistrée</h2>
+          <div class="recu-k">
+            <p class="recu-k__et">Votre numéro</p>
+            <p class="recu-k__num" id="t-num">B-214</p>
+            <p class="recu-k__et" id="t-mode">Sur place</p>
+            <hr>
+            <div id="t-lignes"></div>
+            <div class="recu-k__t"><span>Total</span><span id="t-total">0,00 €</span></div>
+            <hr>
+            <p class="recu-k__et">Smash Avenue · Merci</p>
+          </div>
+          <p class="fin__compte" id="t-compte"></p>
+          <button type="button" class="kbtn kbtn--fant" id="t-fin" style="flex:0 0 auto">Nouvelle commande</button>
+        </section>
+      </div>
+    </div>
+
+    <p class="note mt-1" style="text-align:center">
+      <a class="btn btn--secondaire btn--petit" href="demo-borne-de-commande.html">Ouvrir la démonstration en grand</a>
+    </p>
+  </div>
 </section>
 
 <section class="sec">
@@ -2653,6 +3431,584 @@ window.CONFIG = {
   }, { passive: true });
 
   relancer();
+})();
+/* =========================================================================
+   BORNE DE DÉMONSTRATION — Smash Avenue
+
+   Borne de commande complète et jouable : veille, mode de consommation,
+   carte, fiche produit avec options, panier, paiement simulé, ticket,
+   retour à la veille. C'est la démonstration qu'on montre au restaurateur,
+   donc elle tourne sur une vraie carte et de vrais prix, relevés sur les
+   planches menu du client.
+
+   LA TVA EST CALCULÉE POUR DE VRAI, parce que c'est précisément le point
+   que les restaurateurs vérifient : 10 % sur place, 5,5 % à emporter. Une
+   borne qui affiche le même total dans les deux cas se fait repérer en
+   trente secondes.
+
+   Aucun paiement réel n'a lieu : l'écran de paiement est une simulation,
+   et il le dit.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  var racine = document.getElementById("borne-demo");
+  if (!racine) return;
+
+  /* ====================================================================
+     LA CARTE
+     Relevée sur les planches menu fournies par le client. Les libellés
+     d'ingrédients sont repris tels quels ; là où la planche était
+     illisible, le texte est volontairement court plutôt qu'inventé.
+     ==================================================================== */
+  var E = "img/menu/";
+
+  /* Les deux univers de couleur des planches : orange pour le salé chaud,
+     violet pour l'asiatique et le sucré. Le halo derrière chaque produit
+     en vient, ce qui fait que la carte se lit par zones avant même d'être
+     lue par les mots. */
+  var HALO = {
+    orange: "rgb(242 144 27 / .55)",
+    violet: "rgb(150 108 232 / .62)"
+  };
+
+  /* Huit produits n'ont pas de visuel détouré : leur tuile devient une
+     composition typographique. Un emplacement vide se voit, une tuile
+     dessinée se lit comme un choix. */
+  var SANS_PHOTO = {
+    "tenders": 1, "wings": 1, "nuggets": 1, "mozza-stick": 1,
+    "nem-poulet": 1, "yakitori-poulet": 1, "yakitori-boeuf": 1,
+    "crevette-tempura": 1, "menu-etudiant": 1
+  };
+
+  function formule(sup) {           /* la formule menu des burgers */
+    return { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+      { id: "seul", nom: "Le burger seul", prix: 0 },
+      { id: "menu", nom: "Menu : frite + boisson 33 cl", prix: 3.00 },
+      { id: "menupd", nom: "Menu : frites patate douce + boisson", prix: 4.00 }
+    ] };
+  }
+  var FRITE_CHOIX = { id: "fr", nom: "Votre frite", type: "unique", requis: true, choix: [
+    { id: "crinkle", nom: "Frites crinkle", prix: 0 },
+    { id: "douce", nom: "Frites patate douce", prix: 1.00 }
+  ] };
+  var SIDE_ASIA = { id: "sa", nom: "Votre side asiatique", type: "unique", requis: true, choix: [
+    { id: "cd", nom: "Chicken dynamite", prix: 0 },
+    { id: "crd", nom: "Crevette dynamite", prix: 0 },
+    { id: "nem", nom: "Nems poulet", prix: 0 },
+    { id: "yp", nom: "Yakitori poulet", prix: 0 },
+    { id: "yb", nom: "Yakitori bœuf", prix: 0 },
+    { id: "ct", nom: "Crevette tempura", prix: 0 }
+  ] };
+
+  var CARTE = [
+    { id: "burgers", u: "orange", nom: "Smash burger", ic: "bacon-bomb", produits: [
+      { id: "original-smash", nom: "Original Smash", prix: 6.90, ing: "1 steak smash, cheddar, salade, tomates, oignons, sauce smash", opts: [formule()] },
+      { id: "double-smash", nom: "Double Smash", prix: 8.50, ing: "2 steaks smash, cheddar, salade, tomates, oignons rouges, sauce smash", opts: [formule()] },
+      { id: "bacon-bomb", nom: "Bacon Bomb", prix: 8.90, ing: "2 steaks smash, cheddar, salade, tomates, oignons rouges, bacon, sauce creamy BBQ", opts: [formule()] },
+      { id: "nash-smash", nom: "Nash’n Smash", prix: 8.50, ing: "2 steaks smash, cheddar, oignons rouges, salade, jalapeños, sauce Nashville", opts: [formule()] },
+      { id: "chevre-miel", nom: "Chèvre Miel", prix: 8.90, ing: "2 steaks smash, chèvre, miel, oignons frits, noix, sauce maison", opts: [formule()] },
+      { id: "smash-truffle", nom: "Smash Truffle", prix: 8.90, ing: "2 steaks smash, emmental, champignons, salade, oignon rouge, sauce creamy truffe", opts: [formule()] },
+      { id: "melty-smash", nom: "Melty Smash", prix: 8.90, ing: "2 steaks smash, salade, lardons, oignons, sauce moutarde et poivre", opts: [formule()] },
+      { id: "smash-mountain", nom: "Smash Mountain", prix: 9.90, ing: "2 steaks smash, raclette, rösti, bacon, oignons confits, sauce creamy pepper", opts: [formule()] },
+      { id: "green-chicken", nom: "Green Chicken", prix: 9.00, ing: "Poulet frit, cheddar, salade, oignons rouges, guacamole, sauce verte", opts: [formule()] },
+      { id: "nash-chicken", nom: "Nash’n Chicken", prix: 8.90, ing: "Poulet frit, cheddar, salade, oignons rouges, jalapeños, sauce Nashville", opts: [formule()] },
+      { id: "smoky-chicken", nom: "Smoky Chicken", prix: 8.50, ing: "Poulet frit, cheddar, oignons rouges, bacon, sauce Nashville", opts: [formule()] },
+      { id: "chicken-smash", nom: "Chicken Smash", prix: 7.90, ing: "Poulet frit, cheddar, salade, cornichons, sauce smash", opts: [formule()] }
+    ] },
+
+    { id: "box", u: "orange", nom: "Les box", ic: "good-deal", produits: [
+      { id: "good-deal", nom: "Good Deal", prix: 16.90, ing: "1 Bacon Bomb, 1 Double Smash, 1 frite au choix, 1 boisson 33 cl", opts: [FRITE_CHOIX] },
+      { id: "family", nom: "Family", prix: 29.90, ing: "3 smashs au choix, 3 frites au choix, 1 bouteille au choix", opts: [FRITE_CHOIX] },
+      { id: "combo-fusion", nom: "Combo Fusion", prix: 14.90, ing: "1 smash au choix, 1 side asiatique au choix, 1 frite au choix, 1 boisson 33 cl", opts: [SIDE_ASIA, FRITE_CHOIX] },
+      { id: "full-up", nom: "Full Up", prix: 14.90, ing: "1 smash au choix, 3 tenders, 1 frite, 1 boisson au choix", opts: [FRITE_CHOIX] },
+      { id: "asian-box", nom: "Asian Box", prix: 15.90, ing: "1 bao au choix, 1 side asiatique au choix, 1 frite au choix, 1 boisson 33 cl", opts: [SIDE_ASIA, FRITE_CHOIX] }
+    ] },
+
+    { id: "salades", u: "orange", nom: "Salades", ic: "salade-cesar", produits: [
+      { id: "salade-cesar", nom: "Salade César", prix: 8.90, ing: "Mélange patty (katsu), mélange de salade, tomates cerises, grana padano, croûtons ail, sauce césar", opts: [
+        { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+          { id: "seule", nom: "La salade seule", prix: 0 },
+          { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] },
+      { id: "salade-fromagere", nom: "Salade Fromagère", prix: 8.00, ing: "Mélange patty (katsu), bacon, mélange de salade, tomates cerises, cornichons, emmental, féta, noix, croûtons ail, sauce fines herbes", opts: [
+        { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+          { id: "seule", nom: "La salade seule", prix: 0 },
+          { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] },
+      { id: "salade-new-york", nom: "Salade New York", prix: 8.50, ing: "Mélange patty (katsu), bacon, mélange de salade, tomates cerises, cornichons, grana padano, croûtons ail, emmental, cheddar, oignons frits, sauce miel moutarde", opts: [
+        { id: "f", nom: "Formule", type: "unique", requis: true, choix: [
+          { id: "seule", nom: "La salade seule", prix: 0 },
+          { id: "menu", nom: "Menu : boisson 33 cl", prix: 1.00 } ] } ] }
+    ] },
+
+    { id: "frites", u: "orange", nom: "Frites", ic: "frites-cheddar", produits: [
+      { id: "frites-natures", nom: "Frites natures", prix: 3.00, ing: "Crinkle", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
+      { id: "frites-patates-douces", nom: "Frites patates douces", prix: 3.50, ing: "", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
+      { id: "frites-cheddar", nom: "Frites cheddar", prix: 4.00, ing: "Crinkle, sauce cheddar", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] },
+      { id: "frites-cheddar-bacon", nom: "Frites cheddar bacon", prix: 5.50, ing: "Crinkle, sauce cheddar, bacon", opts: [
+        { id: "s", nom: "Suppléments", type: "multi", choix: [
+          { id: "jal", nom: "Jalapeño", prix: 1.00 }, { id: "oig", nom: "Oignon frit", prix: 1.00 } ] } ] }
+    ] },
+
+    { id: "sides", u: "orange", nom: "À côté", ic: "full-up", produits: [
+      { id: "tenders", nom: "Tenders", prix: 5.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 5.90 }, { id: "x6", nom: "× 6", prix: 9.90 } ] } ] },
+      { id: "wings", nom: "Wings", prix: 3.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 3.90 }, { id: "x6", nom: "× 6", prix: 6.90 } ] } ] },
+      { id: "nuggets", nom: "Nuggets", prix: 3.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x5", nom: "× 5", prix: 3.90 }, { id: "x10", nom: "× 10", prix: 6.90 } ] } ] },
+      { id: "mozza-stick", nom: "Mozza stick", prix: 3.90, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 3.90 }, { id: "x6", nom: "× 6", prix: 6.90 } ] } ] }
+    ] },
+
+    { id: "asiatique", u: "violet", nom: "Asiatique", ic: "chicken-dynamite", produits: [
+      { id: "chicken-dynamite", nom: "Chicken Dynamite", prix: 5.90, ing: "", opts: [] },
+      { id: "crevette-dynamite", nom: "Crevette Dynamite", prix: 5.90, ing: "", opts: [] },
+      { id: "nem-poulet", nom: "Nems poulet", prix: 5.00, ing: "", opts: [
+        { id: "t", nom: "Quantité", type: "taille", requis: true, choix: [
+          { id: "x3", nom: "× 3", prix: 5.00 }, { id: "x6", nom: "× 6", prix: 9.00 } ] } ] },
+      { id: "yakitori-poulet", nom: "Yakitori poulet", prix: 5.90, ing: "× 2", opts: [] },
+      { id: "yakitori-boeuf", nom: "Yakitori bœuf", prix: 5.90, ing: "× 3", opts: [] },
+      { id: "crevette-tempura", nom: "Crevette tempura", prix: 5.90, ing: "× 3", opts: [] }
+    ] },
+
+    { id: "menus", u: "violet", nom: "Menus", ic: "menu-enfant", produits: [
+      { id: "menu-enfant", nom: "Menu Enfant", prix: 6.90, ing: "1 frite, boisson et cadeau compris", opts: [
+        { id: "p", nom: "Le plat", type: "unique", requis: true, choix: [
+          { id: "little", nom: "Little Smash", prix: 0 }, { id: "nug", nom: "5 nuggets", prix: 0 } ] },
+        { id: "b", nom: "La boisson", type: "unique", requis: true, choix: [
+          { id: "capri", nom: "Capri-Sun", prix: 0 }, { id: "eau", nom: "Eau", prix: 0 } ] } ] },
+      { id: "menu-etudiant", nom: "Menu Étudiant", prix: 6.90, ing: "Original Smash, 1 frite, 1 boisson", opts: [FRITE_CHOIX] }
+    ] },
+
+    { id: "desserts", u: "violet", nom: "Desserts", ic: "milkshake", produits: [
+      { id: "tiramisu", nom: "Tiramisu", prix: 3.90, ing: "", opts: [
+        { id: "p", nom: "Le parfum", type: "unique", requis: true, choix: [
+          { id: "pis", nom: "Pistache", prix: 0 }, { id: "oreo", nom: "Oréo", prix: 0 },
+          { id: "man", nom: "Mangue", prix: 0 }, { id: "fra", nom: "Fraise", prix: 0 },
+          { id: "nut", nom: "Nutella", prix: 0 }, { id: "car", nom: "Caramel", prix: 0 },
+          { id: "pb", nom: "Paris-Brest", prix: 0 } ] } ] },
+      { id: "bubble-waffle", nom: "Bubble Waffle", prix: 5.00, ing: "", opts: [
+        { id: "b", nom: "La base", type: "unique", requis: true, choix: [
+          { id: "nut", nom: "Nutella", prix: 0 }, { id: "cb", nom: "Chocolat blanc", prix: 0 },
+          { id: "bue", nom: "Bueno", prix: 0 }, { id: "fr", nom: "Fruits rouges", prix: 0 },
+          { id: "spe", nom: "Spéculos", prix: 0 } ] },
+        { id: "t", nom: "Topping", type: "multi", choix: [
+          { id: "kb", nom: "Kinder Bueno", prix: 1.00 }, { id: "kc", nom: "Kinder Country", prix: 1.00 },
+          { id: "spe", nom: "Spéculos", prix: 1.00 }, { id: "oreo", nom: "Oréo", prix: 1.00 },
+          { id: "sni", nom: "Snickers", prix: 1.00 }, { id: "ban", nom: "Banane", prix: 1.00 },
+          { id: "fra", nom: "Fraise", prix: 1.00 } ] },
+        { id: "g", nom: "Glace et coulis", type: "multi", choix: [
+          { id: "gv", nom: "Glace vanille", prix: 0.50 }, { id: "gf", nom: "Glace fraise", prix: 0.50 },
+          { id: "cc", nom: "Coulis caramel", prix: 0.50 }, { id: "cfr", nom: "Coulis fruits rouges", prix: 0.50 },
+          { id: "cch", nom: "Coulis chocolat", prix: 0.50 }, { id: "cha", nom: "Chantilly", prix: 0.50 } ] } ] },
+      { id: "milkshake", nom: "Milkshake", prix: 5.90, ing: "", opts: [
+        { id: "p", nom: "Le parfum", type: "unique", requis: true, choix: [
+          { id: "van", nom: "Vanille", prix: 0 }, { id: "fra", nom: "Fraise", prix: 0 },
+          { id: "coco", nom: "Coco-ananas", prix: 0 }, { id: "oreo", nom: "Oréo", prix: 0 },
+          { id: "kb", nom: "Kinder Bueno", prix: 0 }, { id: "fr", nom: "Fruits rouges", prix: 0 },
+          { id: "cho", nom: "Chocolat", prix: 0 } ] } ] }
+    ] }
+  ];
+
+  /* ==================================================================== */
+  var $  = function (s, r) { return (r || racine).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || racine).querySelectorAll(s)); };
+  var eur = function (n) { return n.toFixed(2).replace(".", ",") + " €"; };
+
+  var etat = {
+    mode: null,          /* "place" | "emporter" */
+    panier: [],
+    cat: "burgers",
+    prod: null,
+    choix: {},
+    qte: 1,
+    numero: 213
+  };
+
+  /* La TVA d'un ticket de restauration rapide : 10 % sur place, 5,5 % à
+     emporter. C'est le premier calcul qu'un restaurateur vérifie. */
+  function taux() { return etat.mode === "emporter" ? 0.055 : 0.10; }
+
+  function ecran(nom) {
+    $$(".ecran").forEach(function (e) { e.removeAttribute("data-actif"); });
+    var c = $('[data-ecran="' + nom + '"]');
+    if (c) c.setAttribute("data-actif", "");
+    var def = $(".ecran[data-actif] [data-focus]");
+    if (def) def.focus({ preventScroll: true });
+    repousserVeille();
+  }
+
+  /* ---- Veille automatique ---------------------------------------------
+     Une borne laissée sur un panier à moitié rempli bloque la suivante.
+     Au bout de soixante secondes sans geste, tout repart à zéro. */
+  var minuteur = null;
+  function repousserVeille() {
+    clearTimeout(minuteur);
+    if ($('[data-ecran="veille"][data-actif]')) return;
+    minuteur = setTimeout(reinitialiser, 60000);
+  }
+  racine.addEventListener("pointerdown", repousserVeille);
+
+  function reinitialiser() {
+    etat.mode = null; etat.panier = []; etat.cat = "burgers";
+    etat.prod = null; etat.choix = {}; etat.qte = 1;
+    majPastille();
+    ecran("veille");
+  }
+
+  /* ---- Carte ----------------------------------------------------------- */
+  function rendreRail() {
+    $("#k-rail").innerHTML = CARTE.map(function (c) {
+      return '<button type="button" role="tab" data-cat="' + c.id + '" aria-selected="' +
+        (c.id === etat.cat) + '"><img src="' + E + c.ic + '.webp" alt="" loading="lazy" decoding="async">' +
+        c.nom + "</button>";
+    }).join("");
+  }
+
+  function rendreGrille() {
+    var c = CARTE.filter(function (x) { return x.id === etat.cat; })[0];
+    $("#k-titre").textContent = c.nom;
+    var halo = HALO[c.u || "orange"];
+    $("#k-produits").innerHTML = c.produits.map(function (p, i) {
+      var vis = SANS_PHOTO[p.id]
+        ? '<span class="pk__typo">' + p.nom + "</span>"
+        : '<span class="pk__vis"><img src="' + E + p.id + '.webp" alt="" loading="lazy" decoding="async"></span>';
+      return '<button type="button" class="pk" data-prod="' + p.id +
+        '" style="--halo:' + halo + ';animation-delay:' + (i * 34) + 'ms">' +
+        vis +
+        '<span class="pk__txt">' +
+          '<span class="pk__nom">' + p.nom + "</span>" +
+          (p.ing ? '<span class="pk__ing">' + p.ing + "</span>" : "") +
+        "</span>" +
+        '<span class="tag">' + eur(p.prix) + "</span>" +
+      "</button>";
+    }).join("");
+  }
+
+  function trouver(id) {
+    for (var i = 0; i < CARTE.length; i++) {
+      var t = CARTE[i].produits.filter(function (p) { return p.id === id; });
+      if (t.length) return t[0];
+    }
+    return null;
+  }
+
+  /* ---- Fiche produit ---------------------------------------------------- */
+  function ouvrirFiche(id) {
+    var p = trouver(id);
+    if (!p) return;
+    etat.prod = p; etat.qte = 1; etat.choix = {};
+    /* Un groupe obligatoire part sur son premier choix : une borne qui
+       exige une sélection sans en proposer une par défaut fait reculer. */
+    p.opts.forEach(function (g) {
+      if (g.requis && (g.type === "unique" || g.type === "taille")) etat.choix[g.id] = [g.choix[0].id];
+      else etat.choix[g.id] = [];
+    });
+
+    var cat = CARTE.filter(function (x) {
+      return x.produits.indexOf(p) >= 0;
+    })[0];
+    var cadre = $("#f-photo").parentNode;
+    cadre.style.setProperty("--halo", HALO[(cat && cat.u) || "orange"]);
+    if (SANS_PHOTO[p.id]) {
+      $("#f-photo").hidden = true;
+      cadre.dataset.typo = p.nom;
+    } else {
+      $("#f-photo").hidden = false;
+      delete cadre.dataset.typo;
+      $("#f-photo").src = E + p.id + ".webp";
+      $("#f-photo").alt = p.nom;
+    }
+    $("#f-nom").textContent = p.nom;
+    $("#f-ing").textContent = p.ing || "";
+    $("#f-ing").hidden = !p.ing;
+
+    $("#f-groupes").innerHTML = p.opts.map(function (g) {
+      return '<div class="groupe" data-groupe="' + g.id + '">' +
+        '<div class="groupe__tete"><h4 class="kraft">' + g.nom + "</h4><span>" +
+          (g.type === "multi" ? "Plusieurs possibles" : "Un seul choix") + "</span></div>" +
+        '<div class="opts">' + g.choix.map(function (ch) {
+          return '<button type="button" class="opt" data-type="' + g.type + '" data-g="' + g.id + '" data-c="' + ch.id + '" aria-pressed="false">' +
+            '<span class="opt__coche"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/></svg></span>' +
+            '<span class="opt__nom">' + ch.nom + "</span>" +
+            '<span class="opt__prix">' + (g.type === "taille" ? eur(ch.prix) : (ch.prix ? "+ " + eur(ch.prix) : "Inclus")) + "</span>" +
+          "</button>";
+        }).join("") + "</div></div>";
+    }).join("");
+
+    majFiche();
+    ecran("fiche");
+  }
+
+  function prixUnite() {
+    var p = etat.prod, base = p.prix, sup = 0;
+    p.opts.forEach(function (g) {
+      (etat.choix[g.id] || []).forEach(function (cid) {
+        var ch = g.choix.filter(function (c) { return c.id === cid; })[0];
+        if (!ch) return;
+        if (g.type === "taille") base = ch.prix; else sup += ch.prix;
+      });
+    });
+    return base + sup;
+  }
+
+  function majFiche() {
+    $$(".opt").forEach(function (b) {
+      var sel = (etat.choix[b.dataset.g] || []).indexOf(b.dataset.c) >= 0;
+      b.setAttribute("aria-pressed", sel ? "true" : "false");
+    });
+    $("#f-prix").innerHTML = '<span class="tag">' + eur(prixUnite()) + "</span>";
+    $("#f-qte").textContent = etat.qte;
+    $("#f-ajouter").textContent = "Ajouter · " + eur(prixUnite() * etat.qte);
+  }
+
+  function libelleChoix() {
+    var out = [];
+    etat.prod.opts.forEach(function (g) {
+      (etat.choix[g.id] || []).forEach(function (cid) {
+        var ch = g.choix.filter(function (c) { return c.id === cid; })[0];
+        if (ch && !(g.type === "unique" && ch.prix === 0 && /seul/.test(ch.id))) out.push(ch.nom);
+      });
+    });
+    return out.join(" · ");
+  }
+
+  /* ---- Panier ------------------------------------------------------------ */
+  function ajouter() {
+    var cat = CARTE.filter(function (x) { return x.produits.indexOf(etat.prod) >= 0; })[0];
+    etat.panier.push({
+      id: etat.prod.id, nom: etat.prod.nom, det: libelleChoix(),
+      pu: prixUnite(), qte: etat.qte, halo: HALO[(cat && cat.u) || "orange"]
+    });
+    volerVersPanier();
+    majPastille(true);
+    ecran("carte");
+  }
+
+  /* Le produit vole de la fiche jusqu'au panier. C'est l'animation qui dit
+     « c'est pris en compte » sans écrire un mot, et elle remplace le
+     message de confirmation que personne ne lit sur une borne. */
+  function volerVersPanier() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var src = $("#f-photo");
+    var cible = $(".pastille-k");
+    if (!src || src.hidden || !cible || !src.getBoundingClientRect().width) return;
+    var a = src.getBoundingClientRect(), b = cible.getBoundingClientRect();
+    var vol = document.createElement("img");
+    vol.className = "vol"; vol.src = src.src; vol.alt = "";
+    vol.style.left = (a.left + a.width / 2 - 45) + "px";
+    vol.style.top  = (a.top + a.height / 2 - 45) + "px";
+    document.body.appendChild(vol);
+    requestAnimationFrame(function () {
+      vol.style.transform = "translate(" + (b.left + b.width / 2 - a.left - a.width / 2) +
+        "px," + (b.top + b.height / 2 - a.top - a.height / 2) + "px) scale(.18) rotate(22deg)";
+      vol.style.opacity = "0.2";
+    });
+    setTimeout(function () { vol.remove(); }, 680);
+  }
+
+  function majPastille(anime) {
+    var n = etat.panier.reduce(function (s, l) { return s + l.qte; }, 0);
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    $("#k-nb").textContent = n;
+    $("#k-total").textContent = eur(tot);
+    $("#k-voir").disabled = n === 0;
+    if (anime) {
+      var b = $("#k-nb");
+      b.classList.remove("saute"); void b.offsetWidth; b.classList.add("saute");
+    }
+  }
+
+  function rendrePanier() {
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    $("#p-lignes").innerHTML = etat.panier.map(function (l, i) {
+      return '<div class="lk" style="--halo:' + (l.halo || HALO.orange) + '">' +
+        '<span class="lk__vis">' + (SANS_PHOTO[l.id] ? "" :
+          '<img src="' + E + l.id + '.webp" alt="" loading="lazy">') + "</span>" +
+        "<div><div class=\"lk__nom\">" + l.nom + "</div>" +
+        (l.det ? '<div class="lk__det">' + l.det + "</div>" : "") +
+        '<div class="qte" style="margin-top:.4em">' +
+          '<button type="button" data-ligne="' + i + '" data-d="-1" aria-label="Retirer un">−</button>' +
+          "<output>" + l.qte + "</output>" +
+          '<button type="button" data-ligne="' + i + '" data-d="1" aria-label="Ajouter un">+</button>' +
+        "</div></div>" +
+        '<div class="lk__prix">' + eur(l.pu * l.qte) + "</div></div>";
+    }).join("");
+
+    var ht = tot / (1 + taux());
+    $("#p-ht").textContent = eur(ht);
+    $("#p-tva").textContent = eur(tot - ht);
+    $("#p-tauxl").textContent = "TVA " + (taux() * 100).toFixed(1).replace(".0", "").replace(".", ",") + " %" +
+      (etat.mode === "emporter" ? " (à emporter)" : " (sur place)");
+    $("#p-total").textContent = eur(tot);
+    $("#p-payer").disabled = etat.panier.length === 0;
+  }
+
+  /* ---- Paiement et ticket ------------------------------------------------ */
+  function payer() {
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    $("#paie-montant").textContent = eur(tot);
+    ecran("paiement");
+    var barre = $("#paie-barre");
+    barre.classList.remove("court"); void barre.offsetWidth; barre.classList.add("court");
+    setTimeout(terminer, 2800);
+  }
+
+  function terminer() {
+    if (!$('[data-ecran="paiement"][data-actif]')) return;   /* annulé entre-temps */
+    var tot = etat.panier.reduce(function (s, l) { return s + l.pu * l.qte; }, 0);
+    var ht = tot / (1 + taux());
+    etat.numero += 1;
+    $("#t-num").textContent = "B-" + etat.numero;
+    $("#t-mode").textContent = etat.mode === "emporter" ? "À emporter" : "Sur place";
+    $("#t-lignes").innerHTML = etat.panier.map(function (l) {
+      return '<div class="recu-k__l"><span>' + l.qte + " × " + l.nom + "</span><span>" + eur(l.pu * l.qte) + "</span></div>";
+    }).join("") +
+      '<div class="recu-k__l"><span>dont TVA ' + (taux() * 100).toFixed(1).replace(".0", "").replace(".", ",") +
+      " %</span><span>" + eur(tot - ht) + "</span></div>";
+    $("#t-total").textContent = eur(tot);
+    ecran("ticket");
+
+    var reste = 9;
+    $("#t-compte").textContent = "Nouvelle commande dans " + reste + " s";
+    var tic = setInterval(function () {
+      reste -= 1;
+      if (!$('[data-ecran="ticket"][data-actif]')) { clearInterval(tic); return; }
+      if (reste <= 0) { clearInterval(tic); reinitialiser(); return; }
+      $("#t-compte").textContent = "Nouvelle commande dans " + reste + " s";
+    }, 1000);
+  }
+
+  /* ---- Branchements ------------------------------------------------------ */
+  racine.addEventListener("click", function (ev) {
+    var t = ev.target.closest("button, [data-aller]");
+    if (!t || !racine.contains(t)) return;
+
+    if (t.dataset.aller) {
+      if (t.dataset.aller === "carte" && !etat.mode) { ecran("mode"); return; }
+      if (t.dataset.aller === "panier") rendrePanier();
+      ecran(t.dataset.aller);
+      return;
+    }
+    if (t.dataset.mode) {
+      etat.mode = t.dataset.mode;
+      $("#k-mode").textContent = etat.mode === "emporter" ? "À emporter" : "Sur place";
+      $("#k-mode2").textContent = $("#k-mode").textContent;
+      rendreRail(); rendreGrille(); majPastille();
+      ecran("carte");
+      return;
+    }
+    if (t.dataset.cat) { etat.cat = t.dataset.cat; rendreRail(); rendreGrille(); return; }
+    if (t.dataset.prod) { ouvrirFiche(t.dataset.prod); return; }
+
+    if (t.dataset.g) {
+      var g = etat.prod.opts.filter(function (x) { return x.id === t.dataset.g; })[0];
+      var sel = etat.choix[g.id] || [];
+      if (g.type === "multi") {
+        var i = sel.indexOf(t.dataset.c);
+        if (i >= 0) sel.splice(i, 1); else sel.push(t.dataset.c);
+      } else {
+        etat.choix[g.id] = [t.dataset.c];
+      }
+      majFiche();
+      return;
+    }
+    if (t.dataset.q) { etat.qte = Math.min(20, Math.max(1, etat.qte + (+t.dataset.q))); majFiche(); return; }
+    if (t.id === "f-ajouter") { ajouter(); return; }
+
+    if (t.dataset.ligne !== undefined) {
+      var l = etat.panier[+t.dataset.ligne];
+      l.qte += (+t.dataset.d);
+      if (l.qte <= 0) etat.panier.splice(+t.dataset.ligne, 1);
+      majPastille(); rendrePanier();
+      return;
+    }
+    if (t.id === "p-payer") { payer(); return; }
+    if (t.id === "t-fin") { reinitialiser(); return; }
+    if (t.id === "k-plein") {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (racine.requestFullscreen) racine.requestFullscreen();
+      return;
+    }
+  });
+
+  /* Images de veille : trois produits qui dérivent, décalés dans le temps. */
+  var veilleFond = $("#veille-fond");
+  if (veilleFond) {
+    ["bacon-bomb", "frites-cheddar", "milkshake", "chicken-dynamite"].forEach(function (id, i) {
+      var im = new Image();
+      im.src = E + id + ".webp"; im.alt = ""; im.loading = "lazy";
+      im.style.left = [4, 33, 60, 78][i] + "cqw";
+      im.style.animationDelay = (i * 5.5) + "s";
+      veilleFond.appendChild(im);
+    });
+  }
+
+  rendreRail(); rendreGrille(); majPastille();
+  ecran("veille");
+})();
+/* =========================================================================
+   Le montage du burger au défilement.
+
+   Les cinq couches découpées dans la photo s'écartent quand la section
+   entre dans le champ, et se posent quand elle est centrée. Rien ne bouge
+   si le visiteur a demandé moins d'animations.
+
+   Piloté en JavaScript plutôt qu'avec animation-timeline : la propriété
+   n'est pas encore lue par Firefox, et une section qui reste figée chez un
+   visiteur sur cinq n'est pas une animation, c'est un bug.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  var cadre = document.querySelector("[data-montage]");
+  if (!cadre) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var couches = [].slice.call(cadre.querySelectorAll(".monte__c"));
+  if (!couches.length) return;
+
+  var enVue = false, demande = null;
+
+  function placer() {
+    demande = null;
+    var r = cadre.getBoundingClientRect();
+    var h = innerHeight || 800;
+    /* 0 quand la section arrive par le bas, 1 quand elle est centrée. */
+    var t = 1 - Math.min(1, Math.max(0, (r.top - h * 0.18) / (h * 0.62)));
+    var e = 1 - t;                                  /* coefficient d'écartement */
+    for (var i = 0; i < couches.length; i++) {
+      var c = couches[i];
+      var d = +getComputedStyle(c).getPropertyValue("--d") || 0;
+      c.style.transform = "translateY(" + (-d * e).toFixed(2) + "%) scale(" + (1 + e * 0.04).toFixed(3) + ")";
+      c.style.opacity = (0.25 + 0.75 * t).toFixed(3);
+    }
+  }
+
+  function demander() { if (enVue && demande === null) demande = requestAnimationFrame(placer); }
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) {
+      enVue = es[0].isIntersecting;
+      if (enVue) demander();
+    }, { rootMargin: "20% 0px" }).observe(cadre);
+  } else {
+    enVue = true;
+  }
+
+  addEventListener("scroll", demander, { passive: true });
+  addEventListener("resize", demander, { passive: true });
+  placer();
 })();</script>
 </body>
 </html>
