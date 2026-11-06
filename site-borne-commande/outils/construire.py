@@ -855,13 +855,68 @@ CORPS_INDEX = """
     <p class="surtitre">Comment ça se passe</p>
     <h2 style="font-size:var(--t-xl)">De votre paiement à la borne en service</h2>
     <p class="prose mt-1">Tout se fait depuis la page de commande, sans rendez-vous, sans devis à signer et sans commercial au téléphone.</p>
-    <ol class="deroule-v mt-2" role="list">
-      <li data-reveal><b>Vous construisez votre borne en ligne</b><span>Votre carte, vos prix, vos photos, vos suppléments. C’est gratuit, sans compte à créer, et vous pouvez télécharger le résultat pour l’essayer avant de payer.</span></li>
-      <li data-reveal><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
-      <li data-reveal><b>Nous lançons la fabrication</b><span>La tablette part de notre atelier vers votre adresse. Vous recevez le numéro de suivi au départ du colis.</span></li>
-      <li data-reveal><b>Pendant le transport, nous montons votre page</b><span>Nous reprenons votre configuration et nous la mettons en ligne, soit sur votre site, soit sur un nouveau site que nous créons pour vous.</span></li>
-      <li data-reveal><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette adresse et la borne prend ses premières commandes. Comptez un quart d’heure.</span></li>
-    </ol>
+    <div class="parcours mt-2" style="--n:5;--pas-etape:14rem">
+      <div class="parcours__scene" id="parcours-commande" aria-hidden="true">
+        <span class="parcours__sol"></span>
+        <div class="parcours__monde">
+          <div class="ac ac--carte">
+            <div class="ac__plaque">
+              <span class="ac__barre ac__barre--or" style="width:42%"></span>
+              <div class="ac__grille">
+                <span class="ac__tuile" style="--i:0"></span><span class="ac__tuile" style="--i:1"></span>
+                <span class="ac__tuile" style="--i:2"></span><span class="ac__tuile" style="--i:3"></span>
+                <span class="ac__tuile" style="--i:4"></span><span class="ac__tuile" style="--i:5"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac ac--cb">
+            <div class="ac__plaque">
+              <span class="ac__puce"></span>
+              <span class="ac__numero"><i></i><i></i><i></i><i></i></span>
+              <span class="ac__aval">&#10003;</span>
+            </div>
+          </div>
+
+          <div class="ac ac--colis">
+            <div class="ac__boite">
+              <span class="ac__ruban"></span>
+              <span class="ac__rabat"></span>
+              <span class="ac__etiquette"><i></i><i></i></span>
+            </div>
+          </div>
+
+          <div class="ac ac--page">
+            <div class="ac__plaque">
+              <div class="ac__chrome">
+                <span class="ac__pastilles"><i></i><i></i><i></i></span>
+                <span class="ac__url">votresite.fr/borne-commande.html</span>
+              </div>
+              <div class="ac__corps">
+                <span class="ac__ligne ac__ligne--or" style="width:54%"></span>
+                <span class="ac__ligne" style="width:88%"></span>
+                <span class="ac__ligne" style="width:74%"></span>
+                <span class="ac__ligne" style="width:92%"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac ac--borne">
+            <div class="ac__ecran"><span class="ac__dalle">Commandez ici</span></div>
+            <span class="ac__mat"></span>
+            <span class="ac__socle"></span>
+          </div>
+        </div>
+        <div class="parcours__jalons"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <ol class="deroule-v parcours__liste" role="list">
+        <li data-reveal><b>Vous construisez votre borne en ligne</b><span>Votre carte, vos prix, vos photos, vos suppléments. C’est gratuit, sans compte à créer, et vous pouvez télécharger le résultat pour l’essayer avant de payer.</span></li>
+        <li data-reveal><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
+        <li data-reveal><b>Nous lançons la fabrication</b><span>La tablette part de notre atelier vers votre adresse. Vous recevez le numéro de suivi au départ du colis.</span></li>
+        <li data-reveal><b>Pendant le transport, nous montons votre page</b><span>Nous reprenons votre configuration et nous la mettons en ligne, soit sur votre site, soit sur un nouveau site que nous créons pour vous.</span></li>
+        <li data-reveal><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette adresse et la borne prend ses premières commandes. Comptez un quart d’heure.</span></li>
+      </ol>
+    </div>
     <div class="avantages mt-2">
       <div data-reveal><b>600 € HT</b><span>720 € TTC au moment de payer, rien d’autre à ajouter</span></div>
       <div data-reveal><b>Livraison offerte</b><span>France métropolitaine, transport compris dans le prix</span></div>
@@ -947,6 +1002,28 @@ CORPS_INDEX = """
         <p>Un écran tactile de bureau monté sur une colonne et un socle rond lesté, le tout en blanc mat. L’écran se démonte de sa colonne et pivote à la main entre paysage et portrait, grâce à une rotule visible sur la photo.</p>
         <p>À l’intérieur, un appareil Android complet : Play Store accessible, navigateur, Wi-Fi, caméra frontale désactivable et batterie intégrée. Ce n’est donc pas un écran passif branché sur un ordinateur, c’est un appareil autonome qui démarre seul sur la page que vous lui désignez.</p>
         <p>Un écran verrouillé par son fabricant ne sert qu’avec le logiciel du fabricant, et s’éteint le jour où vous arrêtez de payer. Celui-ci accepte n’importe quelle application Android, y compris celle de votre éditeur de caisse, et la page que nous montons pour vous.</p>
+      </div>
+
+      <div class="prose mt-2">
+        <h3 style="font-size:var(--t-md)">La borne sous tous les angles</h3>
+        <p>Attrapez-la et faites-la tourner. Le pivot de l’écran est celui du produit : il bascule entre portrait et paysage à la main, sans outil.</p>
+      </div>
+
+      <div class="v360 mt-1" data-v360 tabindex="0" role="application"
+           aria-label="Vue 360 de la borne. Faites glisser pour la tourner, ou utilisez les flèches du clavier.">
+        <div class="v360__cadre">
+          <div class="v360__objet"><span class="v360__ombre"></span></div>
+        </div>
+        <div class="v360__barre">
+          <button type="button" class="v360__b" data-v360-auto aria-pressed="true">Rotation</button>
+          <button type="button" class="v360__b" data-v360-pivot aria-pressed="false"><span>Paysage</span></button>
+          <button type="button" class="v360__b" data-v360-face>Voir le dos</button>
+          <span class="v360__aide">Glissez pour tourner</span>
+        </div>
+      </div>
+      <p class="note mt-1">Modèle tridimensionnel reconstitué d’après les cotes du fabricant, pas une photographie. Il sert à comprendre la forme, l’encombrement et le pivot ; les photos du produit restent la référence pour la finition.</p>
+
+      <div class="prose mt-2">
         <h3 style="font-size:var(--t-md)">Ce qu’il sait faire au-delà de la prise de commande</h3>
         <p>Posé en paysage près de la cuisine, il affiche les commandes à préparer. En portrait dans une vitrine, il sert d’affichage de carte ou de promotion. Branché sur rien du tout, il reste une tablette de travail pour l’équipe.</p>
         <p>La batterie change la façon de l’installer : vous le déplacez en terrasse à midi, vous le rentrez le soir, et vous évitez la rallonge qui traverse un passage, qui est en pratique la première cause de chute dans un établissement recevant du public.</p>
@@ -1093,11 +1170,45 @@ CORPS_INDEX = """
     <h2 style="font-size:var(--t-xl)">Opérationnelle en un quart d’heure, sans rendez-vous</h2>
     <p class="prose mt-1">Le colis arrive, vous branchez, vous passez une commande test. Il n’y a pas de rendez-vous à prendre : tout ce dont vous avez besoin tient dans le message qu’on vous envoie.</p>
 
-    <ol class="deroule-v mt-2" role="list">
-      <li data-reveal><b>Vous recevez la tablette</b><span>Avec son pied, prête à brancher. Votre carte est déjà saisie d’après la configuration que vous avez montée en ligne.</span></li>
-      <li data-reveal><b>Vous recevez votre message</b><span>L’adresse de votre borne, l’application qui verrouille l’écran et votre code de sortie. Vos clients ne peuvent pas quitter la page de commande.</span></li>
-      <li data-reveal><b>Vous branchez, vous reliez au Wi-Fi</b><span>Vous suivez les six lignes du message, puis vous passez une commande test et vous la voyez arriver côté cuisine.</span></li>
-    </ol>
+    <div class="parcours mt-2" style="--n:3;--pas-etape:19rem">
+      <div class="parcours__scene" id="parcours-installation" aria-hidden="true">
+        <span class="parcours__sol"></span>
+        <div class="parcours__monde">
+          <div class="ac ac--ouvert">
+            <div class="ac__sortie">
+              <div class="ac__ecran"><span class="ac__dalle">Prête</span></div>
+            </div>
+            <div class="ac__boite">
+              <span class="ac__ruban"></span>
+              <span class="ac__rabat"></span>
+              <span class="ac__etiquette"><i></i><i></i></span>
+            </div>
+          </div>
+
+          <div class="ac ac--message">
+            <div class="ac__plaque">
+              <span class="ac__bulle"><i></i><i></i></span>
+              <span class="ac__bulle ac__bulle--or"><i></i><i></i></span>
+              <span class="ac__bulle"><i></i><i></i></span>
+              <span class="ac__code">4 7 2 9</span>
+            </div>
+          </div>
+
+          <div class="ac ac--service">
+            <span class="ac__ondes"><i></i><i></i><i></i></span>
+            <div class="ac__ecran"><span class="ac__dalle">Commandez ici</span></div>
+            <span class="ac__mat"></span>
+            <span class="ac__socle"></span>
+          </div>
+        </div>
+        <div class="parcours__jalons"><i></i><i></i><i></i></div>
+      </div>
+      <ol class="deroule-v parcours__liste" role="list">
+        <li data-reveal><b>Vous recevez la tablette</b><span>Avec son pied, prête à brancher. Votre carte est déjà saisie d’après la configuration que vous avez montée en ligne.</span></li>
+        <li data-reveal><b>Vous recevez votre message</b><span>L’adresse de votre borne, l’application qui verrouille l’écran et votre code de sortie. Vos clients ne peuvent pas quitter la page de commande.</span></li>
+        <li data-reveal><b>Vous branchez, vous reliez au Wi-Fi</b><span>Vous suivez les six lignes du message, puis vous passez une commande test et vous la voyez arriver côté cuisine.</span></li>
+      </ol>
+    </div>
 
     <div class="duo mt-2">
       <div class="carte" data-reveal>
@@ -1851,8 +1962,12 @@ FICHIERS.append(page(
     "Borne de commande restaurant à 600 € HT, sans abonnement | " + MARQUE,
     "Borne de commande tactile pour restaurant : écran vertical sur pied, 600 € HT, sans abonnement ni logiciel imposé. Livraison offerte, garantie 2 ans.",
     CORPS_INDEX, ld=[ORG, PRODUIT, FAQ_INDEX],
-    style_page=_lire("assets/scene3d.css") + "\n" + _lire("assets/demo-borne.css"),
-    script_page=_lire("assets/scene3d.js") + "\n" + _lire("assets/demo-borne.js")))
+    style_page=_lire("assets/scene3d.css") + "\n" + _lire("assets/demo-borne.css")
+                + "\n" + _lire("assets/etapes3d.css")
+                + "\n" + _lire("assets/visite360.css"),
+    script_page=_lire("assets/scene3d.js") + "\n" + _lire("assets/demo-borne.js")
+                + "\n" + _lire("assets/etapes3d.js")
+                + "\n" + _lire("assets/visite360.js")))
 
 FICHIERS.append(page(
     "demo-borne-de-commande.html",

@@ -1,0 +1,134 @@
+/* =========================================================================
+   LA BORNE EN 360°
+
+   Un objet qu'on attrape et qu'on tourne, pas une vidéo qu'on regarde. Le
+   modèle est construit en CSS 3D : colonne et socle en facettes, écran en
+   boîte à six faces. Aucune image, donc rien à télécharger, rien qui
+   pixelise au zoom, et le visiteur voit la face arrière comme la face
+   avant.
+
+   Le choix d'un modèle plutôt que d'une séquence photo tient à ce qu'on a :
+   quatre vues fournisseur ne font pas un tour complet. Un modèle donne les
+   360 degrés, au prix d'une fidélité de rendu moindre. C'est dit sous la
+   scène, il n'y a pas à le cacher.
+
+   L'éclairage est recalculé à chaque trame : chaque facette lit son angle
+   dans le monde et en déduit sa clarté. Sans ça, un dégradé figé tourne
+   avec l'objet et le volume s'effondre dès le quart de tour.
+   ========================================================================= */
+
+.v360 {
+  position: relative;
+  border-radius: var(--r);
+  background:
+    radial-gradient(60% 46% at 50% 16%, rgb(255 255 255 / .1), transparent 66%),
+    radial-gradient(70% 50% at 50% 104%, rgb(108 75 184 / .3), transparent 70%),
+    var(--encre);
+  border: 1px solid var(--trait);
+  overflow: hidden;
+  touch-action: pan-y;                  /* le doigt tourne en X, la page défile en Y */
+  cursor: grab;
+  -webkit-user-select: none; user-select: none;
+}
+.v360:active { cursor: grabbing; }
+.v360:focus-visible { outline: 3px solid var(--action); outline-offset: 3px; }
+
+.v360__cadre {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: grid; place-items: center;
+  /* La barre de commandes est posée par-dessus : sans ce dégagement, elle
+     recouvre le socle sur un écran étroit. */
+  padding-bottom: 3.6rem;
+  perspective: 1200px;
+  perspective-origin: 50% 42%;
+}
+
+.v360__objet {
+  position: relative;
+  width: 0; height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Toutes les pièces partent du même point, au niveau du sol. */
+.v360 .p { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.v360 .f { position: absolute; left: 0; top: 0; backface-visibility: hidden; }
+
+/* ---- L'écran ---------------------------------------------------------- */
+.v360__dalle {
+  display: grid; align-content: center; justify-items: center; gap: .5em;
+  /* Le cadre blanc fait partie du produit : sans lui, la face avant n'est
+     qu'un rectangle noir et l'objet perd son épaisseur. */
+  border: 7px solid #E9E5EE;
+  background:
+    radial-gradient(72% 46% at 50% 26%, rgb(242 144 27 / .42), transparent 72%),
+    linear-gradient(168deg, #241B30, #100C16);
+  color: #fff; text-align: center; padding: 8%;
+  font-family: var(--f-etiq); text-transform: uppercase;
+}
+.v360__dalle b { font-size: 1.5em; letter-spacing: -.02em; line-height: 1; font-weight: 800; }
+.v360__dalle b i { font-style: normal; display: block; font-size: .42em; letter-spacing: .34em; color: var(--action-2, #FFB457); }
+.v360__dalle > span:not(.v360__objectif) {
+  font-size: .62em; letter-spacing: .14em; font-weight: 700;
+  padding: .5em 1.1em; border-radius: 99px;
+  background: var(--action); color: #1A1016;
+}
+.v360__objectif {
+  position: absolute; left: 50%; top: 3.4%; width: 5px; height: 5px;
+  margin-left: -2.5px; border-radius: 50%; padding: 0;
+  background: #3A3046; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18);
+}
+
+/* L'ombre portée au sol : une ellipse, pas une boîte. Sans elle, l'objet
+   flotte et le volume ne se lit plus. */
+.v360__ombre {
+  position: absolute; left: 50%; top: 0;
+  width: 190px; height: 44px; margin-left: -95px; margin-top: -22px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / .62), transparent);
+  transform: rotateX(90deg);
+}
+
+/* ---- Les commandes ---------------------------------------------------- */
+.v360__barre {
+  position: absolute; inset: auto 0 0 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem;
+  padding: .8rem;
+  background: linear-gradient(transparent, rgb(12 8 16 / .86) 42%);
+}
+.v360__b {
+  display: inline-flex; align-items: center; gap: .4rem;
+  min-height: 38px; padding: .4rem .8rem; border-radius: 99px;
+  background: rgb(255 255 255 / .09); color: var(--texte);
+  border: 1px solid rgb(255 255 255 / .18);
+  backdrop-filter: blur(10px);
+  font-family: var(--f-etiq); text-transform: uppercase;
+  font-size: var(--t-xs); font-weight: 700; letter-spacing: .08em;
+  cursor: pointer;
+  /* La réponse est sur l'appui, pas sur le relâchement. */
+  transition: background 120ms ease-out, transform 110ms ease-out, border-color 160ms ease-out;
+}
+.v360__b:hover { background: rgb(255 255 255 / .16); border-color: rgb(255 255 255 / .34); }
+.v360__b:active { transform: scale(.96); }
+.v360__b[aria-pressed="true"] {
+  background: var(--action); color: #1A1016; border-color: var(--action);
+}
+.v360__aide {
+  margin-left: auto; font-size: var(--t-xs); color: var(--gris-clair);
+  display: inline-flex; align-items: center; gap: .35rem;
+  transition: opacity 400ms var(--courbe);
+}
+.v360[data-touche] .v360__aide { opacity: 0; }
+
+@media (max-width: 34rem) {
+  .v360__aide { display: none; }
+}
+
+/* Sans script, la scène n'a aucun intérêt : on la retire et la photo du
+   produit, déjà présente dans la page, fait le travail. */
+html:not(.js) .v360 { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .v360__b { transition: none; }
+}

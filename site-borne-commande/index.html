@@ -1987,6 +1987,484 @@
 
 /* ---- La transition sur la page d'accueil ------------------------------ */
 .essayer { position: relative; overflow: hidden; }
+/* =========================================================================
+   LE PARCOURS EN TROIS DIMENSIONS
+
+   Cinq accessoires posés dans une même scène, en profondeur. L'étape lue
+   tient le premier plan, les autres reculent sur l'axe Z. Le lecteur ne
+   change pas de page et ne clique rien : il descend, et la scène suit.
+
+   Ce qui gouverne la scène n'est pas une suite d'images clés mais une
+   valeur continue, la position dans le parcours, tenue par un ressort
+   amorti critique. Conséquence directe : si le lecteur remonte en plein
+   mouvement, rien n'attend la fin d'une animation pour repartir, la valeur
+   change simplement de cible et le mouvement reste continu. Des keyframes
+   CSS auraient imposé d'attendre.
+
+   Seules deux propriétés sont animées, transform et opacity, parce que ce
+   sont les seules que le compositeur traite sans recalculer la mise en
+   page. Tout le reste est figé.
+   ========================================================================= */
+
+.parcours { display: grid; gap: var(--gout); }
+
+.parcours__scene {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  border-radius: var(--r);
+  overflow: hidden;
+  background:
+    radial-gradient(62% 54% at 50% 38%, rgb(242 144 27 / .16), transparent 70%),
+    radial-gradient(52% 46% at 22% 86%, rgb(108 75 184 / .26), transparent 74%),
+    var(--encre);
+  border: 1px solid var(--trait);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .05);
+}
+
+@media (min-width: 62rem) {
+  .parcours {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: calc(var(--gout) * 1.6);
+    align-items: start;
+  }
+  /* La scène reste à l'écran pendant que la liste défile : sans position
+     collante, l'illustration sort du champ dès la deuxième étape et le
+     parcours ne se voit plus.
+
+     Cette règle doit venir APRÈS « .parcours__scene { position: relative } »
+     ci-dessus : à spécificité égale c'est la dernière déclaration qui
+     gagne, et une media query n'ajoute aucune spécificité. Écrite avant,
+     elle était silencieusement écrasée et la scène ne collait pas. */
+  .parcours__scene { position: sticky; top: 6rem; order: 2; }
+  .parcours__liste { order: 1; }
+}
+
+@media (max-width: 61.999rem) {
+  .parcours__scene { position: sticky; top: 4.6rem; z-index: 2; }
+}
+
+/* Le sol, incliné : sans lui les objets flottent au lieu d'être posés. */
+.parcours__sol {
+  position: absolute; left: 50%; bottom: -14%;
+  width: 190%; height: 62%;
+  transform: translateX(-50%) perspective(760px) rotateX(74deg);
+  transform-origin: 50% 100%; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgb(200 170 230 / .14) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg,  rgb(200 170 230 / .14) 0 1px, transparent 1px 64px);
+  -webkit-mask: radial-gradient(58% 70% at 50% 100%, #000 12%, transparent 74%);
+  mask: radial-gradient(58% 70% at 50% 100%, #000 12%, transparent 74%);
+}
+
+.parcours__monde {
+  position: absolute; inset: 0;
+  perspective: 1100px; perspective-origin: 50% 46%;
+  pointer-events: none;
+}
+
+/* Un accessoire par étape. Les cinq sont dans le document en permanence :
+   les créer à la volée coûterait une recomposition à chaque changement
+   d'étape, là où une opacité et une transformation ne coûtent rien. */
+.ac {
+  position: absolute; left: 50%; top: 50%;
+  width: min(72%, 21rem);
+  margin-left: calc(min(72%, 21rem) / -2);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* ---- Pièces communes --------------------------------------------------- */
+.ac__plaque {
+  position: relative;
+  border-radius: 14px;
+  background: linear-gradient(165deg, var(--carte), var(--encre-2));
+  box-shadow:
+    0 30px 50px -20px rgb(0 0 0 / .8),
+    inset 0 0 0 1px rgb(255 255 255 / .09);
+}
+.ac__barre {
+  height: 7px; border-radius: 4px;
+  background: rgb(255 255 255 / .16);
+}
+.ac__barre--or { background: var(--action); }
+
+/* ---- 1. Le configurateur ---------------------------------------------- */
+.ac--carte .ac__plaque { padding: 14px; }
+.ac__grille {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px;
+}
+.ac__tuile {
+  aspect-ratio: 1; border-radius: 8px;
+  background: linear-gradient(145deg, var(--action), #8A4F08);
+  box-shadow: inset 0 -10px 16px rgb(0 0 0 / .3);
+  transform-origin: 50% 120%;
+}
+.ac__tuile:nth-child(3n+2) { background: linear-gradient(145deg, var(--lampe), var(--lampe-f, #5B3C9E)); }
+.ac__tuile:nth-child(5)    { background: linear-gradient(145deg, #FFB457, #C97A13); }
+
+/* ---- 2. La carte bancaire --------------------------------------------- */
+.ac--cb { width: min(64%, 18rem); margin-left: calc(min(64%, 18rem) / -2); }
+.ac--cb .ac__plaque {
+  aspect-ratio: 1.586;                   /* format ISO 7810 ID-1 */
+  padding: 16px; display: flex; flex-direction: column; justify-content: space-between;
+  background: linear-gradient(142deg, #2B2138 0%, #3C2F4E 48%, #241B30 100%);
+}
+.ac__puce {
+  width: 36px; height: 27px; border-radius: 5px;
+  background: linear-gradient(145deg, #F3C87A, #B8872F);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / .25);
+}
+.ac__numero { display: flex; gap: 9px; }
+.ac__numero i {
+  flex: 1; height: 6px; border-radius: 3px;
+  background: rgb(255 255 255 / .22);
+}
+.ac__aval {
+  position: absolute; right: -10px; bottom: -14px;
+  display: grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--valide); color: #06281B;
+  font-weight: 800; font-size: 22px; line-height: 1;
+  box-shadow: 0 10px 22px rgb(0 0 0 / .55);
+  transform-origin: 50% 50%;
+}
+
+/* ---- 3. Le carton ------------------------------------------------------ */
+.ac--colis { width: min(56%, 16rem); margin-left: calc(min(56%, 16rem) / -2); }
+.ac__boite {
+  position: relative; aspect-ratio: 1 / .86; border-radius: 6px;
+  background: linear-gradient(160deg, #C9A878, #9A7C50 62%, #7C6240);
+  box-shadow: 0 28px 44px -18px rgb(0 0 0 / .8), inset 0 0 0 1px rgb(0 0 0 / .18);
+}
+.ac__rabat {
+  position: absolute; left: 0; right: 0; top: 0; height: 42%;
+  background: linear-gradient(180deg, #D6B585, #B2906096);
+  border-bottom: 1px solid rgb(0 0 0 / .22);
+  transform-origin: 50% 0;
+}
+.ac__ruban {
+  position: absolute; left: 50%; top: 0; bottom: 0; width: 16px; margin-left: -8px;
+  background: rgb(255 255 255 / .5);
+}
+.ac__etiquette {
+  position: absolute; right: 12px; bottom: 12px;
+  width: 44%; padding: 7px 8px; border-radius: 3px;
+  background: #FBFBFC;
+  box-shadow: 0 4px 10px rgb(0 0 0 / .35);
+}
+.ac__etiquette i {
+  display: block; height: 4px; border-radius: 2px; background: #2B2138;
+}
+.ac__etiquette i + i { margin-top: 4px; width: 62%; background: #6B5E7A; }
+
+/* ---- 4. La page en ligne ---------------------------------------------- */
+.ac--page .ac__plaque { padding: 0; overflow: hidden; }
+.ac__chrome {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 11px; background: rgb(255 255 255 / .06);
+  border-bottom: 1px solid rgb(255 255 255 / .08);
+}
+.ac__pastilles { display: flex; gap: 4px; }
+.ac__pastilles i { width: 7px; height: 7px; border-radius: 50%; background: rgb(255 255 255 / .22); }
+.ac__url {
+  flex: 1; height: 15px; border-radius: 8px;
+  background: rgb(255 255 255 / .09);
+  display: grid; align-items: center; padding-inline: 8px;
+  font-family: var(--f-data); font-size: 8px; color: var(--gris-clair);
+  white-space: nowrap; overflow: hidden;
+}
+.ac__corps { padding: 12px; display: grid; gap: 8px; }
+.ac__ligne { height: 8px; border-radius: 4px; background: rgb(255 255 255 / .13); transform-origin: 0 50%; }
+.ac__ligne--or { background: var(--action); }
+
+/* ---- 5. La borne en service ------------------------------------------- */
+.ac--borne { width: min(50%, 15rem); margin-left: calc(min(50%, 15rem) / -2); }
+.ac__ecran {
+  position: relative; aspect-ratio: 3 / 4; border-radius: 10px; padding: 7px;
+  background: #0C0810;
+  box-shadow: 0 26px 46px -18px rgb(0 0 0 / .85), inset 0 0 0 2px #CFC4DF26;
+}
+.ac__dalle {
+  position: absolute; inset: 7px; border-radius: 6px;
+  background:
+    radial-gradient(70% 50% at 50% 30%, rgb(242 144 27 / .5), transparent 72%),
+    linear-gradient(170deg, #241B30, #120E18);
+  display: grid; place-items: center;
+  font-family: var(--f-etiq); text-transform: uppercase; letter-spacing: .1em;
+  font-size: 10px; font-weight: 700; color: var(--craie, #fff);
+  text-align: center; padding: 8px;
+}
+.ac__mat {
+  width: 9px; height: 46px; margin: 0 auto;
+  background: linear-gradient(90deg, #8B8292, #E6E1EC 38%, #A49BAD);
+}
+.ac__socle {
+  width: 58%; height: 13px; margin: 0 auto; border-radius: 50%;
+  background: radial-gradient(58% 58% at 42% 32%, #EFEBF3, #B8B0C2 54%, #6E6678);
+  box-shadow: 0 14px 22px -8px rgb(0 0 0 / .7);
+}
+
+/* ---- Les jalons, sous la scène ---------------------------------------- */
+.parcours__jalons {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; gap: 6px; padding: 12px;
+}
+.parcours__jalons i {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: rgb(255 255 255 / .14);
+  overflow: hidden;
+}
+.parcours__jalons i::after {
+  content: ""; display: block; height: 100%; width: 100%;
+  background: var(--action);
+  transform: scaleX(var(--f, 0)); transform-origin: 0 50%;
+}
+
+/* L'étape lue se distingue dans la liste. La transition reste sur la
+   couleur et l'opacité, jamais sur une propriété de mise en page. */
+.parcours__liste li {
+  opacity: .46;
+  transition: opacity 320ms var(--courbe);
+}
+.parcours__liste li[data-vif] { opacity: 1; }
+/* Le numéro de l'étape lue : la couleur suffit. Un fond le ferait occuper
+   toute la cellule de grille, puisque le pseudo-élément couvre deux
+   rangées, et on obtiendrait un pavé orange à la place d'un chiffre. */
+  .parcours__liste li[data-vif]::before { color: var(--action-f); }
+
+/* Sans script, rien ne doit disparaître : la liste reste entièrement
+   lisible et la scène se contente de montrer la première étape. */
+html:not(.js) .parcours__liste li { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .parcours__liste li { transition: none; }
+  .ac { transition: none !important; }
+}
+
+/* ---- 6. Le colis qui s'ouvre sur la borne (après la livraison) --------- */
+.ac--ouvert { width: min(60%, 17rem); margin-left: calc(min(60%, 17rem) / -2); }
+.ac--ouvert .ac__boite { aspect-ratio: 1 / .7; }
+/* Le rabat se relève avec l'activité : c'est le geste du déballage, et il
+   se lit sans légende. */
+.ac--ouvert .ac__rabat {
+  height: 46%;
+  transform: rotateX(calc(var(--a, 0) * -118deg));
+  transform-origin: 50% 0;
+}
+.ac__sortie {
+  position: absolute; left: 50%; bottom: 52%;
+  width: 46%; margin-left: -23%;
+  transform: translateY(calc((1 - var(--a, 0)) * 44px));
+  opacity: var(--a, 0);
+}
+
+/* ---- 7. Le message reçu ----------------------------------------------- */
+.ac--message { width: min(60%, 17rem); margin-left: calc(min(60%, 17rem) / -2); }
+.ac--message .ac__plaque { padding: 13px; display: grid; gap: 9px; }
+.ac__bulle {
+  padding: 9px 11px; border-radius: 13px 13px 13px 4px;
+  background: rgb(255 255 255 / .09);
+  display: grid; gap: 5px;
+  transform: translateY(calc((1 - var(--l, 0)) * 16px));
+  opacity: var(--l, 0);
+}
+.ac__bulle i { display: block; height: 5px; border-radius: 3px; background: rgb(255 255 255 / .26); }
+.ac__bulle i:last-child { width: 58%; }
+.ac__bulle--or { background: var(--action-pale); border-radius: 13px 13px 4px 13px; justify-self: end; }
+.ac__bulle--or i { background: var(--action-f); }
+/* Les trois bulles arrivent l'une après l'autre : le décalage vient d'une
+   soustraction sur l'activité, pas d'un délai de transition, pour que la
+   remontée du lecteur les fasse repartir en arrière dans le même ordre. */
+.ac--message .ac__bulle:nth-child(1) { --l: clamp(0, calc(var(--a, 0) * 3), 1); }
+.ac--message .ac__bulle:nth-child(2) { --l: clamp(0, calc((var(--a, 0) - .22) * 3), 1); }
+.ac--message .ac__bulle:nth-child(3) { --l: clamp(0, calc((var(--a, 0) - .44) * 3), 1); }
+.ac__code {
+  justify-self: start; padding: .3em .7em; border-radius: 6px;
+  background: var(--kraft); color: var(--kraft-f);
+  font-family: var(--f-data); font-weight: 700; font-size: 11px; letter-spacing: .14em;
+  transform: scale(clamp(.6, calc(.6 + var(--a, 0) * .4), 1));
+  opacity: clamp(0, calc((var(--a, 0) - .58) * 3), 1);
+}
+
+/* ---- 8. Branchée, en service ------------------------------------------ */
+.ac--service { width: min(50%, 15rem); margin-left: calc(min(50%, 15rem) / -2); }
+/* Les ondes partent de l'écran quand l'étape devient active. Une boucle
+   d'ambiance, pas une animation pilotée au doigt : les keyframes sont ici
+   le bon outil. */
+.ac__ondes {
+  position: absolute; left: 50%; top: 14%;
+  width: 54px; height: 54px; margin-left: -27px;
+  opacity: var(--a, 0);
+}
+.ac__ondes i {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid var(--action);
+  animation: onde 2.4s var(--courbe) infinite;
+}
+.ac__ondes i:nth-child(2) { animation-delay: .8s; }
+.ac__ondes i:nth-child(3) { animation-delay: 1.6s; }
+@keyframes onde {
+  from { transform: scale(.2); opacity: .9; }
+  to   { transform: scale(1);  opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ac__ondes i { animation: none; opacity: .35; transform: scale(.7); }
+}
+
+/* La scène est collante, donc la durée du parcours est celle du défilement
+   de la liste. Resserrées, les cinq étapes passent en cinq cents pixels et
+   l'animation est finie avant d'avoir été vue. On écarte donc les étapes
+   là où il y a la place, et seulement là. */
+@media (min-width: 62rem) {
+  /* La course collante vaut la hauteur de la liste moins celle du cadre.
+     Mesurée telle quelle, elle tombait à 357 px pour cinq étapes et à 7 px
+     pour trois : le cadre se décrochait avant la dernière étape, et la
+     seconde scène ne tenait pas du tout. On donne donc à la liste une
+     hauteur calculée sur le nombre d'étapes, et les étapes s'y répartissent. */
+  .parcours__liste {
+    /* Surtout pas --pas : le jeton d'espacement du site porte déjà ce nom,
+       et « .deroule-v li { padding: var(--pas) 0 } » le lisait, ce qui
+       donnait 208 px de rembourrage par étape. */
+    min-height: calc(var(--n, 5) * var(--pas-etape, 13rem));
+    align-content: space-between;
+  }
+  .parcours__liste li:first-child { padding-top: .4rem; }
+  .parcours__liste li:last-child  { padding-bottom: .4rem; }
+}
+/* =========================================================================
+   LA BORNE EN 360°
+
+   Un objet qu'on attrape et qu'on tourne, pas une vidéo qu'on regarde. Le
+   modèle est construit en CSS 3D : colonne et socle en facettes, écran en
+   boîte à six faces. Aucune image, donc rien à télécharger, rien qui
+   pixelise au zoom, et le visiteur voit la face arrière comme la face
+   avant.
+
+   Le choix d'un modèle plutôt que d'une séquence photo tient à ce qu'on a :
+   quatre vues fournisseur ne font pas un tour complet. Un modèle donne les
+   360 degrés, au prix d'une fidélité de rendu moindre. C'est dit sous la
+   scène, il n'y a pas à le cacher.
+
+   L'éclairage est recalculé à chaque trame : chaque facette lit son angle
+   dans le monde et en déduit sa clarté. Sans ça, un dégradé figé tourne
+   avec l'objet et le volume s'effondre dès le quart de tour.
+   ========================================================================= */
+
+.v360 {
+  position: relative;
+  border-radius: var(--r);
+  background:
+    radial-gradient(60% 46% at 50% 16%, rgb(255 255 255 / .1), transparent 66%),
+    radial-gradient(70% 50% at 50% 104%, rgb(108 75 184 / .3), transparent 70%),
+    var(--encre);
+  border: 1px solid var(--trait);
+  overflow: hidden;
+  touch-action: pan-y;                  /* le doigt tourne en X, la page défile en Y */
+  cursor: grab;
+  -webkit-user-select: none; user-select: none;
+}
+.v360:active { cursor: grabbing; }
+.v360:focus-visible { outline: 3px solid var(--action); outline-offset: 3px; }
+
+.v360__cadre {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: grid; place-items: center;
+  /* La barre de commandes est posée par-dessus : sans ce dégagement, elle
+     recouvre le socle sur un écran étroit. */
+  padding-bottom: 3.6rem;
+  perspective: 1200px;
+  perspective-origin: 50% 42%;
+}
+
+.v360__objet {
+  position: relative;
+  width: 0; height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Toutes les pièces partent du même point, au niveau du sol. */
+.v360 .p { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.v360 .f { position: absolute; left: 0; top: 0; backface-visibility: hidden; }
+
+/* ---- L'écran ---------------------------------------------------------- */
+.v360__dalle {
+  display: grid; align-content: center; justify-items: center; gap: .5em;
+  /* Le cadre blanc fait partie du produit : sans lui, la face avant n'est
+     qu'un rectangle noir et l'objet perd son épaisseur. */
+  border: 7px solid #E9E5EE;
+  background:
+    radial-gradient(72% 46% at 50% 26%, rgb(242 144 27 / .42), transparent 72%),
+    linear-gradient(168deg, #241B30, #100C16);
+  color: #fff; text-align: center; padding: 8%;
+  font-family: var(--f-etiq); text-transform: uppercase;
+}
+.v360__dalle b { font-size: 1.5em; letter-spacing: -.02em; line-height: 1; font-weight: 800; }
+.v360__dalle b i { font-style: normal; display: block; font-size: .42em; letter-spacing: .34em; color: var(--action-2, #FFB457); }
+.v360__dalle > span:not(.v360__objectif) {
+  font-size: .62em; letter-spacing: .14em; font-weight: 700;
+  padding: .5em 1.1em; border-radius: 99px;
+  background: var(--action); color: #1A1016;
+}
+.v360__objectif {
+  position: absolute; left: 50%; top: 3.4%; width: 5px; height: 5px;
+  margin-left: -2.5px; border-radius: 50%; padding: 0;
+  background: #3A3046; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18);
+}
+
+/* L'ombre portée au sol : une ellipse, pas une boîte. Sans elle, l'objet
+   flotte et le volume ne se lit plus. */
+.v360__ombre {
+  position: absolute; left: 50%; top: 0;
+  width: 190px; height: 44px; margin-left: -95px; margin-top: -22px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / .62), transparent);
+  transform: rotateX(90deg);
+}
+
+/* ---- Les commandes ---------------------------------------------------- */
+.v360__barre {
+  position: absolute; inset: auto 0 0 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem;
+  padding: .8rem;
+  background: linear-gradient(transparent, rgb(12 8 16 / .86) 42%);
+}
+.v360__b {
+  display: inline-flex; align-items: center; gap: .4rem;
+  min-height: 38px; padding: .4rem .8rem; border-radius: 99px;
+  background: rgb(255 255 255 / .09); color: var(--texte);
+  border: 1px solid rgb(255 255 255 / .18);
+  backdrop-filter: blur(10px);
+  font-family: var(--f-etiq); text-transform: uppercase;
+  font-size: var(--t-xs); font-weight: 700; letter-spacing: .08em;
+  cursor: pointer;
+  /* La réponse est sur l'appui, pas sur le relâchement. */
+  transition: background 120ms ease-out, transform 110ms ease-out, border-color 160ms ease-out;
+}
+.v360__b:hover { background: rgb(255 255 255 / .16); border-color: rgb(255 255 255 / .34); }
+.v360__b:active { transform: scale(.96); }
+.v360__b[aria-pressed="true"] {
+  background: var(--action); color: #1A1016; border-color: var(--action);
+}
+.v360__aide {
+  margin-left: auto; font-size: var(--t-xs); color: var(--gris-clair);
+  display: inline-flex; align-items: center; gap: .35rem;
+  transition: opacity 400ms var(--courbe);
+}
+.v360[data-touche] .v360__aide { opacity: 0; }
+
+@media (max-width: 34rem) {
+  .v360__aide { display: none; }
+}
+
+/* Sans script, la scène n'a aucun intérêt : on la retire et la photo du
+   produit, déjà présente dans la page, fait le travail. */
+html:not(.js) .v360 { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .v360__b { transition: none; }
+}
 </style>
 <script type="application/ld+json">{
  "@context": "https://schema.org",
@@ -2610,13 +3088,68 @@
     <p class="surtitre">Comment ça se passe</p>
     <h2 style="font-size:var(--t-xl)">De votre paiement à la borne en service</h2>
     <p class="prose mt-1">Tout se fait depuis la page de commande, sans rendez-vous, sans devis à signer et sans commercial au téléphone.</p>
-    <ol class="deroule-v mt-2" role="list">
-      <li data-reveal><b>Vous construisez votre borne en ligne</b><span>Votre carte, vos prix, vos photos, vos suppléments. C’est gratuit, sans compte à créer, et vous pouvez télécharger le résultat pour l’essayer avant de payer.</span></li>
-      <li data-reveal><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
-      <li data-reveal><b>Nous lançons la fabrication</b><span>La tablette part de notre atelier vers votre adresse. Vous recevez le numéro de suivi au départ du colis.</span></li>
-      <li data-reveal><b>Pendant le transport, nous montons votre page</b><span>Nous reprenons votre configuration et nous la mettons en ligne, soit sur votre site, soit sur un nouveau site que nous créons pour vous.</span></li>
-      <li data-reveal><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette adresse et la borne prend ses premières commandes. Comptez un quart d’heure.</span></li>
-    </ol>
+    <div class="parcours mt-2" style="--n:5;--pas-etape:14rem">
+      <div class="parcours__scene" id="parcours-commande" aria-hidden="true">
+        <span class="parcours__sol"></span>
+        <div class="parcours__monde">
+          <div class="ac ac--carte">
+            <div class="ac__plaque">
+              <span class="ac__barre ac__barre--or" style="width:42%"></span>
+              <div class="ac__grille">
+                <span class="ac__tuile" style="--i:0"></span><span class="ac__tuile" style="--i:1"></span>
+                <span class="ac__tuile" style="--i:2"></span><span class="ac__tuile" style="--i:3"></span>
+                <span class="ac__tuile" style="--i:4"></span><span class="ac__tuile" style="--i:5"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac ac--cb">
+            <div class="ac__plaque">
+              <span class="ac__puce"></span>
+              <span class="ac__numero"><i></i><i></i><i></i><i></i></span>
+              <span class="ac__aval">&#10003;</span>
+            </div>
+          </div>
+
+          <div class="ac ac--colis">
+            <div class="ac__boite">
+              <span class="ac__ruban"></span>
+              <span class="ac__rabat"></span>
+              <span class="ac__etiquette"><i></i><i></i></span>
+            </div>
+          </div>
+
+          <div class="ac ac--page">
+            <div class="ac__plaque">
+              <div class="ac__chrome">
+                <span class="ac__pastilles"><i></i><i></i><i></i></span>
+                <span class="ac__url">votresite.fr/borne-commande.html</span>
+              </div>
+              <div class="ac__corps">
+                <span class="ac__ligne ac__ligne--or" style="width:54%"></span>
+                <span class="ac__ligne" style="width:88%"></span>
+                <span class="ac__ligne" style="width:74%"></span>
+                <span class="ac__ligne" style="width:92%"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac ac--borne">
+            <div class="ac__ecran"><span class="ac__dalle">Commandez ici</span></div>
+            <span class="ac__mat"></span>
+            <span class="ac__socle"></span>
+          </div>
+        </div>
+        <div class="parcours__jalons"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <ol class="deroule-v parcours__liste" role="list">
+        <li data-reveal><b>Vous construisez votre borne en ligne</b><span>Votre carte, vos prix, vos photos, vos suppléments. C’est gratuit, sans compte à créer, et vous pouvez télécharger le résultat pour l’essayer avant de payer.</span></li>
+        <li data-reveal><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
+        <li data-reveal><b>Nous lançons la fabrication</b><span>La tablette part de notre atelier vers votre adresse. Vous recevez le numéro de suivi au départ du colis.</span></li>
+        <li data-reveal><b>Pendant le transport, nous montons votre page</b><span>Nous reprenons votre configuration et nous la mettons en ligne, soit sur votre site, soit sur un nouveau site que nous créons pour vous.</span></li>
+        <li data-reveal><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette adresse et la borne prend ses premières commandes. Comptez un quart d’heure.</span></li>
+      </ol>
+    </div>
     <div class="avantages mt-2">
       <div data-reveal><b>600 € HT</b><span>720 € TTC au moment de payer, rien d’autre à ajouter</span></div>
       <div data-reveal><b>Livraison offerte</b><span>France métropolitaine, transport compris dans le prix</span></div>
@@ -2702,6 +3235,28 @@
         <p>Un écran tactile de bureau monté sur une colonne et un socle rond lesté, le tout en blanc mat. L’écran se démonte de sa colonne et pivote à la main entre paysage et portrait, grâce à une rotule visible sur la photo.</p>
         <p>À l’intérieur, un appareil Android complet : Play Store accessible, navigateur, Wi-Fi, caméra frontale désactivable et batterie intégrée. Ce n’est donc pas un écran passif branché sur un ordinateur, c’est un appareil autonome qui démarre seul sur la page que vous lui désignez.</p>
         <p>Un écran verrouillé par son fabricant ne sert qu’avec le logiciel du fabricant, et s’éteint le jour où vous arrêtez de payer. Celui-ci accepte n’importe quelle application Android, y compris celle de votre éditeur de caisse, et la page que nous montons pour vous.</p>
+      </div>
+
+      <div class="prose mt-2">
+        <h3 style="font-size:var(--t-md)">La borne sous tous les angles</h3>
+        <p>Attrapez-la et faites-la tourner. Le pivot de l’écran est celui du produit : il bascule entre portrait et paysage à la main, sans outil.</p>
+      </div>
+
+      <div class="v360 mt-1" data-v360 tabindex="0" role="application"
+           aria-label="Vue 360 de la borne. Faites glisser pour la tourner, ou utilisez les flèches du clavier.">
+        <div class="v360__cadre">
+          <div class="v360__objet"><span class="v360__ombre"></span></div>
+        </div>
+        <div class="v360__barre">
+          <button type="button" class="v360__b" data-v360-auto aria-pressed="true">Rotation</button>
+          <button type="button" class="v360__b" data-v360-pivot aria-pressed="false"><span>Paysage</span></button>
+          <button type="button" class="v360__b" data-v360-face>Voir le dos</button>
+          <span class="v360__aide">Glissez pour tourner</span>
+        </div>
+      </div>
+      <p class="note mt-1">Modèle tridimensionnel reconstitué d’après les cotes du fabricant, pas une photographie. Il sert à comprendre la forme, l’encombrement et le pivot ; les photos du produit restent la référence pour la finition.</p>
+
+      <div class="prose mt-2">
         <h3 style="font-size:var(--t-md)">Ce qu’il sait faire au-delà de la prise de commande</h3>
         <p>Posé en paysage près de la cuisine, il affiche les commandes à préparer. En portrait dans une vitrine, il sert d’affichage de carte ou de promotion. Branché sur rien du tout, il reste une tablette de travail pour l’équipe.</p>
         <p>La batterie change la façon de l’installer : vous le déplacez en terrasse à midi, vous le rentrez le soir, et vous évitez la rallonge qui traverse un passage, qui est en pratique la première cause de chute dans un établissement recevant du public.</p>
@@ -2860,11 +3415,45 @@
     <h2 style="font-size:var(--t-xl)">Opérationnelle en un quart d’heure, sans rendez-vous</h2>
     <p class="prose mt-1">Le colis arrive, vous branchez, vous passez une commande test. Il n’y a pas de rendez-vous à prendre : tout ce dont vous avez besoin tient dans le message qu’on vous envoie.</p>
 
-    <ol class="deroule-v mt-2" role="list">
-      <li data-reveal><b>Vous recevez la tablette</b><span>Avec son pied, prête à brancher. Votre carte est déjà saisie d’après la configuration que vous avez montée en ligne.</span></li>
-      <li data-reveal><b>Vous recevez votre message</b><span>L’adresse de votre borne, l’application qui verrouille l’écran et votre code de sortie. Vos clients ne peuvent pas quitter la page de commande.</span></li>
-      <li data-reveal><b>Vous branchez, vous reliez au Wi-Fi</b><span>Vous suivez les six lignes du message, puis vous passez une commande test et vous la voyez arriver côté cuisine.</span></li>
-    </ol>
+    <div class="parcours mt-2" style="--n:3;--pas-etape:19rem">
+      <div class="parcours__scene" id="parcours-installation" aria-hidden="true">
+        <span class="parcours__sol"></span>
+        <div class="parcours__monde">
+          <div class="ac ac--ouvert">
+            <div class="ac__sortie">
+              <div class="ac__ecran"><span class="ac__dalle">Prête</span></div>
+            </div>
+            <div class="ac__boite">
+              <span class="ac__ruban"></span>
+              <span class="ac__rabat"></span>
+              <span class="ac__etiquette"><i></i><i></i></span>
+            </div>
+          </div>
+
+          <div class="ac ac--message">
+            <div class="ac__plaque">
+              <span class="ac__bulle"><i></i><i></i></span>
+              <span class="ac__bulle ac__bulle--or"><i></i><i></i></span>
+              <span class="ac__bulle"><i></i><i></i></span>
+              <span class="ac__code">4 7 2 9</span>
+            </div>
+          </div>
+
+          <div class="ac ac--service">
+            <span class="ac__ondes"><i></i><i></i><i></i></span>
+            <div class="ac__ecran"><span class="ac__dalle">Commandez ici</span></div>
+            <span class="ac__mat"></span>
+            <span class="ac__socle"></span>
+          </div>
+        </div>
+        <div class="parcours__jalons"><i></i><i></i><i></i></div>
+      </div>
+      <ol class="deroule-v parcours__liste" role="list">
+        <li data-reveal><b>Vous recevez la tablette</b><span>Avec son pied, prête à brancher. Votre carte est déjà saisie d’après la configuration que vous avez montée en ligne.</span></li>
+        <li data-reveal><b>Vous recevez votre message</b><span>L’adresse de votre borne, l’application qui verrouille l’écran et votre code de sortie. Vos clients ne peuvent pas quitter la page de commande.</span></li>
+        <li data-reveal><b>Vous branchez, vous reliez au Wi-Fi</b><span>Vous suivez les six lignes du message, puis vous passez une commande test et vous la voyez arriver côté cuisine.</span></li>
+      </ol>
+    </div>
 
     <div class="duo mt-2">
       <div class="carte" data-reveal>
@@ -4139,6 +4728,492 @@ window.CONFIG = {
 
   rendreRail(); rendreGrille(); majPastille();
   ecran("veille");
+})();
+/* =========================================================================
+   LE PARCOURS EN TROIS DIMENSIONS — pilotage
+
+   Une seule valeur gouverne une scène : la position dans le parcours, de 0
+   au nombre d'étapes moins une. Le défilement fixe une cible, un ressort
+   amorti critique tient la valeur courante, et chaque accessoire en déduit
+   sa place en profondeur.
+
+   Pourquoi un ressort plutôt que des images clés : parce qu'un lecteur qui
+   remonte au milieu du mouvement ne doit rien attendre. Avec des keyframes
+   il faudrait interrompre, relire la valeur affichée, puis relancer, et la
+   coupure se voit. Ici la cible change, la vitesse est conservée, et le
+   mouvement reste continu dans les deux sens.
+
+   Paramètres repris du réglage d'Apple pour un déplacement : amortissement
+   1,0, réponse 0,4 s. Amortissement critique, donc aucun dépassement : un
+   rebond se justifie quand le geste portait de l'élan, ce qui n'est pas le
+   cas d'un défilement lu.
+
+   Le module sert toutes les sections « .parcours » de la page. Deux
+   parcours cohabitent sur l'accueil, chacun avec son propre ressort.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  var REPONSE = 0.4, AMORT = 1.0;
+  var W = 2 * Math.PI / REPONSE;
+  var menage = matchMedia("(prefers-reduced-motion: reduce)");
+
+  function monter(bloc) {
+    var scene = bloc.querySelector(".parcours__scene");
+    var liste = bloc.querySelector(".parcours__liste");
+    if (!scene || !liste) return null;
+
+    var accessoires = [].slice.call(scene.querySelectorAll(".ac"));
+    var items = [].slice.call(liste.children);
+    var jalons = [].slice.call(scene.querySelectorAll(".parcours__jalons i"));
+    if (!accessoires.length || items.length !== accessoires.length) return null;
+
+    var N = accessoires.length;
+    var x = 0, v = 0, cible = 0, dernier = 0, boucle = null, vu = false;
+
+    /* La cible est lue dans la géométrie de la liste. On n'utilise pas
+       l'étape « visible » au sens d'un IntersectionObserver, qui ne donne
+       qu'un entier et fait sauter la scène d'un cran à l'autre : on
+       interpole entre deux étapes selon la position de la ligne de
+       lecture, ce qui donne une valeur continue. */
+    function lireCible() {
+      var ligne = innerHeight * 0.45;
+      var c = [], i, r;
+      for (i = 0; i < N; i++) {
+        r = items[i].getBoundingClientRect();
+        c.push(r.top + r.height / 2);
+      }
+      if (ligne <= c[0]) return 0;
+      if (ligne >= c[N - 1]) return N - 1;
+      for (i = 0; i < N - 1; i++) {
+        if (ligne >= c[i] && ligne < c[i + 1]) {
+          var ecart = c[i + 1] - c[i];
+          return i + (ecart > 0 ? (ligne - c[i]) / ecart : 0);
+        }
+      }
+      return N - 1;
+    }
+
+    /* Deux propriétés seulement, transform et opacity : ce sont les seules
+       que le compositeur traite sans refaire la mise en page. La variable
+       --a transporte l'activité de l'accessoire jusqu'à ses pièces, qui
+       animent leur propre détail en CSS. */
+    function poser() {
+      var i, d, e, a;
+      for (i = 0; i < N; i++) {
+        d = i - x;
+        e = Math.abs(d);
+        a = accessoires[i];
+        a.style.opacity = Math.max(0, Math.min(1, 1 - e * 1.15)).toFixed(3);
+        a.style.transform =
+          "translate3d(0, calc(-50% + " + (d * 54).toFixed(1) + "px), " +
+          (-260 * e).toFixed(1) + "px)" +
+          " rotateX(" + (-9 * d).toFixed(2) + "deg)" +
+          " rotateZ(" + (3 * d).toFixed(2) + "deg)" +
+          " scale(" + (1 - 0.1 * e).toFixed(3) + ")";
+        a.style.setProperty("--a", Math.max(0, Math.min(1, 1 - e)).toFixed(3));
+      }
+      for (i = 0; i < jalons.length; i++) {
+        jalons[i].style.setProperty("--f", Math.max(0, Math.min(1, x - i + 1)).toFixed(3));
+      }
+      var vif = Math.round(x);
+      for (i = 0; i < N; i++) {
+        if (i === vif) items[i].setAttribute("data-vif", "");
+        else items[i].removeAttribute("data-vif");
+      }
+    }
+
+    function trame(t) {
+      var dt = Math.min(0.033, (t - dernier) / 1000) || 0.016;
+      dernier = t;
+      v += (-2 * AMORT * W * v - W * W * (x - cible)) * dt;
+      x += v * dt;
+      poser();
+      if (Math.abs(x - cible) < 0.0008 && Math.abs(v) < 0.0008) {
+        x = cible; v = 0; poser();
+        boucle = null;                     /* au repos : plus aucune trame */
+        return;
+      }
+      boucle = requestAnimationFrame(trame);
+    }
+
+    function demander() {
+      cible = lireCible();
+      if (menage.matches) { x = cible; v = 0; poser(); return; }
+      if (boucle === null && vu) { dernier = performance.now(); boucle = requestAnimationFrame(trame); }
+    }
+
+    /* Une scène hors du champ ne consomme aucune trame. */
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        vu = es[0].isIntersecting;
+        if (vu) demander();
+        else if (boucle !== null) { cancelAnimationFrame(boucle); boucle = null; }
+      }, { rootMargin: "25% 0px" }).observe(bloc);
+    } else {
+      vu = true;
+    }
+
+    cible = lireCible(); x = cible; poser();
+    return demander;
+  }
+
+  var mains = [];
+  [].forEach.call(document.querySelectorAll(".parcours"), function (b) {
+    var m = monter(b);
+    if (m) mains.push(m);
+  });
+  if (!mains.length) return;
+
+  function reveiller() { for (var i = 0; i < mains.length; i++) mains[i](); }
+  addEventListener("scroll", reveiller, { passive: true });
+  addEventListener("resize", reveiller, { passive: true });
+  if (menage.addEventListener) menage.addEventListener("change", reveiller);
+  reveiller();
+})();
+/* =========================================================================
+   LA BORNE EN 360° — construction et manipulation
+
+   Le modèle est assemblé ici plutôt qu'écrit dans le HTML : une colonne de
+   quatorze facettes et un socle de vingt-deux, c'est trente-six éléments
+   qu'il serait absurde de taper à la main et impossible de relire.
+
+   Manipulation : le doigt entraîne l'objet au ratio 1:1, la vitesse de
+   relâchement est reprise telle quelle par l'inertie, et l'inclinaison
+   résiste de plus en plus près de ses bornes au lieu de buter net. On peut
+   rattraper l'objet en plein vol, ce qui est tout l'intérêt : une
+   animation qu'on ne peut pas interrompre n'est pas une manipulation.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  var hote = document.querySelector("[data-v360]");
+  if (!hote) return;
+
+  var menage = matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---- Géométrie du modèle, en pixels de maquette ---------------------
+     Montage relevé sur les photos du produit : la colonne passe DERRIÈRE
+     l'écran et monte jusqu'à son centre, où une rotule le tient. C'est ce
+     qui permet au basculement portrait / paysage de se faire sans que
+     l'écran quitte son support : il tourne autour de son propre centre,
+     pas autour d'un point situé sous lui. */
+  var SOCLE_R = 76, SOCLE_H = 12;
+  var MAT_R = 7.5, MAT_H = 200;
+  var ROTULE_R = 16;
+  var EC_L = 196, EC_H = 280, EC_E = 13;     /* écran : largeur, hauteur, épaisseur */
+  var N_MAT = 14, N_SOCLE = 22;
+  var MAT_Z = -(EC_E / 2 + 9);               /* la colonne, derrière le plan de l'écran */
+
+  var objet = hote.querySelector(".v360__objet");
+  if (!objet) return;
+
+  var H = SOCLE_H + MAT_H + EC_H / 2;
+  var C = H / 2;
+
+  /* Chaque facette garde son angle de naissance : l'éclairage en a besoin
+     à chaque trame pour savoir où elle regarde une fois l'objet tourné. */
+  var facettes = [];
+
+  function cylindre(parent, rayon, hauteur, n, y, teinte, z) {
+    var pas = 360 / n;
+    var larg = 2 * Math.PI * rayon / n * 1.06;     /* léger recouvrement */
+    var dz = z || 0;
+    for (var i = 0; i < n; i++) {
+      var a = i * pas;
+      var f = document.createElement("span");
+      f.className = "f";
+      f.style.width = larg.toFixed(2) + "px";
+      f.style.height = hauteur + "px";
+      f.style.marginLeft = (-larg / 2).toFixed(2) + "px";
+      f.style.marginTop = (C - y - hauteur).toFixed(1) + "px";
+      f.style.transform = "translateZ(" + dz + "px) rotateY(" + a + "deg) translateZ(" + rayon.toFixed(2) + "px)";
+      parent.appendChild(f);
+      facettes.push({ el: f, a: a, teinte: teinte });
+    }
+    /* Le disque du dessus ferme le volume : sans lui on voit l'intérieur.
+       Il ne reçoit QUE la rotation : un translateY posé avant le rotateX
+       déplacerait le disque le long d'un axe déjà tourné. */
+    var d = document.createElement("span");
+    d.className = "f";
+    d.style.width = (rayon * 2) + "px";
+    d.style.height = (rayon * 2) + "px";
+    d.style.marginLeft = -rayon + "px";
+    d.style.marginTop = (C - y - hauteur - rayon).toFixed(1) + "px";
+    d.style.borderRadius = "50%";
+    d.style.background = teinte.haut;
+    d.style.transform = "translateZ(" + dz + "px) rotateX(90deg)";
+    parent.appendChild(d);
+  }
+
+  var BLANC = { base: [233, 229, 238], haut: "#EFECF4" };
+  var METAL = { base: [196, 190, 205], haut: "#D8D3E0" };
+
+  cylindre(objet, SOCLE_R, SOCLE_H, N_SOCLE, 0, BLANC, 0);
+  cylindre(objet, MAT_R, MAT_H, N_MAT, SOCLE_H, METAL, MAT_Z);
+
+  /* ---- L'écran, tenu par sa rotule ------------------------------------ */
+  var tete = document.createElement("span");
+  tete.className = "p";
+  tete.style.marginTop = (C - (SOCLE_H + MAT_H)).toFixed(1) + "px";
+  objet.appendChild(tete);
+
+  var pivot = document.createElement("span");
+  pivot.className = "p";
+  tete.appendChild(pivot);
+
+  function face(parent, l, h, transform, fond, classe) {
+    var f = document.createElement("span");
+    f.className = "f" + (classe ? " " + classe : "");
+    f.style.width = l + "px";
+    f.style.height = h + "px";
+    f.style.marginLeft = (-l / 2) + "px";
+    f.style.marginTop = (-h / 2) + "px";
+    f.style.transform = transform;
+    if (fond) f.style.background = fond;
+    parent.appendChild(f);
+    return f;
+  }
+
+  /* L'avant : la dalle. L'arrière et les tranches : la coque blanche. */
+  var avant = face(pivot, EC_L, EC_H, "translateZ(" + (EC_E / 2) + "px)", "", "v360__dalle");
+  avant.style.borderRadius = "10px";
+  avant.innerHTML =
+    '<span class="v360__objectif"></span>' +
+    "<b>SMASH<i>Avenue</i></b>" +
+    "<span>Commandez ici</span>";
+
+  var arriere = face(pivot, EC_L, EC_H, "rotateY(180deg) translateZ(" + (EC_E / 2) + "px)", "#E9E5EE");
+  arriere.style.borderRadius = "10px";
+  facettes.push({ el: arriere, a: 180, teinte: BLANC });
+
+  var tr = [
+    [EC_E, EC_H, "rotateY(90deg)  translateZ(" + (EC_L / 2) + "px)", 90],
+    [EC_E, EC_H, "rotateY(-90deg) translateZ(" + (EC_L / 2) + "px)", 270],
+    [EC_L, EC_E, "rotateX(90deg)  translateZ(" + (EC_H / 2) + "px)", 0],
+    [EC_L, EC_E, "rotateX(-90deg) translateZ(" + (EC_H / 2) + "px)", 0]
+  ];
+  for (var t = 0; t < tr.length; t++) {
+    var e = face(pivot, tr[t][0], tr[t][1], tr[t][2], "#DCD7E3");
+    if (t < 2) facettes.push({ el: e, a: tr[t][3], teinte: BLANC });
+  }
+
+  /* La rotule : un disque plaqué au dos de l'écran, à l'aplomb de la
+     colonne. Elle ne tourne PAS avec le pivot, puisque c'est la pièce
+     fixe sur laquelle l'écran pivote : elle reste donc sur « tete ». */
+  var rotule = face(tete, ROTULE_R * 2, ROTULE_R * 2,
+                    "rotateY(180deg) translateZ(" + (EC_E / 2 + 2) + "px)", "#C9C3D2");
+  rotule.style.borderRadius = "50%";
+  rotule.style.boxShadow = "inset 0 0 0 3px #AFA7BC, 0 0 10px rgb(0 0 0 / .5)";
+
+  /* L'ombre est posée au sol, sous la base. */
+  var ombre = hote.querySelector(".v360__ombre");
+  if (ombre) ombre.style.marginTop = (C - 22).toFixed(1) + "px";
+
+  /* ---- Éclairage ------------------------------------------------------
+     Une seule source, placée en haut à gauche de la scène. Chaque facette
+     lit son angle dans le monde et en déduit sa clarté. */
+  var LUMIERE = -35;
+  function eclairer(tour) {
+    for (var i = 0; i < facettes.length; i++) {
+      var f = facettes[i];
+      var a = (f.a + tour - LUMIERE) * Math.PI / 180;
+      var k = 0.42 + 0.58 * Math.max(0, Math.cos(a));
+      var c = f.teinte.base;
+      f.el.style.background = "rgb(" +
+        Math.round(c[0] * k) + "," + Math.round(c[1] * k) + "," + Math.round(c[2] * k) + ")";
+    }
+  }
+
+  /* ---- État et rendu --------------------------------------------------- */
+  var tour = -22, pente = -8, pivotZ = 0, ciblePivot = 0;
+  var vTour = 0, vPente = 0, vPivot = 0;
+  var PENTE_MIN = -26, PENTE_MAX = 18;
+  var auto = !menage.matches, touche = false, boucle = null, vu = true, dernier = 0;
+
+  function caoutchouc(depassement, course) {
+    var k = 0.55;
+    return (depassement * course * k) / (course + k * Math.abs(depassement));
+  }
+
+  function borner(p) {
+    if (p < PENTE_MIN) return PENTE_MIN + caoutchouc(p - PENTE_MIN, 90);
+    if (p > PENTE_MAX) return PENTE_MAX + caoutchouc(p - PENTE_MAX, 90);
+    return p;
+  }
+
+  var echelle = 1;
+  function rendre() {
+    objet.style.transform =
+      "scale(" + echelle.toFixed(3) + ") rotateX(" + pente.toFixed(2) + "deg)" +
+      " rotateY(" + tour.toFixed(2) + "deg)";
+    pivot.style.transform = "rotateZ(" + pivotZ.toFixed(2) + "deg)";
+    eclairer(tour);
+  }
+
+  /* Le modèle est dessiné en pixels de maquette ; on l'ajuste au cadre
+     plutôt que de recalculer toute la géométrie. */
+  function ajuster() {
+    /* On mesure la hauteur UTILE, dégagement de la barre déduit : calculée
+       sur la boîte entière, l'échelle faisait dépasser le socle sous les
+       boutons en écran étroit. */
+    var cadre = hote.querySelector(".v360__cadre");
+    var util = cadre.clientHeight - parseFloat(getComputedStyle(cadre).paddingBottom || 0);
+    echelle = Math.min(1, (util * 0.94) / H);
+    rendre();
+  }
+
+  /* ---- Ressort du pivot écran (portrait / paysage) ---------------------
+     Amortissement critique, réponse 0,4 s : la bascule ne doit pas rebondir,
+     c'est une pièce mécanique, pas un objet lancé. */
+  var W = 2 * Math.PI / 0.4;
+
+  function trame(t) {
+    var dt = Math.min(0.033, (t - dernier) / 1000) || 0.016;
+    dernier = t;
+    var bouge = false;
+
+    if (auto && !touche) { tour += 14 * dt; bouge = true; }
+
+    if (!touche) {
+      /* Inertie du tour : décroissance exponentielle, comme une roue libre. */
+      if (Math.abs(vTour) > 0.4) {
+        tour += vTour * dt;
+        vTour *= Math.pow(0.12, dt);
+        bouge = true;
+      } else { vTour = 0; }
+
+      /* La pente revient dans ses bornes au ressort. */
+      var cible = Math.max(PENTE_MIN, Math.min(PENTE_MAX, pente));
+      if (Math.abs(pente - cible) > 0.01 || Math.abs(vPente) > 0.01) {
+        vPente += (-2 * W * vPente - W * W * (pente - cible)) * dt;
+        pente += vPente * dt;
+        bouge = true;
+      } else { pente = cible; vPente = 0; }
+    }
+
+    if (Math.abs(pivotZ - ciblePivot) > 0.01 || Math.abs(vPivot) > 0.01) {
+      vPivot += (-2 * W * vPivot - W * W * (pivotZ - ciblePivot)) * dt;
+      pivotZ += vPivot * dt;
+      bouge = true;
+    } else { pivotZ = ciblePivot; vPivot = 0; }
+
+    rendre();
+    if (bouge && vu) { boucle = requestAnimationFrame(trame); }
+    else { boucle = null; }
+  }
+
+  function reveiller() {
+    if (boucle === null && vu) { dernier = performance.now(); boucle = requestAnimationFrame(trame); }
+  }
+
+  /* ---- Manipulation ----------------------------------------------------
+     Suivi au pointeur, capture comprise : sans setPointerCapture, le suivi
+     s'arrête dès que le doigt sort du cadre, et l'objet reste planté. */
+  var dernierX = 0, dernierY = 0, histoire = [];
+
+  hote.addEventListener("pointerdown", function (e) {
+    if (e.button !== undefined && e.button !== 0) return;
+    if (e.target.closest(".v360__b")) return;
+    hote.setPointerCapture(e.pointerId);
+    touche = true; auto = false;
+    hote.setAttribute("data-touche", "");
+    vTour = 0; vPente = 0;
+    dernierX = e.clientX; dernierY = e.clientY;
+    histoire = [{ x: e.clientX, y: e.clientY, t: performance.now() }];
+    majAuto();
+  });
+
+  hote.addEventListener("pointermove", function (e) {
+    if (!touche) return;
+    var dx = e.clientX - dernierX, dy = e.clientY - dernierY;
+    dernierX = e.clientX; dernierY = e.clientY;
+    tour += dx * 0.42;
+    pente = borner(pente - dy * 0.3);
+    histoire.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+    if (histoire.length > 6) histoire.shift();
+    rendre();
+  });
+
+  function lacher(e) {
+    if (!touche) return;
+    touche = false;
+    try { hote.releasePointerCapture(e.pointerId); } catch (x) {}
+    /* La vitesse vient des dernières positions, pas du dernier delta : un
+       seul échantillon donne une valeur bruitée et l'objet part de travers. */
+    var n = histoire.length;
+    if (n >= 2) {
+      var a = histoire[0], b = histoire[n - 1];
+      var dts = (b.t - a.t) / 1000;
+      if (dts > 0.004) {
+        vTour = (b.x - a.x) * 0.42 / dts;
+        vTour = Math.max(-1600, Math.min(1600, vTour));
+      }
+    }
+    reveiller();
+  }
+  hote.addEventListener("pointerup", lacher);
+  hote.addEventListener("pointercancel", lacher);
+
+  /* ---- Clavier ---------------------------------------------------------
+     Un objet qu'on ne peut tourner qu'à la souris est inutilisable sans
+     souris. Les flèches font le même travail. */
+  hote.addEventListener("keydown", function (e) {
+    var k = e.key, pas = e.shiftKey ? 22 : 9;
+    if (k === "ArrowLeft")       { tour -= pas; auto = false; }
+    else if (k === "ArrowRight") { tour += pas; auto = false; }
+    else if (k === "ArrowUp")    { pente = Math.max(PENTE_MIN, pente - 5); }
+    else if (k === "ArrowDown")  { pente = Math.min(PENTE_MAX, pente + 5); }
+    else return;
+    e.preventDefault();
+    hote.setAttribute("data-touche", "");
+    majAuto(); rendre();
+  });
+
+  /* ---- Commandes -------------------------------------------------------- */
+  var bAuto = hote.querySelector("[data-v360-auto]");
+  var bPivot = hote.querySelector("[data-v360-pivot]");
+  var bFace = hote.querySelector("[data-v360-face]");
+
+  function majAuto() {
+    if (bAuto) bAuto.setAttribute("aria-pressed", auto ? "true" : "false");
+  }
+
+  if (bAuto) bAuto.addEventListener("click", function () {
+    auto = !auto; majAuto(); reveiller();
+  });
+
+  if (bPivot) bPivot.addEventListener("click", function () {
+    ciblePivot = ciblePivot === 0 ? -90 : 0;
+    bPivot.setAttribute("aria-pressed", ciblePivot !== 0 ? "true" : "false");
+    bPivot.querySelector("span").textContent = ciblePivot === 0 ? "Paysage" : "Portrait";
+    reveiller();
+  });
+
+  if (bFace) bFace.addEventListener("click", function () {
+    /* On vise le demi-tour le plus proche dans le sens courant, pour que le
+       bouton ne fasse jamais repartir l'objet en arrière de trois tours. */
+    var cible = Math.round((tour + 180) / 360) * 360 + 180;
+    vTour = (cible - tour) * 2.4;
+    auto = false; majAuto(); reveiller();
+  });
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) {
+      vu = es[0].isIntersecting;
+      if (vu) reveiller();
+      else if (boucle !== null) { cancelAnimationFrame(boucle); boucle = null; }
+    }, { rootMargin: "20% 0px" }).observe(hote);
+  }
+
+  addEventListener("resize", ajuster, { passive: true });
+  if (menage.addEventListener) menage.addEventListener("change", function () {
+    auto = !menage.matches; majAuto();
+  });
+
+  majAuto();
+  ajuster();
+  reveiller();
 })();</script>
 </body>
 </html>
