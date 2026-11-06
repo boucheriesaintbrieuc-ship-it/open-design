@@ -1027,6 +1027,102 @@ CORPS_INDEX = """
   </div>
 </section>
 
+<section class="sec sec--alt" id="references">
+  <div class="env">
+    <p class="surtitre">Ils l’utilisent déjà</p>
+    <h2 style="font-size:var(--t-xl)">Huit enseignes, huit métiers, la même tablette</h2>
+    <p class="chapo">Avant de vous la vendre, nous l’avons installée chez nous : boucherie, épicerie, traiteur, boutique de mobilité électrique, agence web. Puis chez un premier restaurant. Chaque enseigne a sa carte, ses couleurs et son propre site.</p>
+
+    <ul class="refs mt-2" role="list">
+      <li data-reveal>
+        <span class="pastille">Restaurant client</span>
+        <a class="ref" href="https://tacostime.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="or" aria-hidden="true">SF</span>
+          <span class="ref__txt"><b>Smashi Food</b><small>Smash burger halal · Pordic</small><span class="ref__url">tacostime.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Notre enseigne</span>
+        <a class="ref" href="https://boucherie-saintbrieuc.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="or" aria-hidden="true">O’B</span>
+          <span class="ref__txt"><b>O’Boucher</b><small>Boucherie halal · Saint-Brieuc</small><span class="ref__url">boucherie-saintbrieuc.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Notre enseigne</span>
+        <a class="ref" href="https://boucherie-guingamp.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="or" aria-hidden="true">O’B</span>
+          <span class="ref__txt"><b>O’Boucher Guingamp</b><small>Boucherie, commande et livraison · Guingamp</small><span class="ref__url">boucherie-guingamp.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Notre enseigne</span>
+        <a class="ref" href="https://epicerie-saintbrieuc.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="or" aria-hidden="true">O’M</span>
+          <span class="ref__txt"><b>O’Market</b><small>Épicerie · Saint-Brieuc</small><span class="ref__url">epicerie-saintbrieuc.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Notre enseigne</span>
+        <a class="ref" href="https://traiteur-saintbrieuc.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="or" aria-hidden="true">O’T</span>
+          <span class="ref__txt"><b>O’Traiteur</b><small>Traiteur · Saint-Brieuc</small><span class="ref__url">traiteur-saintbrieuc.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Notre enseigne</span>
+        <a class="ref" href="https://hover-store.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="violet" aria-hidden="true">HS</span>
+          <span class="ref__txt"><b>Hover Store</b><small>Mobilité électrique · boutique</small><span class="ref__url">hover-store.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Site que nous éditons</span>
+        <a class="ref" href="https://mosquee-saintbrieuc.fr" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="violet" aria-hidden="true">☾</span>
+          <span class="ref__txt"><b>Horaires de prière Saint-Brieuc</b><small>Horaires et librairie</small><span class="ref__url">mosquee-saintbrieuc.fr</span></span>
+        </a>
+      </li>
+      <li data-reveal>
+        <span class="pastille">Notre agence</span>
+        <a class="ref" href="https://autoplate.org" rel="noopener" target="_blank">
+          <span class="ref__sig" data-u="violet" aria-hidden="true">AW</span>
+          <span class="ref__txt"><b>Armor Web</b><small>Agence web, SEO et IA · Saint-Brieuc</small><span class="ref__url">autoplate.org</span></span>
+        </a>
+      </li>
+    </ul>
+    <p class="note mt-2" style="max-width:var(--mesure)">Nous l’écrivons clairement : sept de ces enseignes et sites nous appartiennent. C’est notre terrain d’essai depuis la première tablette reçue, et c’est ce qui nous permet de vous dire ce qui tient en plein service.</p>
+  </div>
+</section>
+
+<section class="sec" id="installation">
+  <div class="env">
+    <p class="surtitre">Après la livraison</p>
+    <h2 style="font-size:var(--t-xl)">Opérationnelle en un quart d’heure, sans rendez-vous</h2>
+    <p class="prose mt-1">Le colis arrive, vous branchez, vous passez une commande test. Il n’y a pas de rendez-vous à prendre : tout ce dont vous avez besoin tient dans le message qu’on vous envoie.</p>
+
+    <ol class="deroule-v mt-2" role="list">
+      <li data-reveal><b>Vous recevez la tablette</b><span>Avec son pied, prête à brancher. Votre carte est déjà saisie d’après la configuration que vous avez montée en ligne.</span></li>
+      <li data-reveal><b>Vous recevez votre message</b><span>L’adresse de votre borne, l’application qui verrouille l’écran et votre code de sortie. Vos clients ne peuvent pas quitter la page de commande.</span></li>
+      <li data-reveal><b>Vous branchez, vous reliez au Wi-Fi</b><span>Vous suivez les six lignes du message, puis vous passez une commande test et vous la voyez arriver côté cuisine.</span></li>
+    </ol>
+
+    <div class="duo mt-2">
+      <div class="carte" data-reveal>
+        <h3>Vous avez déjà un site</h3>
+        <p class="note mt-1">Nous vous envoyons un fichier à déposer dans votre gestionnaire de fichiers. Votre borne tourne à votre adresse, par exemple <code>votresite.fr/borne-commande.html</code>.</p>
+      </div>
+      <div class="carte" data-reveal>
+        <h3>Vous n’avez pas de site</h3>
+        <p class="note mt-1">Nous réservons votre nom de domaine et nous y installons la borne. Seul le nom de domaine reste à votre charge, à 20 € par an.</p>
+      </div>
+    </div>
+
+    <p class="mt-2"><a class="btn" href="commander.html">Commander ma borne · 720 € TTC</a></p>
+    <p class="note mt-1">600 € hors taxes, TVA de 20 % comprise, livraison offerte en France métropolitaine.</p>
+  </div>
+</section>
+
 <section class="sec">
   <div class="env">
     <p class="surtitre">Questions</p>

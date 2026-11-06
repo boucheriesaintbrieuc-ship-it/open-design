@@ -390,6 +390,56 @@
     box-shadow: var(--ombre);
   }
 
+  /* ================= Les références =================
+     Une vignette par enseigne. Le monogramme remplace un logo : huit logos
+     récupérés à des tailles et des fonds différents feraient une rangée
+     bancale, alors qu'une lettre posée dans la couleur de son univers tient
+     la grille. L'étiquette au-dessus dit ce qu'est l'enseigne : sans elle,
+     un visiteur lit huit clients là où il y a sept enseignes à nous. */
+  .refs {
+    display: grid; gap: var(--gout);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  }
+  /* Deux rangées : l'étiquette puis la carte, la carte prenant le reste de
+     la hauteur. Sans la seconde rangée en 1fr, deux cartes voisines dont le
+     nom passe à la ligne n'ont plus la même hauteur et la grille se voit. */
+  .refs li { display: grid; grid-template-rows: auto 1fr; gap: .45rem; }
+  .refs .pastille { justify-self: start; }
+  .ref {
+    display: flex; align-items: center; gap: .8rem;
+    padding: .9rem 1rem; border-radius: var(--r);
+    background: var(--carte); border: 1px solid var(--trait);
+    text-decoration: none; color: var(--texte);
+    transition: border-color var(--duree) var(--courbe),
+                background var(--duree) var(--courbe),
+                transform var(--duree) var(--courbe);
+  }
+  .ref:hover {
+    border-color: var(--action); background: var(--encre-2);
+    color: var(--texte); transform: translateY(-2px);
+  }
+  .ref__sig {
+    flex: none; display: grid; place-items: center;
+    width: 48px; height: 48px; border-radius: 13px;
+    font-family: var(--f-titre); font-weight: 800; font-size: 1.05rem;
+    letter-spacing: -.03em;
+  }
+  .ref__sig[data-u="or"]     { background: var(--action-pale); color: var(--action-f); }
+  .ref__sig[data-u="violet"] { background: var(--lampe-pale);  color: var(--lampe-vif); }
+  .ref__txt b     { display: block; font-weight: 700; letter-spacing: -.015em; }
+  .ref__txt small { display: block; font-size: var(--t-xs); color: var(--gris); margin-top: .12rem; }
+  .ref__url {
+    display: block; margin-top: .2rem; font-family: var(--f-data);
+    font-size: var(--t-xs); color: var(--gris-clair);
+  }
+
+  code {
+    font-family: var(--f-data); font-size: .9em;
+    background: var(--encre-2); color: var(--texte);
+    padding: .1em .4em; border-radius: 5px;
+    overflow-wrap: anywhere;
+  }
+
   /* La fiche technique comme matériau graphique : ce public compare des
      spécifications, donc les specs sont traitées comme un tableau de données
      et pas comme une liste à puces. */
