@@ -138,7 +138,7 @@ def bandeau():
     return f"""<div class="bandeau">
   <div class="env bandeau__int">
     <span><em>Sans abonnement</em></span>
-    <span><b>720 € TTC</b> la borne, payés une fois</span>
+    <span><b>600 € HT</b> la borne, payée une fois</span>
     <span><b>Livraison offerte</b> en France métropolitaine</span>
     <span><a href="commander.html">Construire ma borne</a></span>
   </div>
@@ -762,10 +762,10 @@ CORPS_INDEX = """
     <div class="achat carte">
       <p class="surtitre">Borne de commande sur pied</p>
       <p class="achat__prix">
-        <span class="montant prix">720 €</span>
-        <span class="ttc">TTC, TVA 20 % comprise</span>
+        <span class="montant prix">600 €</span>
+        <span class="ttc">HT, par borne</span>
       </p>
-      <p class="note" style="margin-top:.2rem">600 € HT · <strong>livraison offerte</strong> · payé une fois, aucun abonnement</p>
+      <p class="note" style="margin-top:.2rem"><strong>Livraison offerte</strong> · payé une fois, aucun abonnement · 720 € TTC au règlement</p>
       <a class="btn btn--large" href="commander.html">Commander une borne</a>
       <ul class="garanties mt-1" role="list">
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>0 € par mois, à vie</span></li>
@@ -787,7 +787,7 @@ CORPS_INDEX = """
     <p class="note mt-1">Le configurateur est gratuit et sans compte à créer. Vous repartez avec le fichier de votre borne, que vous payiez ou non.</p>
 
     <dl class="chiffres-cle mt-2">
-      <div><dt>Prix</dt><dd class="chiffres">720 €<span>TTC, payés une fois</span></dd></div>
+      <div><dt>Prix</dt><dd class="chiffres">600 €<span>HT, payés une fois</span></dd></div>
       <div><dt>Abonnement</dt><dd class="chiffres">0 €<span>par mois, à vie</span></dd></div>
       <div><dt>Installation</dt><dd class="chiffres">0 €<span>nous montons votre page</span></dd></div>
       <div><dt>Mise en service</dt><dd class="chiffres">15 min<span>vous branchez, elle commande</span></dd></div>
@@ -857,13 +857,13 @@ CORPS_INDEX = """
     <p class="prose mt-1">Tout se fait depuis la page de commande, sans rendez-vous, sans devis à signer et sans commercial au téléphone.</p>
     <ol class="deroule-v mt-2" role="list">
       <li data-reveal><b>Vous construisez votre borne en ligne</b><span>Votre carte, vos prix, vos photos, vos suppléments. C’est gratuit, sans compte à créer, et vous pouvez télécharger le résultat pour l’essayer avant de payer.</span></li>
-      <li data-reveal><b>Vous payez 720 € TTC par carte</b><span>600 € hors taxes plus 20 % de TVA. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
+      <li data-reveal><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement, aucun engagement.</span></li>
       <li data-reveal><b>Nous lançons la fabrication</b><span>La tablette part de notre atelier vers votre adresse. Vous recevez le numéro de suivi au départ du colis.</span></li>
       <li data-reveal><b>Pendant le transport, nous montons votre page</b><span>Nous reprenons votre configuration et nous la mettons en ligne, soit sur votre site, soit sur un nouveau site que nous créons pour vous.</span></li>
       <li data-reveal><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette adresse et la borne prend ses premières commandes. Comptez un quart d’heure.</span></li>
     </ol>
     <div class="avantages mt-2">
-      <div data-reveal><b>720 € TTC</b><span>TVA de 20 % comprise, rien à ajouter au moment de payer</span></div>
+      <div data-reveal><b>600 € HT</b><span>720 € TTC au moment de payer, rien d’autre à ajouter</span></div>
       <div data-reveal><b>Livraison offerte</b><span>France métropolitaine, transport compris dans le prix</span></div>
       <div data-reveal><b>0 € d’installation</b><span>Nous montons votre page de borne sans frais supplémentaires</span></div>
       <div data-reveal><b>0 € par mois</b><span>Aucun abonnement, aucune commission sur vos ventes</span></div>
@@ -1035,63 +1035,55 @@ CORPS_INDEX = """
 
     <ul class="refs mt-2" role="list">
       <li data-reveal>
-        <span class="pastille">Restaurant client</span>
         <a class="ref" href="https://tacostime.fr" rel="noopener" target="_blank">
+          <span class="pastille">Restaurant client</span>
           <span class="ref__sig" data-u="or" aria-hidden="true">SF</span>
           <span class="ref__txt"><b>Smashi Food</b><small>Smash burger halal · Pordic</small><span class="ref__url">tacostime.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Notre enseigne</span>
         <a class="ref" href="https://boucherie-saintbrieuc.fr" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="or" aria-hidden="true">O’B</span>
           <span class="ref__txt"><b>O’Boucher</b><small>Boucherie halal · Saint-Brieuc</small><span class="ref__url">boucherie-saintbrieuc.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Notre enseigne</span>
         <a class="ref" href="https://boucherie-guingamp.fr" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="or" aria-hidden="true">O’B</span>
           <span class="ref__txt"><b>O’Boucher Guingamp</b><small>Boucherie, commande et livraison · Guingamp</small><span class="ref__url">boucherie-guingamp.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Notre enseigne</span>
         <a class="ref" href="https://epicerie-saintbrieuc.fr" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="or" aria-hidden="true">O’M</span>
           <span class="ref__txt"><b>O’Market</b><small>Épicerie · Saint-Brieuc</small><span class="ref__url">epicerie-saintbrieuc.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Notre enseigne</span>
         <a class="ref" href="https://traiteur-saintbrieuc.fr" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="or" aria-hidden="true">O’T</span>
           <span class="ref__txt"><b>O’Traiteur</b><small>Traiteur · Saint-Brieuc</small><span class="ref__url">traiteur-saintbrieuc.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Notre enseigne</span>
         <a class="ref" href="https://hover-store.fr" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="violet" aria-hidden="true">HS</span>
           <span class="ref__txt"><b>Hover Store</b><small>Mobilité électrique · boutique</small><span class="ref__url">hover-store.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Site que nous éditons</span>
         <a class="ref" href="https://mosquee-saintbrieuc.fr" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="violet" aria-hidden="true">☾</span>
           <span class="ref__txt"><b>Horaires de prière Saint-Brieuc</b><small>Horaires et librairie</small><span class="ref__url">mosquee-saintbrieuc.fr</span></span>
         </a>
       </li>
       <li data-reveal>
-        <span class="pastille">Notre agence</span>
         <a class="ref" href="https://autoplate.org" rel="noopener" target="_blank">
           <span class="ref__sig" data-u="violet" aria-hidden="true">AW</span>
           <span class="ref__txt"><b>Armor Web</b><small>Agence web, SEO et IA · Saint-Brieuc</small><span class="ref__url">autoplate.org</span></span>
         </a>
       </li>
     </ul>
-    <p class="note mt-2" style="max-width:var(--mesure)">Nous l’écrivons clairement : sept de ces enseignes et sites nous appartiennent. C’est notre terrain d’essai depuis la première tablette reçue, et c’est ce qui nous permet de vous dire ce qui tient en plein service.</p>
   </div>
 </section>
 
@@ -1118,8 +1110,8 @@ CORPS_INDEX = """
       </div>
     </div>
 
-    <p class="mt-2"><a class="btn" href="commander.html">Commander ma borne · 720 € TTC</a></p>
-    <p class="note mt-1">600 € hors taxes, TVA de 20 % comprise, livraison offerte en France métropolitaine.</p>
+    <p class="mt-2"><a class="btn" href="commander.html">Commander ma borne · 600 € HT</a></p>
+    <p class="note mt-1">Prix hors taxes, destiné aux professionnels. 720 € TTC au règlement, livraison offerte en France métropolitaine.</p>
   </div>
 </section>
 
@@ -1155,7 +1147,7 @@ CORPS_INDEX = """
 </main>
 
 <div class="barre-mobile">
-  <span class="prix">720,00 € TTC</span>
+  <span class="prix">600,00 € HT</span>
   <a class="btn btn--petit" href="commander.html">Commander</a>
 </div>
 """
@@ -1182,7 +1174,7 @@ CORPS_COMMANDER = fil([("Accueil", "index.html"), ("Commander", None)]) + """
     <h2 style="font-size:var(--t-lg)">Comment se passe la vente</h2>
     <ol class="deroule" role="list">
       <li><div><b>Vous configurez votre borne sur cette page</b><span>Votre carte, vos prix, vos photos. Rien n’est envoyé nulle part tant que vous n’avez pas payé.</span></div></li>
-      <li><div><b>Vous payez 720 € TTC par carte</b><span>600 € hors taxes plus 20 % de TVA. Livraison comprise, aucun frais d’installation, aucun abonnement.</span></div></li>
+      <li><div><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement.</span></div></li>
       <li><div><b>Nous lançons la commande à notre usine</b><span>La tablette part de notre atelier en Chine vers votre adresse. Vous recevez le numéro de suivi au départ.</span></div></li>
       <li><div><b>Pendant le transport, nous montons votre page de borne</b><span>Nous reprenons votre configuration, nous la mettons en ligne, et nous vous envoyons l’adresse à ouvrir sur la tablette.</span></div></li>
       <li><div><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette page et la borne est en service. Comptez un quart d’heure.</span></div></li>
@@ -1879,7 +1871,7 @@ FICHIERS.append(page(
 FICHIERS.append(page(
     "commander.html",
     "Commander votre borne de commande restaurant | " + MARQUE,
-    "Construisez votre borne en ligne, essayez-la, puis commandez : 720 € TTC livraison comprise, sans abonnement ni frais d’installation.",
+    "Construisez votre borne en ligne, essayez-la, puis commandez : 600 € HT, livraison comprise, sans abonnement ni frais d’installation.",
     CORPS_COMMANDER,
     style_page=_lire("assets/borne-builder.css"),
     script_page=_lire("assets/borne-builder.js")))

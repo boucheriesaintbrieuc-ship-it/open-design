@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commander votre borne de commande restaurant | O’Borne</title>
-<meta name="description" content="Construisez votre borne en ligne, essayez-la, puis commandez : 720 € TTC livraison comprise, sans abonnement ni frais d’installation.">
+<meta name="description" content="Construisez votre borne en ligne, essayez-la, puis commandez : 600 € HT, livraison comprise, sans abonnement ni frais d’installation.">
 <link rel="canonical" href="https://borne-restaurants.fr/commander.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="O’Borne">
 <meta property="og:title" content="Commander votre borne de commande restaurant | O’Borne">
-<meta property="og:description" content="Construisez votre borne en ligne, essayez-la, puis commandez : 720 € TTC livraison comprise, sans abonnement ni frais d’installation.">
+<meta property="og:description" content="Construisez votre borne en ligne, essayez-la, puis commandez : 600 € HT, livraison comprise, sans abonnement ni frais d’installation.">
 <meta property="og:url" content="https://borne-restaurants.fr/commander.html">
 <meta property="og:image" content="https://borne-restaurants.fr/img/og-borne-commande-restaurant.jpg">
 <meta property="og:locale" content="fr_FR">
@@ -400,12 +400,13 @@
     display: grid; gap: var(--gout);
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   }
-  /* Deux rangées : l'étiquette puis la carte, la carte prenant le reste de
-     la hauteur. Sans la seconde rangée en 1fr, deux cartes voisines dont le
-     nom passe à la ligne n'ont plus la même hauteur et la grille se voit. */
-  .refs li { display: grid; grid-template-rows: auto 1fr; gap: .45rem; }
-  .refs .pastille { justify-self: start; }
+  .refs li { display: grid; }
+  /* L'étiquette est collée sur la carte, pas posée au-dessus : au-dessus,
+     la seule carte qui en porte une descend d'une rangée et casse
+     l'alignement des sept autres. */
+  .refs .pastille { position: absolute; top: -.55rem; left: .9rem; z-index: 1; }
   .ref {
+    position: relative;
     display: flex; align-items: center; gap: .8rem;
     padding: .9rem 1rem; border-radius: var(--r);
     background: var(--carte); border: 1px solid var(--trait);
@@ -1303,7 +1304,7 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
 <div class="bandeau">
   <div class="env bandeau__int">
     <span><em>Sans abonnement</em></span>
-    <span><b>720 € TTC</b> la borne, payés une fois</span>
+    <span><b>600 € HT</b> la borne, payée une fois</span>
     <span><b>Livraison offerte</b> en France métropolitaine</span>
     <span><a href="commander.html">Construire ma borne</a></span>
   </div>
@@ -1328,7 +1329,7 @@ input[type="color"] { width: 100%; min-height: 50px; padding: 4px; border: 1px s
     <h2 style="font-size:var(--t-lg)">Comment se passe la vente</h2>
     <ol class="deroule" role="list">
       <li><div><b>Vous configurez votre borne sur cette page</b><span>Votre carte, vos prix, vos photos. Rien n’est envoyé nulle part tant que vous n’avez pas payé.</span></div></li>
-      <li><div><b>Vous payez 720 € TTC par carte</b><span>600 € hors taxes plus 20 % de TVA. Livraison comprise, aucun frais d’installation, aucun abonnement.</span></div></li>
+      <li><div><b>Vous payez la borne par carte</b><span>600 € hors taxes, soit 720 € TTC débités au moment du règlement. Livraison comprise, aucun frais d’installation, aucun abonnement.</span></div></li>
       <li><div><b>Nous lançons la commande à notre usine</b><span>La tablette part de notre atelier en Chine vers votre adresse. Vous recevez le numéro de suivi au départ.</span></div></li>
       <li><div><b>Pendant le transport, nous montons votre page de borne</b><span>Nous reprenons votre configuration, nous la mettons en ligne, et nous vous envoyons l’adresse à ouvrir sur la tablette.</span></div></li>
       <li><div><b>Vous branchez, elle ouvre sur votre carte</b><span>Vous verrouillez l’écran sur cette page et la borne est en service. Comptez un quart d’heure.</span></div></li>

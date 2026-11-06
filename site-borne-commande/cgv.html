@@ -400,12 +400,13 @@
     display: grid; gap: var(--gout);
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   }
-  /* Deux rangées : l'étiquette puis la carte, la carte prenant le reste de
-     la hauteur. Sans la seconde rangée en 1fr, deux cartes voisines dont le
-     nom passe à la ligne n'ont plus la même hauteur et la grille se voit. */
-  .refs li { display: grid; grid-template-rows: auto 1fr; gap: .45rem; }
-  .refs .pastille { justify-self: start; }
+  .refs li { display: grid; }
+  /* L'étiquette est collée sur la carte, pas posée au-dessus : au-dessus,
+     la seule carte qui en porte une descend d'une rangée et casse
+     l'alignement des sept autres. */
+  .refs .pastille { position: absolute; top: -.55rem; left: .9rem; z-index: 1; }
   .ref {
+    position: relative;
     display: flex; align-items: center; gap: .8rem;
     padding: .9rem 1rem; border-radius: var(--r);
     background: var(--carte); border: 1px solid var(--trait);
@@ -1219,7 +1220,7 @@
 <div class="bandeau">
   <div class="env bandeau__int">
     <span><em>Sans abonnement</em></span>
-    <span><b>720 € TTC</b> la borne, payés une fois</span>
+    <span><b>600 € HT</b> la borne, payée une fois</span>
     <span><b>Livraison offerte</b> en France métropolitaine</span>
     <span><a href="commander.html">Construire ma borne</a></span>
   </div>
